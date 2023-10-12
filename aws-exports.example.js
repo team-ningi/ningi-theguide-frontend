@@ -1,0 +1,5 @@
+export default {
+  REGION: "[YOUR_AWS_REGION]",
+  USER_POOL_ID: "[YOUR_POOL_ID]",
+  USER_POOL_APP_CLIENT_ID: "[YOUR_CLIENT_ID]",
+};
