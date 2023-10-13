@@ -6,8 +6,13 @@ import { useEffect, useState } from "react";
 import Wrapper from "@/lib/components/appWrapper";
 import { Spinner } from "../lib/components/spinner";
 import { ChatInterface } from "@/lib/components/chatInterface";
+import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
-export default function Home() {
+export default function Home({
+  session,
+}: {
+  session: { email: string; authToken: string };
+}) {
   const router = useRouter();
   const [loading, updateLoading] = useState(false);
 
@@ -32,8 +37,9 @@ export default function Home() {
       </Head>
       <Wrapper>
         {loading && <Spinner />}
-        <ChatInterface />
+        <ChatInterface session={session} />
       </Wrapper>
     </>
   );
 }
+export const getServerSideProps = serverSidePropsWithAuth({ redirect: true });

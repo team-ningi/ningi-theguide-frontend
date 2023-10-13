@@ -60,8 +60,9 @@ const Wrapper = ({
         <Box
           sx={{
             border: "0px solid green",
-            ml: "auto",
-            mr: "auto",
+            // ml: "auto",
+            // mr: "auto",
+            ml: "270px",
             width: "auto",
             height: "auto",
           }}

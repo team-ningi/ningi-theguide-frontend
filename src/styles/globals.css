@@ -101,3 +101,17 @@ input[type="file"]::file-selector-button:hover {
 input[type="file"]::file-selector-button:active {
   background-color: #e5e7eb;
 }
+
+/* Scroll bar fix for older browser*/
+@media screen and (-ms-high-contrast: active),
+  screen and (-ms-high-contrast: none) {
+  * {
+    -ms-overflow-style: none;
+    overflow-y: auto;
+  }
+}
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent; /* make scrollbar transparent */
+}

@@ -9,6 +9,31 @@ import { LoginForm, Waiting, Verify } from "@/lib/components/login";
 import { LoginTypes } from "@/lib/types";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
+/*
+// TODO
+
+// WHEN LOG IN
+//  -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR
+
+// CHAT UI ❌
+
+// SET UP PINECONE ❌
+
+// UPLOAD FILES ❌
+// -> goes into database ❌
+//    -> Embed into pinecone ❌
+
+//  TEXT    CHAT ❌
+//  AUDIO   CHAT ❌
+//  IMAGE   CHAT ❌
+
+
+// REPORTING  ❌
+//
+
+
+*/
+
 const defaultState = {
   username: "",
   mode: "login", //  login || verify || waiting
