@@ -18,14 +18,14 @@ const Spinner = () => (
     <ThreeCircles
       height="100"
       width="100"
-      color="#ff66cc"
+      color="#564DFE"
       wrapperStyle={{}}
       wrapperClass=""
       visible={true}
       ariaLabel="three-circles-rotating"
-      outerCircleColor="#cc33cc"
-      innerCircleColor="#ff66cc"
-      middleCircleColor="#fff"
+      outerCircleColor="#564DFE"
+      innerCircleColor="#8A84FF"
+      middleCircleColor="#564DFE"
     />
   </Flex>
 );

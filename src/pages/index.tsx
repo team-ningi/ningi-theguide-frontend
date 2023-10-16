@@ -11,11 +11,21 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
 // TODO
+NEXT- >>> 
+          - UPLOAD FILES TO S3 
+            - IF MP3 -> TRANSCRIBE AND EMBED
+            - ELSE   -> EMBED
+          - CREATE EMBEDDING PINECONE (WILL NEED TO LOOK AT WHAT LQ DID FOR BIG FILES)
+          - LIST OUT UPLOADS FOR THE USER
+          - SELECT(s) FILE TO QUERY AGAINST
+          - WHEN CHAT MSG SENDS (replce in memeory VDB)
+            -> similarity search at pinecone > return array > send to open ai
+
 
 // WHEN LOG IN
-//  -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR
+//  -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR  ❌
 
-// CHAT UI ❌
+// CHAT UI ✅
 
 // SET UP PINECONE ❌
 
@@ -23,13 +33,14 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 // -> goes into database ❌
 //    -> Embed into pinecone ❌
 
-//  TEXT    CHAT ❌
-//  AUDIO   CHAT ❌
-//  IMAGE   CHAT ❌
-
+//  TEXT       CHAT ✅
+//  AUDIO      CHAT ✅
+//  TEXTRACT   CHAT ❌
+    https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
+    https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
 
 // REPORTING  ❌
-//
+// look at petes wireframes
 
 
 */

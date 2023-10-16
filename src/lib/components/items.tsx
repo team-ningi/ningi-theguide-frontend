@@ -48,11 +48,9 @@ export const AddBtn = ({
 export const BackBtn = ({
   url,
   router,
-  darkMode,
 }: {
   url: string;
   router: AppRouterInstance;
-  darkMode: boolean;
 }) => (
   <Flex
     sx={{
@@ -66,7 +64,7 @@ export const BackBtn = ({
       alignItems: "center",
       cursor: "pointer",
       "&:hover": {
-        backgroundColor: darkMode ? "#000" : "#F8F8F8",
+        backgroundColor: "#F8F8F8",
       },
     }}
     onClick={() => router.push(url)}
@@ -79,9 +77,7 @@ export const BackBtn = ({
         color: darkMode ? "#FFF" : "#444",
       }}
     />{" "} */}
-    <Paragraph sx={{ color: darkMode ? "#FFF" : "#444", fontSize: "13px" }}>
-      Back
-    </Paragraph>
+    <Paragraph sx={{ color: "#444", fontSize: "13px" }}>Back</Paragraph>
   </Flex>
 );
 

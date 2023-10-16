@@ -128,16 +128,9 @@ export type PageTypes = {
 };
 
 export type AddContentStateType = {
-  id: string;
-  image_url: string;
-  type: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
   user_id: string;
-  author: string;
-  loading: boolean;
+  customFilename: string;
+  label: string;
   showSuccess: boolean;
 };
 
@@ -158,10 +151,9 @@ export type EditContentStateType = {
 };
 
 export type AddContentErrorStateType = {
-  image_url: boolean;
-  title: boolean;
-  content: boolean;
-  author: boolean;
+  customFilename: boolean;
+  document_url: boolean;
+  label: boolean;
   error_msg: string;
 };
 

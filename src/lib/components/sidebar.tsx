@@ -30,26 +30,26 @@ const items = [
     name: "Chat",
     icon: <Chat size={24} />,
     url: "/chat",
-    testId: "sidebar-web",
+    testId: "sidebar-chat",
   },
   {
     name: "Reports",
     icon: <FilePdf size={24} />,
     url: "/events",
-    testId: "sidebar-chat",
+    testId: "sidebar-reports",
   },
   {
     name: "Upload",
     icon: <UploadSimple size={24} />,
-    url: "/profile",
-    testId: "sidebar-web",
+    url: "/upload",
+    testId: "sidebar-upload",
   },
   {
     name: "Logout",
     icon: <SignOut size={24} />,
     url: "/",
     logout: true,
-    testId: "sidebar-dashboard",
+    testId: "sidebar-logout",
   },
 ];
 
