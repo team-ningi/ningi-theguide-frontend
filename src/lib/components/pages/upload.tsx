@@ -110,6 +110,25 @@ const addDocument = async (
     },
   });
 
+const createEmbeddings = async (
+  user_id: string,
+  file_url: string,
+  document_id: string,
+  file_type: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/create-embeddings",
+    data: {
+      user_id,
+      file_url,
+      document_id,
+      file_type,
+      authToken,
+    },
+  });
+
 const UploadComponent = ({
   user,
   setLoading,
@@ -173,7 +192,7 @@ const UploadComponent = ({
 
         await upload.promise();
 
-        await addDocument(
+        const { data } = await addDocument(
           state?.user_id,
           state?.label,
           `${process.env.NEXT_PUBLIC_AWS_CDN_URL}/${savedFileName}`,
@@ -183,6 +202,28 @@ const UploadComponent = ({
           customFileName,
           session?.authToken
         );
+
+        const doc = data?.document || {};
+        const { user_id, file_url, _id, file_type } = doc;
+        console.log(user_id, file_url, _id, file_type);
+
+        try {
+          if (["txt", "pdf"].includes(file_type)) {
+            await createEmbeddings(
+              user_id,
+              file_url,
+              _id,
+              file_type,
+              session?.authToken
+            );
+            console.log("create embedding");
+          } else {
+            console.log("invalid filetype for an embedding");
+          }
+        } catch (e) {
+          // swallow
+          console.log("embeddings failed");
+        }
 
         //@ts-ignore
         // document.getElementById("add-content-label").value = null;

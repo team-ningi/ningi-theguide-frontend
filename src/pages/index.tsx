@@ -12,14 +12,14 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 /*
 // TODO
 NEXT- >>> 
-          - UPLOAD FILES TO S3 
-            - IF MP3 -> TRANSCRIBE AND EMBED
-            - ELSE   -> EMBED
-          - CREATE EMBEDDING PINECONE (WILL NEED TO LOOK AT WHAT LQ DID FOR BIG FILES)
-          - LIST OUT UPLOADS FOR THE USER
-          - SELECT(s) FILE TO QUERY AGAINST
-          - WHEN CHAT MSG SENDS (replce in memeory VDB)
-            -> similarity search at pinecone > return array > send to open ai
+          - UPLOAD FILES TO S3  ✅
+            - IF MP3 -> TRANSCRIBE AND EMBED ❌
+            - ELSE   -> EMBED ✅
+          - CREATE EMBEDDING PINECONE (WILL NEED TO LOOK AT WHAT LQ DID FOR BIG FILES) ✅
+          - LIST OUT UPLOADS FOR THE USER ❌
+          - SELECT(s) FILE TO QUERY AGAINST ❌
+          - WHEN CHAT MSG SENDS (replce in memeory VDB) ❌
+            -> similarity search at pinecone > return array > send to open ai ✅
 
 
 // WHEN LOG IN
@@ -27,10 +27,10 @@ NEXT- >>>
 
 // CHAT UI ✅
 
-// SET UP PINECONE ❌
+// SET UP PINECONE ✅
 
-// UPLOAD FILES ❌
-// -> goes into database ❌
+// UPLOAD FILES  ✅
+// -> goes into database  ✅
 //    -> Embed into pinecone ❌
 
 //  TEXT       CHAT ✅
