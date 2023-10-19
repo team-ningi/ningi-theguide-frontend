@@ -16,8 +16,7 @@ NEXT- >>>
             - IF MP3 -> TRANSCRIBE AND EMBED ❌
             - ELSE   -> EMBED ✅
           - CREATE EMBEDDING PINECONE (WILL NEED TO LOOK AT WHAT LQ DID FOR BIG FILES) ✅
-          - LIST OUT UPLOADS FOR THE USER ❌
-          - SELECT(s) FILE TO QUERY AGAINST ❌
+          - LIST OUT UPLOADS FOR THE USER ❌ - SELECT(s) FILE TO QUERY AGAINST ❌
           - WHEN CHAT MSG SENDS (replce in memeory VDB) ❌
             -> similarity search at pinecone > return array > send to open ai ✅
 
@@ -42,6 +41,14 @@ NEXT- >>>
 // REPORTING  ❌
 // look at petes wireframes
 
+
+// CYPRESS TESTING
+// SET ENV VAR OF TEST_APPLICATION_TOKEN === 'utgig_E2E_uigikb98687_E2E_5645ry'
+// if this is used bybass the manage checks ( set Authorization header to TEST_APPLICATION_TOKEN in test calls )
+//    This will allow us to do an E2E
+//        1 -> create test stuff
+//        2 -> start the tests, click thru each page
+//        3 -> teardown test stuff
 
 */
 
@@ -68,7 +75,14 @@ const Login = ({ setCoreData, darkMode, session }: LoginTypes) => {
           if (mode === "verify") {
             updateState({ ...currentState, mode: "verify" });
             await setCoreData(atob(encoded), session, false);
-            window.location.assign("/dashboard");
+
+            if (atob(encoded) === "test@ningi.co.uk") {
+              // TODO
+              // TEST ROUTE
+              //  window.location.assign("/tests");
+            } else {
+              window.location.assign("/discussions");
+            }
           }
         }
       } catch (e) {

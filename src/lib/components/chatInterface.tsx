@@ -22,7 +22,7 @@ const InputLabel = ({ title, subtitle, customSX = {} }: any) => (
 const defaultState = {
   loading: false,
   text: "",
-  fileToUse: "ai/iht.pdf", //"ai/example.txt", // example / ningi
+  fileToUse: "ai/example.txt", //"ai/example.txt", // example / ningi
 };
 
 // TODO
@@ -45,8 +45,6 @@ const callChatAPI = async (
   const { text, fileToUse } = state;
   updateState({ ...state, loading: true });
 
-  console.log("text ", text);
-
   const { data } = await axios.post("/api/db/chat", {
     question: text,
     fileToUse,
@@ -58,7 +56,7 @@ const callChatAPI = async (
   const updatedHistory = [...history, { question, answer }];
   updateHistory(updatedHistory);
 
-  updateState({ ...state, loading: false });
+  updateState({ ...state, loading: false, text: "" });
 };
 
 const exampleHistory = [
@@ -181,120 +179,81 @@ const ChatInterface = ({ session }: { session: any }) => {
   }, [history]);
 
   return (
-    <Flex
-      sx={{
-        width: "650px",
-        border: "0px blue solid",
-        backgroundColor: "transparent",
-        borderRadius: "6px",
-        minHeight: "500px",
-        margin: "60px 0 0 0px",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        p: "0px",
-      }}
-    >
-      {state.loading && <Spinner />}
+    <Flex sx={{ width: "870px", margin: "60px 0 0 0" }}>
       <Flex
         sx={{
-          border: "0px solid red",
-          p: "10px 5px",
+          width: "650px",
+          border: "0px blue solid",
           backgroundColor: "transparent",
-          height: "460px",
-          borderRadius: "5px",
+          borderRadius: "6px",
+          minHeight: "500px",
+          margin: "0",
           flexDirection: "column",
-          overflow: "scroll",
-          pb: "20px",
+          justifyContent: "space-between",
+          p: "0px",
         }}
       >
-        {history.map((item: ChatItem, i: number) => (
-          <ChatItem key={`chat-item-${i}`} item={item} i={i} />
-        ))}
-        {!history?.length && (
-          <Paragraph
-            sx={{
-              color: "#888",
-              fontWeight: "500",
-              mt: "200px",
-              width: "100%",
-              fontSize: "18px",
-              textAlign: "center",
-            }}
-          >
-            Ask a question to begin 💬 🚀
-          </Paragraph>
-        )}
-        <Box ref={bottomRef} id="scrollToDiv" sx={{ height: 1 }} />
-      </Flex>
-
-      <Flex
-        sx={{
-          height: "70px",
-          mt: "20px",
-          flexDirection: "row",
-          backgroundColor: "white",
-          border: "0px solid red",
-          borderRadius: "20px",
-        }}
-      >
-        <Textarea
-          sx={{
-            border: "0px solid red",
-            outline: "0px",
-            ml: "8px",
-            mt: "10px",
-            mr: "10px",
-            height: "50px",
-            width: "100%",
-            backgroundColor: "white",
-            resize: "none",
-          }}
-          placeholder="Type your question..."
-          value={state?.text}
-          onKeyDown={async (e) => {
-            console.log(e.key);
-            if (e.key === "Enter") {
-              if (state?.text === "") return;
-              await callChatAPI(
-                state,
-                updateState,
-                history,
-                updateHistory,
-                session
-              );
-            }
-          }}
-          onChange={(e) => updateState({ ...state, text: e.target.value })}
-        />
+        {state.loading && <Spinner />}
         <Flex
           sx={{
-            width: "50px",
-            border: "0px green solid",
-            mr: "10px",
-            justifyContent: "center",
-            alignItems: "center",
-            color: state?.text === "" ? "lightgrey" : "#333366",
+            border: "0px solid red",
+            p: "10px 5px",
+            backgroundColor: "transparent",
+            height: "460px",
+            borderRadius: "5px",
+            flexDirection: "column",
+            overflow: "scroll",
+            pb: "20px",
           }}
         >
-          <Flex
+          {history.map((item: ChatItem, i: number) => (
+            <ChatItem key={`chat-item-${i}`} item={item} i={i} />
+          ))}
+          {!history?.length && (
+            <Paragraph
+              sx={{
+                color: "#888",
+                fontWeight: "500",
+                mt: "200px",
+                width: "100%",
+                fontSize: "18px",
+                textAlign: "center",
+              }}
+            >
+              Ask a question to begin 💬 🚀
+            </Paragraph>
+          )}
+          <Box ref={bottomRef} id="scrollToDiv" sx={{ height: 1 }} />
+        </Flex>
+
+        <Flex
+          sx={{
+            height: "70px",
+            mt: "20px",
+            flexDirection: "row",
+            backgroundColor: "white",
+            border: "0px solid red",
+            borderRadius: "20px",
+          }}
+        >
+          <Textarea
+            id="chat-input"
             sx={{
-              width: "50px",
-              height: "40px",
-              border: ` 1px ${
-                state?.text !== "" ? "lightgrey" : "#F9F9F9"
-              } solid`,
-              borderRadius: "100%",
-              justifyContent: "center",
-              alignItems: "center",
-              background:
-                state?.text === ""
-                  ? "#F9F9F9"
-                  : "linear-gradient(180deg, rgba(139,132,255,1) 10%, rgba(73,64,255,1) 100%)",
-              cursor: state?.text === "" ? "not-allowed" : "pointer",
-              color: state?.text === "" ? "inherit" : "white",
+              border: "0px solid red",
+              outline: "0px",
+              ml: "8px",
+              mt: "10px",
+              mr: "10px",
+              height: "50px",
+              width: "100%",
+              backgroundColor: "white",
+              resize: "none",
             }}
-            onClick={async () => {
-              if (state?.text !== "") {
+            placeholder="Type your question..."
+            value={state?.text}
+            onKeyDown={async (e) => {
+              if (e.key === "Enter") {
+                if (state?.text === "") return;
                 await callChatAPI(
                   state,
                   updateState,
@@ -304,14 +263,63 @@ const ChatInterface = ({ session }: { session: any }) => {
                 );
               }
             }}
+            onChange={(e) => updateState({ ...state, text: e.target.value })}
+          />
+          <Flex
+            sx={{
+              width: "50px",
+              border: "0px green solid",
+              mr: "10px",
+              justifyContent: "center",
+              alignItems: "center",
+              color: state?.text === "" ? "lightgrey" : "#333366",
+            }}
           >
-            <PaperPlaneTilt
-              size={24}
-              weight={`${state?.text === "" ? "regular" : "fill"}`}
-            />
+            <Flex
+              sx={{
+                width: "50px",
+                height: "40px",
+                border: ` 1px ${
+                  state?.text !== "" ? "lightgrey" : "#F9F9F9"
+                } solid`,
+                borderRadius: "100%",
+                justifyContent: "center",
+                alignItems: "center",
+                background:
+                  state?.text === ""
+                    ? "#F9F9F9"
+                    : "linear-gradient(180deg, rgba(139,132,255,1) 10%, rgba(73,64,255,1) 100%)",
+                cursor: state?.text === "" ? "not-allowed" : "pointer",
+                color: state?.text === "" ? "inherit" : "white",
+              }}
+              onClick={async () => {
+                if (state?.text !== "") {
+                  await callChatAPI(
+                    state,
+                    updateState,
+                    history,
+                    updateHistory,
+                    session
+                  );
+                }
+              }}
+            >
+              <PaperPlaneTilt
+                size={24}
+                weight={`${state?.text === "" ? "regular" : "fill"}`}
+              />
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
+      <Flex
+        sx={{
+          width: "200px",
+          height: "500px",
+          border: "1px solid red",
+          ml: "20px",
+        }}
+      ></Flex>
     </Flex>
   );
 };

@@ -13,6 +13,21 @@ export default ({ redirect = true, generate = true }) =>
   withIronSessionSsr(async function getServerSideProps({ req }) {
     const authentication = await authTokenVerification(req.session.authToken);
 
+    const isTestUser =
+      process.env.TEST_APPLICATION_TOKEN ===
+      process.env.MANAGE_APPLICATION_TOKEN;
+
+    if (isTestUser) {
+      return {
+        props: {
+          session: {
+            email: "test@ningi.co.uk",
+            authToken: "1234567890abcdefgh",
+          },
+        },
+      };
+    }
+
     if (!authentication.valid && redirect) {
       return {
         redirect: {

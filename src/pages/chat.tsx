@@ -7,25 +7,24 @@ import Wrapper from "@/lib/components/appWrapper";
 import { Spinner } from "../lib/components/spinner";
 import { ChatInterface } from "@/lib/components/chatInterface";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
+import { PageTypes, SessionType, UserType } from "@/lib/types";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
 
-export default function Home({
-  session,
-}: {
-  session: { email: string; authToken: string };
-}) {
+const Chat = ({ session, setCoreData, user }: PageTypes) => {
   const router = useRouter();
-  const [loading, updateLoading] = useState(false);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       await Auth.currentAuthenticatedUser();
-  //       updateLoading(false);
-  //     } catch (e) {
-  //       router.push("/");
-  //     }
-  //   })();
-  // }, []);
+  useEffect(() => {
+    (async () => {
+      if (session?.email) {
+        if (!user) {
+          await setCoreData(session.email, session, false);
+        }
+      } else {
+        window.location.assign("/");
+      }
+    })();
+  }, []);
 
   return (
     <>
@@ -36,10 +35,33 @@ export default function Home({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {loading && <Spinner />}
         <ChatInterface session={session} />
       </Wrapper>
     </>
   );
-}
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  updateDarkMode: () => dispatch({ type: "TOGGLE_DARK_MODE" }),
+  setCoreData: (
+    email: string,
+    session: SessionType,
+    keepLoadingSpinner: boolean
+  ) =>
+    dispatch({
+      type: "REFRESH_CORE_DATA",
+      action: { email, session, keepLoadingSpinner },
+    }),
+});
+
+const mapStateToProps = (state: {
+  account: { darkMode: boolean; user: UserType };
+}) => {
+  const { account } = state;
+  return {
+    darkMode: account.darkMode,
+    user: account.user,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
 export const getServerSideProps = serverSidePropsWithAuth({ redirect: true });
