@@ -3,6 +3,9 @@ import axios from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { LoginStateTypes, LoginSetStateTypes } from "@/lib/types";
 
+const emailRegexPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+export const isValidEmail = (email: string) => emailRegexPattern.test(email);
+
 const Title = () => (
   <Paragraph
     sx={{ fontSize: "55px", fomntWeight: "300", mb: "30px", color: "#333" }}
@@ -87,6 +90,11 @@ export const LoginForm = ({
           color: "#323741",
           fontSize: "14px",
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && isValidEmail(currentState?.username)) {
+            logUserIn(currentState, updateState, toggleLoading);
+          }
+        }}
       />
     </Box>
 
@@ -101,7 +109,9 @@ export const LoginForm = ({
         width: "150px",
       }}
       onClick={() => {
-        logUserIn(currentState, updateState, toggleLoading);
+        if (isValidEmail(currentState?.username)) {
+          logUserIn(currentState, updateState, toggleLoading);
+        }
       }}
     >
       Send magic link

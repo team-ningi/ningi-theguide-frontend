@@ -10,4 +10,5 @@ export const sessionOptions = {
 
 export default withIronSessionApiRoute(async function callback(req, res) {
   await req.session.destroy();
+  res.redirect("/");
 }, sessionOptions);
