@@ -9,18 +9,5 @@ export const sessionOptions = {
 };
 
 export default withIronSessionApiRoute(async function callback(req, res) {
-  const {
-    query: { token, session, email },
-  } = req;
-
-  req.session.authToken = token;
-  req.session.email = email;
-  await req.session.save();
-
-  let redirectUrl = `/?mode=verify&e=${btoa(email)}`;
-  if (session) {
-    redirectUrl = `${redirectUrl}&session=${session}`;
-  }
-
-  res.redirect(redirectUrl);
+  await req.session.destroy();
 }, sessionOptions);

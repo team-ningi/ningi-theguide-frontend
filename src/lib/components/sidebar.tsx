@@ -18,6 +18,18 @@ import { useRouter, usePathname } from "next/navigation";
 import { connect } from "react-redux";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { Dispatch } from "redux";
+import axios from "axios";
+
+const destroySession = async () => {
+  try {
+    await axios({
+      method: "post",
+      url: `/api/auth/destroy`,
+    });
+  } catch (e) {
+    console.log("failed to destroy session");
+  }
+};
 
 const items = [
   {
@@ -88,8 +100,8 @@ const MenuItem = ({
     onClick={async () => {
       if (item.logout) {
         await logUserOut();
-        // TODO delete cookie? `${process.env.NEXT_PUBLIC_SECRET_COOKIE_NAME}`
         toggleSidebar(false);
+        await destroySession();
         router.push("/");
       } else {
         toggleSidebar(false);

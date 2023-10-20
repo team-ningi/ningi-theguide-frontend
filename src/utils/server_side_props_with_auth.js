@@ -2,12 +2,6 @@
 import { withIronSessionSsr } from "iron-session/next";
 import { sessionOptions } from "../pages/api/auth/callback";
 import { authTokenVerification } from "./auth";
-import { customAlphabet } from "nanoid";
-
-const nanoid = customAlphabet(
-  "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
-  20
-);
 
 export default ({ redirect = true, generate = true }) =>
   withIronSessionSsr(async function getServerSideProps({ req }) {

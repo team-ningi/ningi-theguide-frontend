@@ -17,7 +17,7 @@ NEXT- >>>
             - ELSE   -> EMBED ✅
           - CREATE EMBEDDING PINECONE (WILL NEED TO LOOK AT WHAT LQ DID FOR BIG FILES) ✅
           - LIST OUT UPLOADS FOR THE USER ❌ - SELECT(s) FILE TO QUERY AGAINST ❌
-          - WHEN CHAT MSG SENDS (replce in memeory VDB) ❌
+          - WHEN CHAT MSG SENDS (replce in memeory VDB) ✅
             -> similarity search at pinecone > return array > send to open ai ✅
 
 
@@ -78,10 +78,11 @@ const Login = ({ setCoreData, darkMode, session }: LoginTypes) => {
 
             if (atob(encoded) === "test@ningi.co.uk") {
               // TODO
-              // TEST ROUTE
+              // E2E TEST ROUTE
               //  window.location.assign("/tests");
+              alert("we are testing E2E baby");
             } else {
-              window.location.assign("/discussions");
+              window.location.assign("/chat");
             }
           }
         }
