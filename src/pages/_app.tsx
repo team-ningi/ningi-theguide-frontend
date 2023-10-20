@@ -29,7 +29,7 @@ const composer =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
     : compose;
 
-const store = configureStore({
+export const store = configureStore({
   reducer: reducers,
   middleware: [sagaMiddleware],
 });

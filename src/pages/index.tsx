@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { Dispatch } from "redux";
 import { Flex, Box, Paragraph } from "theme-ui";
-import Header from "@/lib/components/header";
-import { Spinner } from "@/lib/components/spinner";
+import Header from "../lib/components/header";
+import { Spinner } from "../lib/components/spinner";
 import { connect } from "react-redux";
-import { LoginForm, Waiting, Verify } from "@/lib/components/login";
-import { LoginTypes } from "@/lib/types";
+import { LoginForm, Waiting, Verify } from "../lib/components/login";
+import { LoginTypes } from "../lib/types";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
