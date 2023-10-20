@@ -2,10 +2,24 @@
 import { Box, Flex, Paragraph, Image, Textarea, Button } from "theme-ui";
 import { useEffect, useState, useRef } from "react";
 import ReactSelect from "react-select";
-import axios from "axios";
 import { Spinner } from "./spinner";
 import Identicon from "identicon.js";
 import { PaperPlaneTilt } from "phosphor-react";
+import { chat } from "@/utils/api-helper";
+
+/*
+TODO 
+
+- GET DOCUMENTS
+- GET HISTORY
+
+- SHOW DOCUMENTS ABILITY TO SELECT WHICH ONES TO USE FOR CONTEXT
+- LOAD HISTORY INTO CHAT WINDOW
+  - CREATE HISTORY ON FIRST MESSAGE
+
+
+
+*/
 
 type ChatItem = {
   question: string;
@@ -22,7 +36,7 @@ const InputLabel = ({ title, subtitle, customSX = {} }: any) => (
 const defaultState = {
   loading: false,
   text: "",
-  fileToUse: "ai/example.txt", //"ai/example.txt", // example / ningi
+  documentIds: ["652d3be157c1833f0f918f7f", "652d2926578a740f76271a16"],
 };
 
 // TODO
@@ -42,14 +56,10 @@ const callChatAPI = async (
   updateHistory: any,
   session: any
 ) => {
-  const { text, fileToUse } = state;
+  const { text, documentIds } = state;
   updateState({ ...state, loading: true });
 
-  const { data } = await axios.post("/api/db/chat", {
-    question: text,
-    fileToUse,
-    authToken: session?.authToken,
-  });
+  const { data } = await chat(text, documentIds, session?.authToken);
 
   const { question, answer } = data;
 
