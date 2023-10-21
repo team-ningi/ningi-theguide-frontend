@@ -3,8 +3,8 @@ import React from "react";
 import { Provider } from "react-redux";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import Login from "../src/pages";
-import { store } from "../src/pages/_app";
+import Login from "../../src/pages";
+import { store } from "../../src/pages/_app";
 
 jest.mock("next/font/google", () => ({
   Poppins: () => {},
