@@ -113,6 +113,7 @@ export const LoginForm = ({
           logUserIn(currentState, updateState, toggleLoading);
         }
       }}
+      disabled={!isValidEmail(currentState?.username)}
     >
       Send magic link
     </Button>

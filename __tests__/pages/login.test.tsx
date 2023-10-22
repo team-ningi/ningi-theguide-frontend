@@ -1,10 +1,11 @@
 //@ts-nocheck
 import React from "react";
 import { Provider } from "react-redux";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Login from "../../src/pages";
 import { store } from "../../src/pages/_app";
+import { act } from "react-dom/test-utils";
 
 jest.mock("next/font/google", () => ({
   Poppins: () => {},
@@ -12,12 +13,19 @@ jest.mock("next/font/google", () => ({
 }));
 
 describe("Login", () => {
-  it("Login page is rendered", () => {
-    const { container } = render(
+  it("Login page is rendered", async () => {
+    const { getByText, container } = render(
       <Provider store={store}>
         <Login session={{ email: "", authToken: "" }} />
       </Provider>
     );
+
+    const SignInBtn = getByText("Send magic link");
+    expect(SignInBtn).toHaveAttribute("disabled");
+    await act(async () => {
+      fireEvent.change(email, { target: { value: "test@test.com" } });
+    });
+    expect(SignInBtn).not.toHaveAttribute("disabled");
 
     expect(container).toMatchSnapshot();
 
