@@ -12,44 +12,17 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 /*
 // TODO
 NEXT- >>> 
-          - UPLOAD FILES TO S3  ✅
-            - IF MP3 -> TRANSCRIBE AND EMBED ❌
-            - ELSE   -> EMBED ✅
-          - CREATE EMBEDDING PINECONE (WILL NEED TO LOOK AT WHAT LQ DID FOR BIG FILES) ✅
-          - LIST OUT UPLOADS FOR THE USER ❌ - SELECT(s) FILE TO QUERY AGAINST ❌
-          - WHEN CHAT MSG SENDS (replce in memeory VDB) ✅
-            -> similarity search at pinecone > return array > send to open ai ✅
-
+          - UPLOAD AUDIO FILES
+            - IF MP3 -> TRANSCRIBE AND CREATE EMBED ❌
+              TEXTRACT   CHAT ❌
+              https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
+              https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
 
 // WHEN LOG IN
 //  -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR  ❌
 
-// CHAT UI ✅
-
-// SET UP PINECONE ✅
-
-// UPLOAD FILES  ✅
-// -> goes into database  ✅
-//    -> Embed into pinecone ❌
-
-//  TEXT       CHAT ✅
-//  AUDIO      CHAT ✅
-//  TEXTRACT   CHAT ❌
-    https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
-    https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
-
-// REPORTING  ❌
+// REPORT BUILDER  ❌
 // look at petes wireframes
-
-
-// CYPRESS TESTING
-// SET ENV VAR OF TEST_APPLICATION_TOKEN === 'utgig_E2E_uigikb98687_E2E_5645ry'
-// if this is used bybass the manage checks ( set Authorization header to TEST_APPLICATION_TOKEN in test calls )
-//    This will allow us to do an E2E
-//        1 -> create test stuff
-//        2 -> start the tests, click thru each page
-//        3 -> teardown test stuff
-
 */
 
 const defaultState = {
