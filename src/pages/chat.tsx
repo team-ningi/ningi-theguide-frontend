@@ -35,7 +35,7 @@ const Chat = ({ session, setCoreData, user }: PageTypes) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        <ChatInterface session={session} />
+        {user && <ChatInterface session={session} user={user} />}
       </Wrapper>
     </>
   );

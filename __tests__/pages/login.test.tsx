@@ -29,7 +29,7 @@ describe("Login", () => {
 
     expect(container).toMatchSnapshot();
 
-    const Title = screen.getAllByText(/Ai Adviser/i);
+    const Title = screen.getAllByText(/The Guide/i);
     expect(Title[0]).toBeInTheDocument();
 
     const Email = screen.getAllByText(/Email address/i);

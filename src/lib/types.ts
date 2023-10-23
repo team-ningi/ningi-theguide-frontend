@@ -64,19 +64,17 @@ export type ListItemType = {
   updated_at: string;
 };
 
-export type UserType = [
-  {
-    _id: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-    phone_number: string;
-    address_line1: string;
-    address_line2: string;
-    address_line3: string;
-    role: string;
-  }
-];
+export type UserType = {
+  _id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  address_line1: string;
+  address_line2: string;
+  address_line3: string;
+  role: string;
+};
 
 export type DetailsTypes = {
   setCoreData: (

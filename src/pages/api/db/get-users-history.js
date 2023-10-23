@@ -1,14 +1,13 @@
-//
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { id, authToken } = req.body;
+  const { user_id, authToken } = req.body;
   try {
     const { data } = await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/get-individual-content`,
+      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/get-users-history`,
       data: {
-        id,
+        user_id,
       },
       headers: {
         Authorization: process.env.MANAGE_APPLICATION_TOKEN,

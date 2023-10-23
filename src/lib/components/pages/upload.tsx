@@ -151,7 +151,7 @@ const UploadComponent = ({
   }, [file]);
 
   useEffect(() => {
-    updateState({ ...state, user_id: user[0]?._id });
+    updateState({ ...state, user_id: user?._id });
     return upload?.abort();
   }, []);
 

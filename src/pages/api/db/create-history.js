@@ -1,11 +1,22 @@
+//
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { type, authToken } = req.body;
+  const { user_id, document_ids, question, answer, authToken } = req.body;
   try {
     const { data } = await axios({
-      method: "get",
-      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/get-content?type=${type}`,
+      method: "post",
+      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/create-history`,
+      data: {
+        user_id,
+        history: [
+          {
+            document_ids,
+            question,
+            answer,
+          },
+        ],
+      },
       headers: {
         Authorization: process.env.MANAGE_APPLICATION_TOKEN,
         engageSession: authToken,

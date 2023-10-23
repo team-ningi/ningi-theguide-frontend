@@ -10,7 +10,7 @@ const Title = () => (
   <Paragraph
     sx={{ fontSize: "55px", fomntWeight: "300", mb: "30px", color: "#333" }}
   >
-    Ai Adviser
+    The Guide
   </Paragraph>
 );
 
