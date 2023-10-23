@@ -11,18 +11,25 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
 // TODO
-NEXT- >>> 
-          - UPLOAD AUDIO FILES
-            - IF MP3 -> TRANSCRIBE AND CREATE EMBED ❌
-              TEXTRACT   CHAT ❌
+**** 1
+          - DISPLAY FILE UPLOADS ❌
+            -> Type label filename edit button
+                -> if click edit u can change label
+
+**** 2
+          - UPLOAD AUDIO FILES ❌
+            - IF MP3 -> TRANSCRIBE AND CREATE EMBED
+              TEXTRACT   CHAT
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
 
-// WHEN LOG IN
-//  -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR  ❌
+**** 3
+          - WHEN LOG IN ❌
+            -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR
 
-// REPORT BUILDER  ❌
-// look at petes wireframes
+**** 4            
+          - REPORT BUILDER ❌
+            -> look at petes wireframes
 */
 
 const defaultState = {
