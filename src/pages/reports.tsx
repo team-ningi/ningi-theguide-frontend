@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import Wrapper from "@/lib/components/appWrapper";
-import Upload from "@/lib/components/pages/upload";
+import PageData from "@/lib/components/pages/dashboard";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { connect } from "react-redux";
@@ -33,13 +33,18 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
   return (
     <>
       <Head>
-        <title>Upload</title>
-        <meta name="description" content="AiAdviser upload a file" />
+        <title>{params.type}</title>
+        <meta name="description" content={`Community - ${params.type}`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {state?.ready && user && <Upload user={user} session={session} />}
+        {state?.ready && (
+          <PageData
+            // @ts-ignore
+            user={user}
+          />
+        )}
       </Wrapper>
     </>
   );

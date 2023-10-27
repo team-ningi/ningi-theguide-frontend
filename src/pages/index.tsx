@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Dispatch } from "redux";
-import { Flex, Box, Paragraph } from "theme-ui";
+import { Flex, Box } from "theme-ui";
+import { useRouter } from "next/navigation";
 import Header from "../lib/components/header";
 import { Spinner } from "../lib/components/spinner";
 import { connect } from "react-redux";
@@ -15,6 +16,10 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
           - DISPLAY FILE UPLOADS ❌
             -> Type label filename edit button
                 -> if click edit u can change label
+
+**** 2
+          - UPLOAD DOCX FILES ❌
+            - CHECK CAN EMBED INTO VECTOR DB
 
 **** 2
           - UPLOAD AUDIO FILES ❌
@@ -40,29 +45,34 @@ const defaultState = {
 const Login = ({ setCoreData, darkMode, session }: LoginTypes) => {
   const [currentState, updateState] = useState(defaultState);
   const [loading, toggleLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
       toggleLoading(true);
       try {
-        const queryString = window.location.href;
-        const decodedQueryString = decodeURIComponent(queryString);
-        const url = new URL(decodedQueryString);
-        const mode = url.searchParams.get("mode");
-        const encoded = url?.search?.split("=")[2];
+        if (session?.email) {
+          router.push("/dashboard");
+        } else {
+          const queryString = window.location.href;
+          const decodedQueryString = decodeURIComponent(queryString);
+          const url = new URL(decodedQueryString);
+          const mode = url.searchParams.get("mode");
+          const encoded = url?.search?.split("=")[2];
 
-        if (encoded) {
-          if (mode === "verify") {
-            updateState({ ...currentState, mode: "verify" });
-            await setCoreData(atob(encoded), session, false);
+          if (encoded) {
+            if (mode === "verify") {
+              updateState({ ...currentState, mode: "verify" });
+              await setCoreData(atob(encoded), session, false);
 
-            if (atob(encoded) === "test@ningi.co.uk") {
-              // TODO
-              // E2E TEST ROUTE
-              //  window.location.assign("/tests");
-              alert("we are testing E2E baby");
-            } else {
-              window.location.assign("/chat");
+              if (atob(encoded) === "test@ningi.co.uk") {
+                // TODO
+                // E2E TEST ROUTE
+                //  window.location.assign("/tests");
+                alert("we are testing E2E baby");
+              } else {
+                window.location.assign("/chat");
+              }
             }
           }
         }

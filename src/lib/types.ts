@@ -5,6 +5,17 @@ export type SetLoadingType = (loading: boolean) => {
   loading: boolean;
 };
 
+export type DocType = {
+  custom_filename: string;
+  emedding_created: boolean;
+  file_type: string;
+  file_url: string;
+  label: string;
+  original_filename: string;
+  saved_filename: string;
+  user_id: string;
+};
+
 export type SessionType = { email: string; authToken: string };
 
 export type stateType = {
@@ -125,11 +136,12 @@ export type PageTypes = {
   setLoading: SetLoadingType;
 };
 
-export type AddContentStateType = {
+export type DashboardStateType = {
   user_id: string;
   customFilename: string;
   label: string;
   showSuccess: boolean;
+  showUpload: boolean;
 };
 
 export type EditContentStateType = {

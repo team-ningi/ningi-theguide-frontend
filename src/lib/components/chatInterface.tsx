@@ -53,7 +53,7 @@ const callChatAPI = async (
 
   if (!documentIds?.length) {
     // TODO
-    // show msg ... 'select at least one doc'
+    // show MSG ... 'select at least one doc'
     return;
   }
   updateState({ ...state, loading: true });

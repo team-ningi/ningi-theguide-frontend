@@ -3,7 +3,6 @@ import {
   House,
   FilePdf,
   Chat,
-  UploadSimple,
   SignOut,
   CaretRight,
   List,
@@ -47,14 +46,8 @@ const items = [
   {
     name: "Reports",
     icon: <FilePdf size={24} />,
-    url: "/events",
+    url: "/reports",
     testId: "sidebar-reports",
-  },
-  {
-    name: "Upload",
-    icon: <UploadSimple size={24} />,
-    url: "/upload",
-    testId: "sidebar-upload",
   },
   {
     name: "Logout",
