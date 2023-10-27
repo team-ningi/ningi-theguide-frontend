@@ -140,8 +140,7 @@ export type DashboardStateType = {
   user_id: string;
   customFilename: string;
   label: string;
-  showSuccess: boolean;
-  showUpload: boolean;
+  mode: string;
 };
 
 export type EditContentStateType = {

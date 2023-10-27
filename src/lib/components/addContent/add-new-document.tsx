@@ -7,6 +7,7 @@ import {
   SetLoadingType,
   SessionType,
 } from "@/lib/types";
+import { XCircle } from "phosphor-react";
 import {
   ChangeEventHandler,
   Dispatch,
@@ -26,12 +27,7 @@ const s3 = new S3({
   region: process.env.NEXT_PUBLIC_AWS_KEY_REGION,
 });
 
-const defaultState = {
-  customFilename: "",
-  user_id: "",
-  label: "",
-  showSuccess: false,
-};
+const supportedDocTypes = ["txt", "pdf", "docx"];
 
 const defaultErrorState = {
   document_url: false,
@@ -162,7 +158,6 @@ export const AddNewForm = ({
   user: UserType;
   session: SessionType;
 }) => {
-  // const [state, updateState] = useState(defaultState);
   const [errorState, updateErrorState] =
     useState<AddContentErrorStateType>(defaultErrorState);
   const [file, setFile] = useState<File | null>(null);
@@ -232,7 +227,7 @@ export const AddNewForm = ({
         console.log(user_id, file_url, _id, file_type);
 
         try {
-          if (["txt", "pdf"].includes(file_type)) {
+          if (supportedDocTypes.includes(file_type)) {
             await createEmbeddings(
               user_id,
               file_url,
@@ -254,9 +249,11 @@ export const AddNewForm = ({
         setUpload(null);
         updateState({
           ...state,
-          showSuccess: true,
+          mode: "success",
         });
         await setLoading(false);
+
+        setTimeout(() => updateState({ ...state, mode: "start" }), 3000);
       }
     } catch (err) {
       updateState({
@@ -273,112 +270,44 @@ export const AddNewForm = ({
   };
 
   return (
-    <Box
+    <Flex
       className="sectionContainer"
       sx={{
-        width: "400px",
-        maxWidth: "400px",
+        width: "800px",
         opacity: 1,
-        mt: "100px",
-        minHeight: "600px",
+        mt: "50px",
+        minHeight: "50px",
         textAlign: "center",
         backgroundColor: "transparent",
         border: "0px solid blue",
-        ml: "50px",
         "@media screen and (max-width: 1275px)": { width: "600px" },
-        "@media screen and (max-width: 700px)": {
-          width: "100%",
-          border: "0px solid firebrick",
-          ml: "auto",
-          mr: "auto",
-        },
-        "@media screen and (max-width: 550px)": {
-          width: "250px",
-          ml: "60px",
-        },
       }}
     >
-      <Paragraph
-        sx={{
-          textAlign: "center",
-          fontWeight: "500",
-          fontSize: "19px",
-          mb: "30px",
-          color: "#444",
-        }}
-      >
-        Add a document to your library
-      </Paragraph>
-
-      {state?.showSuccess && (
+      {state?.mode === "success" && (
         <>
-          <Paragraph sx={{ mt: "100px", color: "green" }}>
+          <Paragraph
+            sx={{
+              mt: "0px",
+              color: "green",
+              fontWeight: "500",
+              textAlign: "center",
+              width: "100%",
+            }}
+          >
             Your content has been successfully created 🚀
           </Paragraph>
         </>
       )}
 
-      {!state?.showSuccess && (
+      {state?.mode === "start" && (
         <Flex
           sx={{
-            flexDirection: "column",
-            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "flex-end",
             width: "100%",
+            height: "80px",
           }}
         >
-          <InputLabel
-            customSX={{
-              textAlign: "left",
-              width: "400px",
-            }}
-            title="Label"
-            subtitle=" *"
-          />
-          <Input
-            sx={{
-              backgroundColor: "white",
-              height: "45px",
-              borderRadius: 0,
-              borderColor: "inputBorder",
-              width: "400px",
-              mt: "10px",
-              mb: "20px",
-              border: errorState.label
-                ? "1px firebrick solid"
-                : "1px solid #E8E8E8",
-            }}
-            type="text"
-            data-testid="add-content-label"
-            id="add-content-label"
-            name="add-content-label"
-            placeholder=""
-            value={state.label}
-            onChange={(e: { target: { value: string } }) => {
-              updateState({ ...state, label: e.target.value });
-              updateErrorState({ ...errorState, label: false });
-            }}
-          />
-
-          <Flex
-            sx={{
-              alignItems: "flex-start",
-              width: "400px",
-              mb: "20px",
-              border: errorState.document_url ? "1px firebrick solid" : "unset",
-            }}
-          >
-            <input
-              style={{ width: "100%", color: "#444" }}
-              type="file"
-              onChange={handleFileChange}
-            />
-          </Flex>
-
-          {errorState?.error_msg !== "" && (
-            <Paragraph sx={{ mb: "20px", color: "firebrick" }}>
-              {errorState?.error_msg}
-            </Paragraph>
-          )}
           <Button
             variant="primary"
             sx={{
@@ -386,8 +315,110 @@ export const AddNewForm = ({
               cursor: "pointer",
               mt: "0px",
               alignSelf: "flex-end",
-              mr: "0px",
-              width: "150px",
+              mb: "5px",
+              height: "40px",
+              width: "100px",
+              fontSize: "14px",
+            }}
+            onClick={() => updateState({ ...state, mode: "add" })}
+          >
+            Add File
+          </Button>
+        </Flex>
+      )}
+
+      {state?.mode === "add" && (
+        <Flex
+          sx={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "80px",
+            border: "0px solid red",
+            position: "relative",
+          }}
+        >
+          <Paragraph
+            sx={{
+              position: "absolute",
+              top: "-10px",
+              right: 0,
+              fontWeight: "400",
+              color: "#555",
+              cursor: "pointer",
+              zIndex: 999,
+            }}
+            onClick={() => updateState({ ...state, mode: "start" })}
+          >
+            <XCircle size={18} weight="fill" />
+          </Paragraph>
+          <Box>
+            <InputLabel
+              customSX={{
+                textAlign: "left",
+                width: "300px",
+              }}
+              title="Label"
+              subtitle=" *"
+            />
+            <Input
+              sx={{
+                backgroundColor: "white",
+                height: "40px",
+                borderRadius: 0,
+                borderColor: "inputBorder",
+                width: "300px",
+                mt: "10px",
+                mb: "20px",
+                border: errorState.label
+                  ? "1px firebrick solid"
+                  : "1px solid #E8E8E8",
+              }}
+              type="text"
+              data-testid="add-content-label"
+              id="add-content-label"
+              name="add-content-label"
+              placeholder=""
+              value={state.label}
+              onChange={(e: { target: { value: string } }) => {
+                updateState({ ...state, label: e.target.value });
+                updateErrorState({ ...errorState, label: false });
+              }}
+            />
+          </Box>
+          <Box
+            sx={{
+              width: "300px",
+              ml: "20px",
+              border: errorState.document_url ? "1px firebrick solid" : "unset",
+            }}
+          >
+            <InputLabel
+              customSX={{
+                textAlign: "left",
+                width: "300px",
+              }}
+              title="File"
+              subtitle=" *"
+            />
+            <input
+              style={{ width: "100%", color: "#444", marginTop: "7px" }}
+              type="file"
+              onChange={handleFileChange}
+            />
+          </Box>
+
+          <Button
+            variant="primary"
+            sx={{
+              color: "white",
+              cursor: "pointer",
+              mt: "0px",
+              alignSelf: "flex-end",
+              mb: "5px",
+              height: "40px",
+              width: "100px",
+              fontSize: "14px",
             }}
             onClick={handleUpload}
           >
@@ -395,6 +426,6 @@ export const AddNewForm = ({
           </Button>
         </Flex>
       )}
-    </Box>
+    </Flex>
   );
 };

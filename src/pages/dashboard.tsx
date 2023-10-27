@@ -12,7 +12,7 @@ import { SessionType, UserType, PageTypes } from "../lib/types";
 
 const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [state, updateContent] = useState<{ ready: boolean; user: UserType }>({
-    ready: false,
+    ready: false, //@ts-ignore
     user: null,
   });
   const params = useParams();

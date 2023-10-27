@@ -14,16 +14,19 @@ import {
 import {
   FilePdf,
   FileText,
+  FileDoc,
   CheckCircle,
   WarningCircle,
   CaretRight,
   CaretDown,
+  DownloadSimple,
 } from "phosphor-react";
 import { getUserDocuments } from "@/utils/api-helper";
 import { AddNewForm } from "@/lib/components/addContent/add-new-document";
 import moment from "moment";
 
 const IconMap = {
+  docx: <FileDoc size={22} />,
   txt: <FileText size={22} />,
   pdf: <FilePdf size={22} />,
 };
@@ -89,7 +92,7 @@ const FileKeyValue = ({
   theValue?: string;
   isLink?: string;
 }) => (
-  <Flex sx={{ width: "100%", ml: "26px", mb: "5px" }}>
+  <Flex sx={{ width: "100%", ml: "26px", mb: "8px" }}>
     <Paragraph
       sx={{
         fontWeight: "300",
@@ -107,17 +110,21 @@ const FileKeyValue = ({
       </Paragraph>
     )}
     {isLink && (
-      <Paragraph
-        sx={{
-          fontWeight: "300",
-          fontSize: "14px",
-          ml: "20px",
-          cursor: "pointer",
-        }}
-        onClick={() => window.location.assign(`${isLink}`)}
-      >
-        Download - put download icon here
-      </Paragraph>
+      <>
+        <Paragraph
+          sx={{
+            fontWeight: "300",
+            fontSize: "14px",
+            ml: "20px",
+            mr: "5px",
+            cursor: "pointer",
+          }}
+          onClick={() => window.location.assign(`${isLink}`)}
+        >
+          Click Here{" "}
+        </Paragraph>
+        <DownloadSimple size={13} style={{ margin: "0 0 0 0", padding: 0 }} />
+      </>
     )}
   </Flex>
 );
@@ -201,7 +208,7 @@ const TableItem = ({ item, i }: { item: any; i: number }) => {
             theValue={moment(item.updated_at).format("dddd, MMMM Do YYYY")}
           />
           <FileKeyValue theKey="File Type" theValue={item.file_type} />
-          <FileKeyValue theKey="Original File" isLink={item.file_url} />
+          <FileKeyValue theKey="Download Original" isLink={item.file_url} />
           <FileKeyValue
             theKey="Original Filename"
             theValue={item.original_filename}
@@ -235,11 +242,11 @@ const TableItem = ({ item, i }: { item: any; i: number }) => {
 };
 
 const defaultState = {
-  showUpload: false,
   showSuccess: false,
   user_id: "",
   customFilename: "",
   label: "",
+  mode: "start", // start | add | success | error
 };
 
 const DashboardComponent = ({
@@ -264,9 +271,9 @@ const DashboardComponent = ({
         "all"
       );
 
+      // TODO - PUT BACK IN
       updateDocs(data);
       updateState({ ...state, user_id: user?._id });
-      console.log(data);
       setLoading(false);
     })();
   }, []);
@@ -296,6 +303,14 @@ const DashboardComponent = ({
         },
       }}
     >
+      <AddNewForm
+        state={state}
+        updateState={updateState}
+        setLoading={setLoading}
+        user={user}
+        session={session}
+      />
+
       {docs?.length > 0 && (
         <Box
           style={{
@@ -315,15 +330,21 @@ const DashboardComponent = ({
         </Box>
       )}
 
-      {docs?.length < 1 && <Paragraph>Upload docs first</Paragraph>}
-
-      <AddNewForm
-        state={state}
-        updateState={updateState}
-        setLoading={setLoading}
-        user={user}
-        session={session}
-      />
+      {docs?.length < 1 && (
+        <Paragraph
+          sx={{
+            width: "100%",
+            textAlign: "left",
+            fontSize: "16px",
+            fontWeight: "500",
+            mt: "30px",
+            color: "#555",
+          }}
+        >
+          You currently have no documents uploaded.
+          {/* TODO ADD NICE IMAGE HERE */}
+        </Paragraph>
+      )}
     </Box>
   );
 };

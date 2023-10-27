@@ -27,10 +27,10 @@ const Theme = {
     },
   },
   fonts: {
-    body: 'Roboto, "Open Sans", sans-serif',
-    heading: 'Roboto, "Open Sans", sans-serif',
-    monospace: 'Roboto, "Open Sans", sans-serif',
-    label: 'Roboto, "Open Sans", sans-serif',
+    body: 'Poppins, "Open Sans", sans-serif',
+    heading: 'Poppins, "Open Sans", sans-serif',
+    monospace: 'Poppins, "Open Sans", sans-serif',
+    label: 'Poppins, "Open Sans", sans-serif',
   },
   fontWeights: {
     body: 400,

@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <ThemeUIProvider theme={theme}>
-        <main className={roboto.className}>
+        <main className={poppins.className}>
           <Component {...pageProps} />
         </main>
       </ThemeUIProvider>
