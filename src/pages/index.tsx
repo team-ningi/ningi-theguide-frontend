@@ -12,14 +12,6 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
 // TODO
-**** 1
-          - DISPLAY FILE UPLOADS ❌
-            -> Type label filename edit button
-                -> if click edit u can change label
-
-**** 2
-          - UPLOAD DOCX FILES ❌
-            - CHECK CAN EMBED INTO VECTOR DB
 
 **** 2
           - UPLOAD AUDIO FILES ❌

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Paragraph, Flex, Box, Input, Button } from "theme-ui";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -30,7 +31,7 @@ const s3 = new S3({
 const supportedDocTypes = ["txt", "pdf", "docx"];
 
 const defaultErrorState = {
-  document_url: false,
+  file_url: false,
   label: false,
   customFilename: false,
   error_msg: "",
@@ -44,31 +45,45 @@ const validateForm = async (
   setLoading: (loading: boolean) => {
     type: string;
     loading: boolean;
+  },
+  hideNotification: () => {
+    type: string;
+  },
+  showNotification: (data: any) => {
+    type: string;
+    data: any;
   }
 ) => {
   let errors = 0;
   const errObject = {
-    title: false,
+    label: false,
     content: false,
-    image_url: false,
+    file_url: false,
   };
 
   if (!state.label || state.label.length < 3) {
     errors++;
-    errObject.title = true;
+    errObject.label = true;
   }
 
   if (!file) {
     errors++;
-    errObject.image_url = true;
+    errObject.file_url = true;
   }
 
   if (errors > 0) {
     updateErrorState({
       ...errorState,
       ...errObject,
-      error_msg: "There are errors in your data",
     });
+
+    console.log({ errObject });
+
+    showNotification({
+      text: "There are errors in your data.",
+      type: "error",
+    });
+    setTimeout(() => hideNotification(), 3000);
     await setLoading(false);
   } else {
     updateErrorState({ ...defaultErrorState });
@@ -151,19 +166,26 @@ export const AddNewForm = ({
   updateState,
   user,
   session,
+  hideNotification,
+  showNotification,
 }: {
   setLoading: SetLoadingType;
   state: DashboardStateType;
   updateState: (value: SetStateAction<DashboardStateType>) => void;
   user: UserType;
   session: SessionType;
+  hideNotification: () => {
+    type: string;
+  };
+  showNotification: (data: any) => {
+    type: string;
+    data: any;
+  };
 }) => {
   const [errorState, updateErrorState] =
     useState<AddContentErrorStateType>(defaultErrorState);
   const [file, setFile] = useState<File | null>(null);
   const [upload, setUpload] = useState<S3.ManagedUpload | null>(null);
-
-  const router = useRouter();
 
   useEffect(() => {
     setUpload(null);
@@ -188,7 +210,9 @@ export const AddNewForm = ({
         errorState,
         updateErrorState,
         file,
-        setLoading
+        setLoading,
+        hideNotification,
+        showNotification
       );
 
       if (validatedForm) {
@@ -247,22 +271,20 @@ export const AddNewForm = ({
         //@ts-ignore
         // document.getElementById("add-content-label").value = null;
         setUpload(null);
-        updateState({
-          ...state,
-          mode: "success",
-        });
-        await setLoading(false);
 
-        setTimeout(() => updateState({ ...state, mode: "start" }), 3000);
+        showNotification({
+          text: "Your upload was a success",
+          type: "success",
+        });
+        setTimeout(() => hideNotification(), 3000);
+        setLoading(false);
       }
     } catch (err) {
-      updateState({
-        ...state,
+      showNotification({
+        text: "Your new document has NOT been saved.",
+        type: "error",
       });
-      updateErrorState({
-        ...errorState,
-        error_msg: `Your new document has NOT been saved.`,
-      });
+      setTimeout(() => hideNotification(), 3000);
 
       await setLoading(false);
       console.error(err);
@@ -348,11 +370,18 @@ export const AddNewForm = ({
               cursor: "pointer",
               zIndex: 999,
             }}
-            onClick={() => updateState({ ...state, mode: "start" })}
+            onClick={() => {
+              updateState({ ...state, mode: "start" });
+              updateErrorState({ ...defaultErrorState });
+            }}
           >
             <XCircle size={18} weight="fill" />
           </Paragraph>
-          <Box>
+          <Box
+            sx={{
+              border: errorState.label ? "1px firebrick solid" : "unset",
+            }}
+          >
             <InputLabel
               customSX={{
                 textAlign: "left",
@@ -370,9 +399,7 @@ export const AddNewForm = ({
                 width: "300px",
                 mt: "10px",
                 mb: "20px",
-                border: errorState.label
-                  ? "1px firebrick solid"
-                  : "1px solid #E8E8E8",
+                border: "1px solid #E8E8E8",
               }}
               type="text"
               data-testid="add-content-label"
@@ -390,7 +417,7 @@ export const AddNewForm = ({
             sx={{
               width: "300px",
               ml: "20px",
-              border: errorState.document_url ? "1px firebrick solid" : "unset",
+              border: errorState.file_url ? "1px firebrick solid" : "unset",
             }}
           >
             <InputLabel

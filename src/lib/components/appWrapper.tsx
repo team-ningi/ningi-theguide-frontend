@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Spinner } from "@/lib/components/spinner";
 import { ReactNode } from "react";
 import { Dispatch } from "redux";
+import NotificationWidget from "./notifications";
 
 const Wrapper = ({
   children,
@@ -24,34 +25,8 @@ const Wrapper = ({
         position: "relative",
       }}
     >
-      {/* <Box
-        sx={{
-          height: "100vh",
-          width: "1050px",
-          backgroundColor: "#F2F2FF",
-          flexDirection: "column",
-          backgroundImage: `url(/bg2.png)`,
-          backgroundSize: "cover",
-          position: "absolute",
-          right: "0",
-
-          "@media screen and (max-width: 1450px)": {
-            width: "750px",
-            backgroundPosition: "left",
-          },
-          "@media screen and (max-width: 1150px)": {
-            width: "650px",
-            backgroundPosition: "left",
-          },
-          "@media screen and (max-width: 950px)": {
-            width: "600px",
-          },
-          "@media screen and (max-width: 550px)": {
-            backgroundImage: "unset",
-          },
-        }}
-      /> */}
       {loading && <Spinner />}
+      <NotificationWidget />
 
       <Header />
 

@@ -253,10 +253,19 @@ const DashboardComponent = ({
   user,
   session,
   setLoading,
+  hideNotification,
+  showNotification,
 }: {
   user: UserType;
   session: SessionType;
   setLoading: SetLoadingType;
+  hideNotification: () => {
+    type: string;
+  };
+  showNotification: (data: any) => {
+    type: string;
+    data: any;
+  };
 }) => {
   const [state, updateState] = useState<DashboardStateType>(defaultState);
   const [docs, updateDocs] = useState<DocType[]>([]);
@@ -271,7 +280,6 @@ const DashboardComponent = ({
         "all"
       );
 
-      // TODO - PUT BACK IN
       updateDocs(data);
       updateState({ ...state, user_id: user?._id });
       setLoading(false);
@@ -309,6 +317,8 @@ const DashboardComponent = ({
         setLoading={setLoading}
         user={user}
         session={session}
+        hideNotification={hideNotification}
+        showNotification={showNotification}
       />
 
       {docs?.length > 0 && (
@@ -351,6 +361,9 @@ const DashboardComponent = ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setLoading: (loading: boolean) => dispatch({ type: "SET_LOADING", loading }),
+  hideNotification: () => dispatch({ type: "HIDE_NOTIFICATION" }),
+  showNotification: (data: any) =>
+    dispatch({ type: "SHOW_NOTIFICATION", data }),
 });
 
 const mapStateToProps = (state: { account: {} }) => {

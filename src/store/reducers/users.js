@@ -30,16 +30,29 @@ const initialState = {
   error: null,
   versionsConfig: null,
   isMobile: mobileCheck(),
-  articles: [],
-  comments: [],
-  discussions: [],
-  events: [],
-  groups: [],
-  likes: [],
+  notification: {
+    show: false,
+    customText: "",
+    type: "success", // success | error | gentle | warning
+  },
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case "HIDE_NOTIFICATION":
+      return {
+        ...state,
+        notification: { show: false, customText: "", type: "success" },
+      };
+    case "SHOW_NOTIFICATION":
+      return {
+        ...state,
+        notification: {
+          show: true,
+          customText: action?.data?.text,
+          type: action?.data?.type,
+        },
+      };
     case "TOGGLE_DARK_MODE":
       return {
         ...state,

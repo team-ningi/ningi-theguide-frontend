@@ -161,7 +161,7 @@ export type EditContentStateType = {
 
 export type AddContentErrorStateType = {
   customFilename: boolean;
-  document_url: boolean;
+  file_url: boolean;
   label: boolean;
   error_msg: string;
 };
