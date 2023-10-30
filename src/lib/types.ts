@@ -142,6 +142,7 @@ export type DashboardStateType = {
   label: string;
   mode: string;
   filters: boolean;
+  docsFound: boolean;
 };
 
 export type EditContentStateType = {
