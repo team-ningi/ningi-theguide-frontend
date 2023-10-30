@@ -573,7 +573,7 @@ const DashboardComponent = ({
         hideNotification={hideNotification}
         showNotification={showNotification}
       />
-      {state.mode === "start" && state?.docsFound && (
+      {state?.docsFound && (
         <Paragraph
           sx={{
             position: "absolute",

@@ -296,22 +296,6 @@ export const AddNewForm = ({
         "@media screen and (max-width: 1275px)": { width: "600px" },
       }}
     >
-      {state?.mode === "success" && (
-        <>
-          <Paragraph
-            sx={{
-              mt: "0px",
-              color: "green",
-              fontWeight: "500",
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            Your content has been successfully created 🚀
-          </Paragraph>
-        </>
-      )}
-
       {state?.mode === "start" && (
         <Flex
           sx={{
@@ -336,7 +320,7 @@ export const AddNewForm = ({
             }}
             onClick={() => updateState({ ...state, mode: "add" })}
           >
-            Add File
+            Add
           </Button>
         </Flex>
       )}
@@ -345,7 +329,7 @@ export const AddNewForm = ({
         <Flex
           sx={{
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             width: "100%",
             height: "90px",
             mt: "30px",
@@ -409,7 +393,7 @@ export const AddNewForm = ({
           </Box>
           <Box
             sx={{
-              width: "300px",
+              width: "380px",
               ml: "20px",
               border: errorState.file_url ? "1px firebrick solid" : "unset",
             }}
@@ -418,7 +402,7 @@ export const AddNewForm = ({
               customSX={{
                 textAlign: "left",
                 width: "300px",
-                mt: "18px",
+                mt: "20px",
               }}
               title="File (pdf, txt, docx)"
               subtitle=" *"
