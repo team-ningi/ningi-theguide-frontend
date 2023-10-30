@@ -5,6 +5,14 @@ export type SetLoadingType = (loading: boolean) => {
   loading: boolean;
 };
 
+export type ShowNotificationType = (data: any) => {
+  type: string;
+  data: any;
+};
+export type HideNotificationType = () => {
+  type: string;
+};
+
 export type DocType = {
   custom_filename: string;
   emedding_created: boolean;
@@ -134,6 +142,8 @@ export type PageTypes = {
   session: SessionType;
   user: UserType;
   setLoading: SetLoadingType;
+  showNotification: ShowNotificationType;
+  hideNotification: HideNotificationType;
 };
 
 export type DashboardStateType = {

@@ -12,6 +12,7 @@ import {
   createHistory,
   updateHistory as updateHistoryAPI,
 } from "@/utils/api-helper";
+import { HideNotificationType, ShowNotificationType } from "../types";
 
 type ChatItem = {
   question: string;
@@ -47,13 +48,18 @@ const callChatAPI = async (
   history: any,
   updateHistory: any,
   session: any,
-  user_id: string
+  user_id: string,
+  showNotification: any,
+  hideNotification: any
 ) => {
   const { text, documentIds } = state;
 
   if (!documentIds?.length) {
-    // TODO
-    // show MSG ... 'select at least one doc'
+    showNotification({
+      text: "You must select at least 1 document.",
+      type: "error",
+    });
+    setTimeout(() => hideNotification(), 3000);
     return;
   }
   updateState({ ...state, loading: true });
@@ -201,7 +207,17 @@ const ChatItem = ({
   </Flex>
 );
 
-const ChatInterface = ({ session, user }: { session: any; user: any }) => {
+const ChatInterface = ({
+  session,
+  user,
+  showNotification,
+  hideNotification,
+}: {
+  session: any;
+  user: any;
+  showNotification: ShowNotificationType;
+  hideNotification: HideNotificationType;
+}) => {
   const [history, updateHistory] = useState([]);
   const [documents, updateDocuments] = useState([]);
   const [state, updateState] = useState(defaultState);
@@ -364,7 +380,9 @@ const ChatInterface = ({ session, user }: { session: any; user: any }) => {
                       history,
                       updateHistory,
                       session,
-                      user?._id
+                      user?._id,
+                      showNotification,
+                      hideNotification
                     );
                   }
                 }}
@@ -407,7 +425,9 @@ const ChatInterface = ({ session, user }: { session: any; user: any }) => {
                         history,
                         updateHistory,
                         session,
-                        user?._id
+                        user?._id,
+                        showNotification,
+                        hideNotification
                       );
                     }
                   }}

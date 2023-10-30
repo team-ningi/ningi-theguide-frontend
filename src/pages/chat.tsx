@@ -11,7 +11,13 @@ import { PageTypes, SessionType, UserType } from "@/lib/types";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 
-const Chat = ({ session, setCoreData, user }: PageTypes) => {
+const Chat = ({
+  session,
+  setCoreData,
+  user,
+  showNotification,
+  hideNotification,
+}: PageTypes) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -35,7 +41,14 @@ const Chat = ({ session, setCoreData, user }: PageTypes) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {user && <ChatInterface session={session} user={user} />}
+        {user && (
+          <ChatInterface
+            session={session}
+            user={user}
+            showNotification={showNotification}
+            hideNotification={hideNotification}
+          />
+        )}
       </Wrapper>
     </>
   );
@@ -52,6 +65,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
       type: "REFRESH_CORE_DATA",
       action: { email, session, keepLoadingSpinner },
     }),
+  hideNotification: () => dispatch({ type: "HIDE_NOTIFICATION" }),
+  showNotification: (data: any) =>
+    dispatch({ type: "SHOW_NOTIFICATION", data }),
 });
 
 const mapStateToProps = (state: {
