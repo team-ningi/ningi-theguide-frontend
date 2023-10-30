@@ -1,5 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Paragraph, Flex } from "theme-ui";
+import { Box, Paragraph, Flex, Input } from "theme-ui";
+import ReactSelect from "react-select";
+import { debounce } from "debounce";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -24,6 +26,7 @@ import {
 import { getUserDocuments } from "@/utils/api-helper";
 import { AddNewForm } from "@/lib/components/addContent/add-new-document";
 import moment from "moment";
+import axios from "axios";
 
 const IconMap = {
   docx: <FileDoc size={22} />,
@@ -247,6 +250,262 @@ const defaultState = {
   customFilename: "",
   label: "",
   mode: "start", // start | add | success | error
+  searchLabel: "",
+  searchEmbedded: "all",
+  searchFileType: "all",
+  filters: false,
+};
+
+const InputLabel = ({
+  title,
+  subtitle,
+  customSX = {},
+}: {
+  title: string;
+  subtitle: string;
+  customSX: {};
+}) => (
+  <Paragraph
+    sx={{
+      color: "#444",
+      fontSize: "14px",
+      mb: "3px",
+      mt: "10px",
+      ...customSX,
+    }}
+  >
+    {title}
+    <span style={{ color: "firebrick" }}>{subtitle}</span>
+  </Paragraph>
+);
+
+/*
+: "",
+  searchEmbedded: "all",
+  searchFileType: "all",
+
+*/
+const filterDocuments = async (
+  state: any,
+  updateState: any,
+  session: SessionType,
+  updateDocs: any
+) => {
+  const { searchLabel, searchEmbedded, searchFileType } = state;
+  let body = {};
+  if (searchFileType !== "all") {
+    //@ts-ignore
+    body.file_type = searchFileType;
+  }
+  //@ts-ignore
+  body.embedded = searchEmbedded;
+
+  const { data } = await axios({
+    method: "post",
+    url: "/api/db/search-documents",
+    data: {
+      search: searchLabel,
+      limit: 100,
+      skip: 0,
+      authToken: session?.authToken,
+      ...body,
+    },
+  });
+
+  updateDocs(data);
+};
+
+const Filters = ({
+  state,
+  updateState,
+  session,
+  updateDocs,
+}: {
+  state: any;
+  updateState: any;
+  session: SessionType;
+  updateDocs: any;
+}) => {
+  const handleLabelChange = debounce(async (e: any) => {
+    const tempState = { ...state, searchLabel: e.target.value };
+    updateState(tempState);
+    await filterDocuments(tempState, updateState, session, updateDocs);
+  }, 500);
+  return (
+    <Flex
+      sx={{
+        border: "0px solid red",
+        width: "800px",
+        mt: "0px",
+        height: "80px",
+        alignItems: "flex-start",
+      }}
+    >
+      {state.mode === "start" && (
+        <>
+          <Box>
+            <InputLabel
+              customSX={{
+                textAlign: "left",
+                width: "200px",
+              }}
+              title="Label"
+              subtitle=""
+            />
+            <Input
+              sx={{
+                backgroundColor: "white",
+                height: "40px",
+                borderRadius: 0,
+                borderColor: "inputBorder",
+                width: "200px",
+                mt: "0px",
+                mb: "20px",
+                border: "1px solid lightgrey",
+                fontSize: "14px",
+                color: "rgb(128, 128, 128)",
+                fontStyle: "normal",
+              }}
+              type="text"
+              data-testid="searchLabel"
+              id="searchLabel"
+              name="searchLabel"
+              placeholder=""
+              onChange={handleLabelChange}
+            />
+          </Box>
+          <Box>
+            <InputLabel
+              customSX={{
+                textAlign: "left",
+                width: "200px",
+                marginLeft: "15px",
+              }}
+              title="Embedded"
+              subtitle=""
+            />
+            <ReactSelect
+              value={{
+                value:
+                  state?.searchEmbedded !== "all"
+                    ? state?.searchEmbedded
+                      ? "true"
+                      : "false"
+                    : "all",
+                label:
+                  state?.searchEmbedded !== "all"
+                    ? state?.searchEmbedded
+                      ? "true"
+                      : "false"
+                    : "all",
+              }}
+              onChange={async (values: any) => {
+                const tempState = { ...state, searchEmbedded: values?.value };
+                updateState(tempState);
+                await filterDocuments(
+                  tempState,
+                  updateState,
+                  session,
+                  updateDocs
+                );
+              }}
+              placeholder="All"
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: "200px",
+                  fontSize: "14px",
+                  outline: "none",
+                  minHeight: "40px",
+                  marginLeft: "15px",
+                  textAlign: "left",
+                }),
+              }}
+              options={[
+                { value: "all", label: "All" },
+                { value: false, label: "False" },
+                { value: true, label: "True" },
+              ]}
+            />
+          </Box>
+          <Box>
+            <InputLabel
+              customSX={{
+                textAlign: "left",
+                width: "200px",
+                marginLeft: "15px",
+              }}
+              title="File type"
+              subtitle=""
+            />
+            <ReactSelect
+              value={{
+                value: state?.searchFileType,
+                label: state?.searchFileType,
+              }}
+              onChange={async (values: any) => {
+                const tempState = { ...state, searchFileType: values?.value };
+                updateState(tempState);
+                await filterDocuments(
+                  tempState,
+                  updateState,
+                  session,
+                  updateDocs
+                );
+              }}
+              placeholder="All"
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  width: "200px",
+                  fontSize: "14px",
+                  outline: "none",
+                  minHeight: "40px",
+                  marginLeft: "15px",
+                  textAlign: "left",
+                }),
+              }}
+              options={[
+                { value: "all", label: "All" },
+                { value: "txt", label: "Txt" },
+                { value: "docx", label: "Docx" },
+                { value: "pdf", label: "PDF" },
+              ]}
+            />
+          </Box>
+          <Paragraph
+            sx={{
+              ml: "20px",
+              mt: "40px",
+              color: "#666",
+              fontSize: "13px",
+              cursor: "pointer",
+            }}
+            onClick={async () => {
+              const tempState = {
+                ...state,
+                searchLabel: "",
+                searchEmbedded: "all",
+                searchFileType: "all",
+                filters: false,
+              };
+              updateState(tempState);
+              await filterDocuments(
+                tempState,
+                updateState,
+                session,
+                updateDocs
+              );
+              // @ts-ignore
+              document.getElementById("searchLabel").value = null;
+            }}
+          >
+            clear
+          </Paragraph>
+        </>
+      )}
+    </Flex>
+  );
 };
 
 const DashboardComponent = ({
@@ -292,7 +551,7 @@ const DashboardComponent = ({
       sx={{
         width: "900px",
         opacity: 1,
-        mt: "20px",
+        mt: "30px",
         minHeight: "600px",
         textAlign: "center",
         backgroundColor: "transparent",
@@ -320,26 +579,34 @@ const DashboardComponent = ({
         hideNotification={hideNotification}
         showNotification={showNotification}
       />
-
-      {docs?.length > 0 && (
-        <Box
-          style={{
-            marginTop: "30px",
-            border: "1px #E2E8F0 solid",
-            width: "800px",
-            minHeight: "50px",
-            marginBottom: "20px",
-            borderTopLeftRadius: "12px",
-            borderTopRightRadius: "12px",
-          }}
-        >
-          <TableHeader />
-          {docs?.map((item: DocType, i: number) => (
-            <TableItem item={item} i={i} key={`${item.label}`} />
-          ))}
-        </Box>
+      {state.mode === "start" && !state?.filters && (
+        <Filters
+          state={state}
+          updateState={updateState}
+          session={session}
+          updateDocs={updateDocs}
+        />
       )}
-
+      {docs?.length > 0 && (
+        <>
+          <Box
+            style={{
+              marginTop: "10px",
+              border: "1px #E2E8F0 solid",
+              width: "800px",
+              minHeight: "50px",
+              marginBottom: "20px",
+              borderTopLeftRadius: "12px",
+              borderTopRightRadius: "12px",
+            }}
+          >
+            <TableHeader />
+            {docs?.map((item: DocType, i: number) => (
+              <TableItem item={item} i={i} key={`${item.label}`} />
+            ))}
+          </Box>
+        </>
+      )}
       {docs?.length < 1 && (
         <Paragraph
           sx={{

@@ -12,6 +12,11 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
 // TODO
+**** 1
+            FILTERS ON DASH
+              - fuzzy search label
+              - embedded
+              - file type
 
 **** 2
           - UPLOAD AUDIO FILES ❌

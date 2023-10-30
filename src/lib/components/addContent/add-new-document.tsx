@@ -268,16 +268,7 @@ export const AddNewForm = ({
           console.log("embeddings failed");
         }
 
-        //@ts-ignore
-        // document.getElementById("add-content-label").value = null;
-        setUpload(null);
-
-        showNotification({
-          text: "Your upload was a success",
-          type: "success",
-        });
-        setTimeout(() => hideNotification(), 3000);
-        setLoading(false);
+        window.location.reload();
       }
     } catch (err) {
       showNotification({
@@ -297,8 +288,8 @@ export const AddNewForm = ({
       sx={{
         width: "800px",
         opacity: 1,
-        mt: "50px",
-        minHeight: "50px",
+        mt: "0px",
+        minHeight: "40px",
         textAlign: "center",
         backgroundColor: "transparent",
         border: "0px solid blue",
@@ -327,7 +318,7 @@ export const AddNewForm = ({
             flexDirection: "row",
             justifyContent: "flex-end",
             width: "100%",
-            height: "80px",
+            height: "40px",
           }}
         >
           <Button
@@ -337,10 +328,11 @@ export const AddNewForm = ({
               cursor: "pointer",
               mt: "0px",
               alignSelf: "flex-end",
-              mb: "5px",
+              mb: "10px",
               height: "40px",
               width: "100px",
               fontSize: "14px",
+              zIndex: 9999,
             }}
             onClick={() => updateState({ ...state, mode: "add" })}
           >
@@ -355,7 +347,8 @@ export const AddNewForm = ({
             flexDirection: "row",
             justifyContent: "space-between",
             width: "100%",
-            height: "80px",
+            height: "90px",
+            mt: "30px",
             border: "0px solid red",
             position: "relative",
           }}
@@ -363,7 +356,7 @@ export const AddNewForm = ({
           <Paragraph
             sx={{
               position: "absolute",
-              top: "-10px",
+              top: "-20px",
               right: 0,
               fontWeight: "400",
               color: "#555",
@@ -386,6 +379,7 @@ export const AddNewForm = ({
               customSX={{
                 textAlign: "left",
                 width: "300px",
+                mt: "20px",
               }}
               title="Label"
               subtitle=" *"
@@ -397,7 +391,7 @@ export const AddNewForm = ({
                 borderRadius: 0,
                 borderColor: "inputBorder",
                 width: "300px",
-                mt: "10px",
+
                 mb: "20px",
                 border: "1px solid #E8E8E8",
               }}
@@ -424,33 +418,42 @@ export const AddNewForm = ({
               customSX={{
                 textAlign: "left",
                 width: "300px",
+                mt: "18px",
               }}
-              title="File"
+              title="File (pdf, txt, docx)"
               subtitle=" *"
             />
             <input
-              style={{ width: "100%", color: "#444", marginTop: "7px" }}
+              style={{ width: "100%", color: "#444" }}
               type="file"
               onChange={handleFileChange}
             />
           </Box>
-
-          <Button
-            variant="primary"
+          <Box
             sx={{
-              color: "white",
-              cursor: "pointer",
-              mt: "0px",
-              alignSelf: "flex-end",
-              mb: "5px",
               height: "40px",
               width: "100px",
-              fontSize: "14px",
+              mt: "0px",
+              alignSelf: "flex-end",
+              mb: "20px",
             }}
-            onClick={handleUpload}
           >
-            Upload
-          </Button>
+            {state.label !== "" && (
+              <Button
+                variant="primary"
+                sx={{
+                  color: "white",
+                  cursor: "pointer",
+                  height: "40px",
+                  width: "100px",
+                  fontSize: "14px",
+                }}
+                onClick={handleUpload}
+              >
+                Upload
+              </Button>
+            )}
+          </Box>
         </Flex>
       )}
     </Flex>

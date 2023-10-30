@@ -141,6 +141,7 @@ export type DashboardStateType = {
   customFilename: string;
   label: string;
   mode: string;
+  filters: boolean;
 };
 
 export type EditContentStateType = {
