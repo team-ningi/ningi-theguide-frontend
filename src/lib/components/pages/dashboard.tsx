@@ -12,6 +12,8 @@ import {
   UserType,
   DocType,
   DashboardStateType,
+  HideNotificationType,
+  ShowNotificationType,
 } from "@/lib/types";
 import {
   FilePdf,
@@ -503,17 +505,14 @@ const DashboardComponent = ({
   setLoading,
   hideNotification,
   showNotification,
+  loading,
 }: {
   user: UserType;
   session: SessionType;
   setLoading: SetLoadingType;
-  hideNotification: () => {
-    type: string;
-  };
-  showNotification: (data: any) => {
-    type: string;
-    data: any;
-  };
+  hideNotification: HideNotificationType;
+  showNotification: ShowNotificationType;
+  loading: boolean;
 }) => {
   const [state, updateState] = useState<DashboardStateType>(defaultState);
   const [docs, updateDocs] = useState<DocType[]>([]);
@@ -537,7 +536,7 @@ const DashboardComponent = ({
       setLoading(false);
     })();
   }, []);
-
+  if (loading) return;
   return (
     <Box
       className="sectionContainer"
@@ -652,8 +651,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch({ type: "SHOW_NOTIFICATION", data }),
 });
 
-const mapStateToProps = (state: { account: {} }) => {
+const mapStateToProps = (state: { account: { loading: boolean } }) => {
   const { account } = state;
-  return {};
+  return {
+    loading: account.loading,
+  };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardComponent);
