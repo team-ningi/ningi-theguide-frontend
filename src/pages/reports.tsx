@@ -2,49 +2,45 @@
 
 import Head from "next/head";
 import Wrapper from "@/lib/components/appWrapper";
-import PageData from "@/lib/components/pages/dashboard";
+import Reports from "@/lib/components/pages/reports";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 import { SessionType, UserType, PageTypes } from "../lib/types";
-// import { getContent } from "@/utils/api-helper";
 
 const Page = ({ session, setCoreData, user }: PageTypes) => {
-  const [state, updateContent] = useState({ ready: true, content: [] });
+  const [state, updateContent] = useState<{ ready: boolean; user: UserType }>({
+    ready: false, //@ts-ignore
+    user: null,
+  });
   const params = useParams();
 
   useEffect(() => {
     (async () => {
       if (session?.email) {
-        updateContent({ ...state, ready: false });
         if (!user) {
           await setCoreData(session.email, session, false);
+        } else {
+          updateContent({ ...state, ready: true, user });
         }
-
-        updateContent({ ...state, ready: true });
       } else {
         window.location.assign("/");
       }
     })();
-  }, []);
+  }, [user]);
 
   return (
     <>
       <Head>
-        <title>{params.type}</title>
-        <meta name="description" content={`Community - ${params.type}`} />
+        <title>Reports</title>
+        <meta name="description" content={`The Guide - Reports`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {state?.ready && (
-          <PageData
-            // @ts-ignore
-            user={user}
-          />
-        )}
+        {state?.ready && <Reports user={state?.user} session={session} />}
       </Wrapper>
     </>
   );

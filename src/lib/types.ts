@@ -155,6 +155,15 @@ export type DashboardStateType = {
   docsFound: boolean;
 };
 
+export type ReportsStateType = {
+  user_id: string;
+  customFilename: string;
+  label: string;
+  mode: string;
+  filters: boolean;
+  docsFound: boolean;
+};
+
 export type EditContentStateType = {
   data: {
     _id: string;

@@ -14,11 +14,14 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 // TODO
 **** 1
           - PAGINATION ON DASH
+            - API already supports it ... 
 
 **** 2
           - UPLOAD AUDIO FILES ❌
             - IF MP3 -> TRANSCRIBE AND CREATE EMBED
-              TEXTRACT   CHAT
+          
+          - UPLOAD IMAGE FILES ❌    
+            - TEXTRACT   CHAT
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
 
@@ -28,7 +31,8 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 **** 4            
           - REPORT BUILDER ❌
-            -> look at petes wireframes
+            -> GENERATE DOC WITH TAGS REPLACED ✅
+            -> UI FOR REPORTS
 */
 
 const defaultState = {

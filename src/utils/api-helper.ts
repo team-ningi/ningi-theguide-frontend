@@ -1,5 +1,15 @@
 import axios from "axios";
 
+export const generateDocx = async (tags: object, authToken: string) =>
+  await axios({
+    method: "post",
+    url: "/api/db/generate-docx",
+    data: {
+      tags,
+      authToken,
+    },
+  });
+
 export const getUserDocuments = async (
   id: string,
   authToken: string,
