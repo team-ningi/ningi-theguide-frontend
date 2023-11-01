@@ -12,6 +12,10 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
 // TODO
+
+*** MAKER SURE WHEN SEARCHING DOCUMENTS IT SENDS USER_ID
+---> OTHERWISE YOUR GETTING ALL DOCUMENTS FOR ALL USERS
+
 **** 1
           - PAGINATION ON DASH
             - API already supports it ... 

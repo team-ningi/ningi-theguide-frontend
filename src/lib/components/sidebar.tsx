@@ -1,11 +1,12 @@
 import { Flex, Box, Paragraph } from "theme-ui";
 import {
   House,
-  FilePdf,
+  Files,
   Chat,
   SignOut,
   CaretRight,
   List,
+  FilePlus,
 } from "phosphor-react";
 import {
   ReactNode,
@@ -32,8 +33,8 @@ const destroySession = async () => {
 
 const items = [
   {
-    name: "Dashboard",
-    icon: <House size={24} />,
+    name: "Documents",
+    icon: <Files size={24} />,
     url: "/dashboard",
     testId: "sidebar-dashboard",
   },
@@ -45,7 +46,7 @@ const items = [
   },
   {
     name: "Reports",
-    icon: <FilePdf size={24} />,
+    icon: <FilePlus size={24} />,
     url: "/reports",
     testId: "sidebar-reports",
   },

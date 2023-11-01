@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/get-users-history`,
+      url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/get-users-history`,
       data: {
         user_id,
       },

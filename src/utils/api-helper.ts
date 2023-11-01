@@ -25,6 +25,16 @@ export const getUserDocuments = async (
     },
   });
 
+export const getUserReports = async (id: string, authToken: string) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-users-reports",
+    data: {
+      user_id: id,
+      authToken,
+    },
+  });
+
 export const getUserHistory = async (id: string, authToken: string) =>
   await axios({
     method: "post",

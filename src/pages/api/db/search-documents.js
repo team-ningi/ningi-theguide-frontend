@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
     const { data } = await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/search-documents`,
+      url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/search-documents`,
       data: {
         embedded,
         limit,

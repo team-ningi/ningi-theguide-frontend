@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   try {
     const { data } = await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/query`,
+      url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/query`,
       data: {
         question,
         documentIds,
@@ -35,7 +35,7 @@ const params = new URLSearchParams();
     const queryString = params.toString();
 
     const { data } = await axios({
-      url: `${process.env.NEXT_PUBLIC_COMMUNITY_API_URL}/in-memory-ai-text?${queryString}`,
+      url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/in-memory-ai-text?${queryString}`,
       headers: {
         Authorization: process.env.MANAGE_APPLICATION_TOKEN,
         engageSession: authToken,

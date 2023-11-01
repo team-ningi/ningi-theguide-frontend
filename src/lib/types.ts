@@ -24,6 +24,15 @@ export type DocType = {
   user_id: string;
 };
 
+export type ReportType = {
+  report_name: string;
+  report_type: string;
+  base_template_url: string;
+  generated_report_url: string;
+  document_ids: string[];
+  metadata: object;
+};
+
 export type SessionType = { email: string; authToken: string };
 
 export type stateType = {
@@ -157,11 +166,12 @@ export type DashboardStateType = {
 
 export type ReportsStateType = {
   user_id: string;
-  customFilename: string;
-  label: string;
+  reportType: string;
   mode: string;
+  searchReportName: string;
+  searchFileType: string;
+  reportsFound: boolean;
   filters: boolean;
-  docsFound: boolean;
 };
 
 export type EditContentStateType = {
