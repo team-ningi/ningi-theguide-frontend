@@ -1,15 +1,22 @@
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { file_type, report_type, search, limit, skip, authToken } = req.body;
+  const {
+    user_id,
+    file_type,
+    report_type = "all",
+    search,
+    limit,
+    skip,
+    authToken,
+  } = req.body;
   try {
     let body = {};
     if (file_type) {
       body.file_type = file_type;
     }
-    if (report_type) {
-      body.report_type = report_type;
-    }
+    body.report_type = report_type;
+
     if (search) {
       body.search = search;
     }
@@ -18,6 +25,7 @@ export default async function handler(req, res) {
       method: "post",
       url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/search-reports`,
       data: {
+        user_id,
         limit,
         skip,
         ...body,

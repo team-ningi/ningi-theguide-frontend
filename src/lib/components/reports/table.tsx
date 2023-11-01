@@ -26,7 +26,7 @@ export const TableHeader = () => (
       borderBottom: "1px solid #E2E8F0",
       height: "50px",
       fontSize: "15px",
-      p: "0 20px 10px",
+      p: "0 20px 10px ",
       backgroundColor: "#F8F8F8",
       color: "#444",
       borderTopLeftRadius: "12px",
@@ -48,24 +48,25 @@ export const TableHeader = () => (
     <Box
       style={{
         textAlign: "center",
-        width: "130px",
+        width: "180px",
         paddingTop: "15px",
         borderRight: "1px solid #E2E8F0",
         fontWeight: "600",
       }}
     >
-      Type
+      Template
     </Box>
     <Box
       style={{
         textAlign: "center",
-        width: "130px",
+        width: "120px",
+        margin: "0 auto",
         paddingTop: "15px",
-        borderRight: "0px solid #E2E8F0",
+        border: "0px solid #E2E8F0",
         fontWeight: "600",
       }}
     >
-      Status
+      Type
     </Box>
   </Flex>
 );
@@ -84,7 +85,7 @@ const FileKeyValue = ({
       sx={{
         fontWeight: "300",
         fontSize: "14px",
-        minWidth: "130px",
+        minWidth: "140px",
         textAlign: "right",
       }}
     >
@@ -118,8 +119,7 @@ const FileKeyValue = ({
 
 export const TableItem = ({ item, i }: { item: any; i: number }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
-
-  const { file_type, report_name, embedding_created } = item;
+  const { file_type, report_name, report_type } = item;
   const isEven = i % 2 === 0;
 
   return (
@@ -147,7 +147,6 @@ export const TableItem = ({ item, i }: { item: any; i: number }) => {
             textAlign: "left",
             ml: "30px",
             width: "100%",
-            borderRight: "1px solid #E2E8F0",
             cursor: "pointer",
           }}
           onClick={() => toggleDetails(!showDetails)}
@@ -160,31 +159,28 @@ export const TableItem = ({ item, i }: { item: any; i: number }) => {
           {!showDetails && <CaretRight size={17} />}
           {showDetails && <CaretDown size={17} />}
         </Flex>
+
         <Box
           style={{
             textAlign: "center",
-            width: "130px",
+            width: "180px",
             borderRight: "1px solid #E2E8F0",
+            borderLeft: "1px solid #E2E8F0",
+            textTransform: "capitalize",
+          }}
+        >
+          {report_type}
+        </Box>
+        <Box
+          style={{
+            textAlign: "center",
+            width: "120px",
             fontWeight: "500",
             color: "#444",
           }}
         >
           {/* @ts-ignore */}
           {IconMap[file_type]}
-        </Box>
-        <Box
-          style={{
-            textAlign: "center",
-            width: "130px",
-            borderRight: "0px solid #E2E8F0",
-            color: embedding_created ? "green" : "firebrick",
-          }}
-        >
-          {embedding_created ? (
-            <CheckCircle size={22} />
-          ) : (
-            <WarningCircle size={22} />
-          )}
         </Box>
       </Flex>
       {showDetails && (
@@ -194,20 +190,30 @@ export const TableItem = ({ item, i }: { item: any; i: number }) => {
             theKey="Uploaded"
             theValue={moment(item.updated_at).format("dddd, MMMM Do YYYY")}
           />
+          <FileKeyValue
+            theKey="Download Report"
+            isLink={item.generated_report_url}
+          />
           <FileKeyValue theKey="File Type" theValue={item.file_type} />
-          <FileKeyValue theKey="Download Original" isLink={item.file_url} />
           <FileKeyValue
-            theKey="Original Filename"
-            theValue={item.original_filename}
+            theKey="Download Template"
+            isLink={item.base_template_url}
           />
-          <FileKeyValue
-            theKey="Vector Embedded"
-            theValue={
-              item.embedding_created
-                ? "yes"
-                : "failed (try again by clicking the button below)"
-            }
-          />
+
+          {/* <FileKeyValue theKey="Documents Used" theValue={item.document_ids} /> */}
+          <Paragraph
+            sx={{
+              width: "100%",
+              textAlign: "right",
+              pr: "20px",
+              fontSize: "14px",
+              color: "#444",
+              cursor: "pointer",
+            }}
+            onClick={() => alert("regenerate")}
+          >
+            Regenerate
+          </Paragraph>
         </Flex>
       )}
     </Flex>

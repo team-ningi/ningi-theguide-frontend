@@ -58,6 +58,7 @@ const defaultState = {
   mode: "start", // start | create
   searchReportName: "",
   searchFileType: "all",
+  searchReportType: "all",
   filters: false,
   reportsFound: false,
 };
@@ -97,15 +98,15 @@ const filterReports = async (
     //@ts-ignore
     body.file_type = searchFileType;
   }
-  if (searchReportType !== "all") {
-    //@ts-ignore
-    body.report_type = searchReportType;
-  }
+
+  //@ts-ignore
+  body.report_type = searchReportType;
 
   const { data } = await axios({
     method: "post",
     url: "/api/db/search-reports",
     data: {
+      user_id: state?.user_id,
       search: searchReportName,
       limit: 100,
       skip: 0,
@@ -175,60 +176,7 @@ const Filters = ({
             onChange={handleLabelChange}
           />
         </Box>
-        <Box>
-          <InputLabel
-            customSX={{
-              textAlign: "left",
-              width: "200px",
-              marginLeft: "15px",
-            }}
-            title="Embedded"
-            subtitle=""
-          />
-          <ReactSelect
-            value={{
-              value:
-                state?.searchEmbedded !== "all"
-                  ? state?.searchEmbedded
-                    ? "true"
-                    : "false"
-                  : "all",
-              label:
-                state?.searchEmbedded !== "all"
-                  ? state?.searchEmbedded
-                    ? "true"
-                    : "false"
-                  : "all",
-            }}
-            onChange={async (values: any) => {
-              const tempState = { ...state, searchEmbedded: values?.value };
-              updateState(tempState);
-              await filterReports(
-                tempState,
-                updateState,
-                session,
-                updateReports
-              );
-            }}
-            placeholder="All"
-            styles={{
-              control: (provided) => ({
-                ...provided,
-                width: "200px",
-                fontSize: "14px",
-                outline: "none",
-                minHeight: "40px",
-                marginLeft: "15px",
-                textAlign: "left",
-              }),
-            }}
-            options={[
-              { value: "all", label: "All" },
-              { value: false, label: "False" },
-              { value: true, label: "True" },
-            ]}
-          />
-        </Box>
+
         <Box>
           <InputLabel
             customSX={{
@@ -274,6 +222,49 @@ const Filters = ({
             ]}
           />
         </Box>
+        <Box>
+          <InputLabel
+            customSX={{
+              textAlign: "left",
+              width: "200px",
+              marginLeft: "15px",
+            }}
+            title="Report type"
+            subtitle=""
+          />
+          <ReactSelect
+            value={{
+              value: state?.searchReportType,
+              label: state?.searchReportType,
+            }}
+            onChange={async (values: any) => {
+              const tempState = { ...state, searchReportType: values?.value };
+              updateState(tempState);
+              await filterReports(
+                tempState,
+                updateState,
+                session,
+                updateReports
+              );
+            }}
+            placeholder="All"
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: "200px",
+                fontSize: "14px",
+                outline: "none",
+                minHeight: "40px",
+                marginLeft: "15px",
+                textAlign: "left",
+              }),
+            }}
+            options={[
+              { value: "all", label: "All" },
+              { value: "test", label: "Test" },
+            ]}
+          />
+        </Box>
         <Paragraph
           sx={{
             ml: "20px",
@@ -288,6 +279,7 @@ const Filters = ({
               searchReportName: "",
               searchEmbedded: "all",
               searchFileType: "all",
+              searchReportType: "all",
               filters: false,
             };
             updateState(tempState);
@@ -326,7 +318,7 @@ const ReportsComponent = ({
     (async () => {
       setLoading(true);
       const { data } = await getUserReports(user._id, session?.authToken);
-      console.log("reports ", reports);
+
       updateReports(data);
       updateState({
         ...state,
@@ -456,7 +448,7 @@ const ReportsComponent = ({
             }}
           >
             {state?.reportsFound
-              ? "No results found."
+              ? "No reports found."
               : "You have not generated any reports."}
           </Paragraph>
           <Box sx={{ mt: "40px" }}>

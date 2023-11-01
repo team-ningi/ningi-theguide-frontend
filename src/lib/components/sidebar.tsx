@@ -35,7 +35,7 @@ const items = [
   {
     name: "Documents",
     icon: <Files size={24} />,
-    url: "/dashboard",
+    url: "/documents",
     testId: "sidebar-dashboard",
   },
   {

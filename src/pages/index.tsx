@@ -54,7 +54,7 @@ const Login = ({ setCoreData, darkMode, session }: LoginTypes) => {
       toggleLoading(true);
       try {
         if (session?.email) {
-          router.push("/dashboard");
+          router.push("/documents");
         } else {
           const queryString = window.location.href;
           const decodedQueryString = decodeURIComponent(queryString);
