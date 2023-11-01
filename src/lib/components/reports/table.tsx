@@ -201,19 +201,21 @@ export const TableItem = ({ item, i }: { item: any; i: number }) => {
           />
 
           {/* <FileKeyValue theKey="Documents Used" theValue={item.document_ids} /> */}
-          <Paragraph
+          <Flex
             sx={{
-              width: "100%",
+              width: "auto",
               textAlign: "right",
               pr: "20px",
               fontSize: "14px",
               color: "#444",
+              fontWeight: "600",
               cursor: "pointer",
+              alignSelf: "flex-end",
             }}
-            onClick={() => alert("regenerate")}
+            onClick={() => alert("edit report ")}
           >
-            Regenerate
-          </Paragraph>
+            Edit Report
+          </Flex>
         </Flex>
       )}
     </Flex>
