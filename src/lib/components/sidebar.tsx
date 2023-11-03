@@ -207,7 +207,7 @@ const Sidebar = ({
           background:
             "linear-gradient(180deg, rgba(139,132,255,1) 10%, rgba(73,64,255,1) 100%)",
           flexDirection: "column",
-          position: "absolute",
+          position: "fixed",
           boxShadow: "5px 0 6px -1px rgba(0,0,0,0.3)",
           "@media screen and (max-width: 1050px)": {
             display: "none",

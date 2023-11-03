@@ -33,7 +33,7 @@ const Header = ({
         height: "70px",
         borderBottom: "0px solid lightgrey",
         alignItems: "center",
-        position: "absolute",
+        position: "fixed",
         top: "0",
         left: "0",
         zIndex: 999,

@@ -14,9 +14,10 @@ import {
   ReportsStateType,
   HideNotificationType,
   ShowNotificationType,
+  DocType,
 } from "@/lib/types";
 import { Files, XCircle } from "phosphor-react";
-import { getUserReports } from "@/utils/api-helper";
+import { getUserReports, getUserDocuments } from "@/utils/api-helper";
 import axios from "axios";
 import CreateNewReport from "../reports/createReport";
 import { TableHeader, TableItem } from "../reports/table";
@@ -63,19 +64,22 @@ const defaultState = {
   reportsFound: false,
 };
 
-const InputLabel = ({
+export const InputLabel = ({
   title,
   subtitle,
+  fontWeight = "600",
   customSX = {},
 }: {
   title: string;
   subtitle: string;
+  fontWeight?: string;
   customSX: {};
 }) => (
   <Paragraph
     sx={{
       color: "#444",
       fontSize: "14px",
+      fontWeight,
       mb: "3px",
       mt: "10px",
       ...customSX,
@@ -312,14 +316,23 @@ const ReportsComponent = ({
 }) => {
   const [state, updateState] = useState<ReportsStateType>(defaultState);
   const [reports, updateReports] = useState<ReportType[]>([]);
+  const [docs, updateDocs] = useState<DocType[]>([]);
+
   const router = useRouter();
 
   useEffect(() => {
     (async () => {
       setLoading(true);
       const { data } = await getUserReports(user._id, session?.authToken);
-
       updateReports(data);
+
+      const { data: docs } = await getUserDocuments(
+        user._id,
+        session?.authToken,
+        "all"
+      );
+      updateDocs(docs);
+
       updateState({
         ...state,
         user_id: user?._id,
@@ -462,6 +475,9 @@ const ReportsComponent = ({
           state={state}
           updateState={updateState}
           session={session}
+          docs={docs}
+          reports={reports}
+          setLoading={setLoading}
         />
       )}
     </Box>
