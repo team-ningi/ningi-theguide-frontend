@@ -43,6 +43,9 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
           - WHEN LOG IN ❌
             -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR
 
+***** 5
+          - LIVE BLOCKS HOW CAN WE USE IT?
+            https://vercel.com/templates/next.js/liveblocks-starter-kit
 
 */
 
