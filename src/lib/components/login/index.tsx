@@ -3,7 +3,8 @@ import axios from "axios";
 import { Dispatch, SetStateAction } from "react";
 import { LoginStateTypes, LoginSetStateTypes } from "@/lib/types";
 
-const emailRegexPattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+const emailRegexPattern =
+  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const isValidEmail = (email: string) => emailRegexPattern.test(email);
 
 const Title = () => (

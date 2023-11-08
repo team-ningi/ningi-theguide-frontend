@@ -47,6 +47,11 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
           - LIVE BLOCKS HOW CAN WE USE IT?
             https://vercel.com/templates/next.js/liveblocks-starter-kit
 
+
+****** 6
+          - Look into function calling
+            https://platform.openai.com/docs/guides/function-calling
+
 */
 
 const defaultState = {
