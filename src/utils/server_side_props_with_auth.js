@@ -12,6 +12,7 @@ export default ({ redirect = true, generate = true }) =>
       process.env.MANAGE_APPLICATION_TOKEN;
 
     if (isTestUser) {
+      console.log("E2E testing");
       return {
         props: {
           session: {
@@ -32,7 +33,7 @@ export default ({ redirect = true, generate = true }) =>
 
     return {
       props: {
-        session: req.session,
+        session: { ...req.session, uuid: authentication?.uuid || "" },
       },
     };
   }, sessionOptions);

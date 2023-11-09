@@ -2,21 +2,22 @@ import { put, takeLatest, all } from "redux-saga/effects";
 import axios from "axios";
 import { actions, actions as userActions } from "../reducers/users";
 
-const findExistingUser = async (email: string, authToken: string) =>
+const findExistingUser = async (uuid: string, authToken: string) =>
   await axios({
     method: "post",
     url: "/api/db/find-user",
     data: {
-      email,
+      uuid,
       authToken,
     },
   });
 
-const createUser = async (email: string, authToken: string) =>
+const createUser = async (uuid: string, email: string, authToken: string) =>
   await axios({
     method: "post",
     url: "/api/db/create-user",
     data: {
+      uuid,
       email,
       authToken,
     },
@@ -27,7 +28,7 @@ export function* refreshCoreData({
 }: {
   action: {
     email: string;
-    session: { authToken: string };
+    session: { authToken: string; uuid: string };
     keepLoadingSpinner: boolean;
   };
 }): any {
@@ -36,10 +37,20 @@ export function* refreshCoreData({
 
     const { email, session, keepLoadingSpinner = true } = action;
 
-    const { data: user } = yield findExistingUser(email, session?.authToken);
+    const uuidToUse =
+      email === "test@ningi.co.uk" ? "test12345" : session?.uuid;
+
+    const { data: user } = yield findExistingUser(
+      uuidToUse,
+      session?.authToken
+    );
 
     if (user.length < 1) {
-      const { data: res } = yield createUser(email, session?.authToken);
+      const { data: res } = yield createUser(
+        session?.uuid,
+        email,
+        session?.authToken
+      );
 
       if (res.error) {
         throw new Error("failed to create user");

@@ -37,6 +37,26 @@ const IconMap = {
   pdf: <FilePdf size={22} />,
 };
 
+const createEmbedding = async (
+  user_id: string,
+  document_id: string,
+  file_url: string,
+  file_type: string,
+  authToken: string
+) => {
+  await axios({
+    method: "post",
+    url: "/api/db/create-embeddings",
+    data: {
+      user_id,
+      document_id,
+      file_url,
+      file_type,
+      authToken,
+    },
+  });
+};
+
 export const TableHeader = () => (
   <Flex
     sx={{
@@ -135,7 +155,17 @@ const FileKeyValue = ({
   </Flex>
 );
 
-const TableItem = ({ item, i }: { item: any; i: number }) => {
+const TableItem = ({
+  item,
+  i,
+  authToken,
+  setLoading,
+}: {
+  item: any;
+  i: number;
+  authToken: string;
+  setLoading: SetLoadingType;
+}) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
 
   const { file_type, label, embedding_created } = item;
@@ -236,7 +266,18 @@ const TableItem = ({ item, i }: { item: any; i: number }) => {
                 fontSize: "14px",
                 cursor: "pointer",
               }}
-              onClick={() => alert(item?._id)}
+              onClick={async () => {
+                setLoading(true);
+                await createEmbedding(
+                  item.user_id,
+                  item._id,
+                  item.file_url,
+                  item.file_type,
+                  authToken
+                );
+                setLoading(false);
+                window.location.reload();
+              }}
             >
               Embed document
             </Paragraph>
@@ -608,7 +649,13 @@ const DashboardComponent = ({
           >
             <TableHeader />
             {docs?.map((item: DocType, i: number) => (
-              <TableItem item={item} i={i} key={`${item.label}`} />
+              <TableItem
+                item={item}
+                i={i}
+                key={`${item.label}`}
+                authToken={session?.authToken}
+                setLoading={setLoading}
+              />
             ))}
           </Box>
         </>

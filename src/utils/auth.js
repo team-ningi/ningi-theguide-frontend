@@ -3,7 +3,7 @@ import axios from "axios";
 export const authTokenVerification = async (token) => {
   try {
     const {
-      data: { session_id: sessionID },
+      data: { session_id: sessionID, uuid },
     } = await axios({
       method: "get",
       url: `${process.env.NEXT_PUBLIC_MANAGE_API_URL}/v1/tokens`,
@@ -14,7 +14,7 @@ export const authTokenVerification = async (token) => {
       maxRedirects: 0,
     });
 
-    return { valid: true, sessionID };
+    return { valid: true, sessionID, uuid };
   } catch (error) {
     switch (error.response?.status) {
       case 404:

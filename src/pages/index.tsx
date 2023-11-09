@@ -68,7 +68,7 @@ const Login = ({ setCoreData, darkMode, session }: LoginTypes) => {
     (async () => {
       toggleLoading(true);
       try {
-        if (session?.email) {
+        if (session?.email && session.email !== "test@ningi.co.uk") {
           router.push("/documents");
         } else {
           const queryString = window.location.href;

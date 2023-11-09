@@ -15,6 +15,7 @@ export default withIronSessionApiRoute(async function callback(req, res) {
 
   req.session.authToken = token;
   req.session.email = email;
+  req.session.uuid = "";
   await req.session.save();
 
   let redirectUrl = `/?mode=verify&e=${btoa(email)}`;
