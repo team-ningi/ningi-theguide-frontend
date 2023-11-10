@@ -6,95 +6,14 @@ import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
 import { DocType } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
+import { BasicReportTags, SRCarltonTags } from "./tags";
 
-const baseTemplates = ["test"];
+const baseTemplates = ["BasicReport", "SuitabilityReportCarlton"];
 
-const defaultTags = [
-  {
-    tag: "first_name",
-    data: "first name",
-    prompt: "return {{data}} only with no other text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "last_name",
-    data: "last name",
-    prompt: "return {{data}} only with no other text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "meeting_date",
-    data: "company join date",
-    prompt: "return {{data}}",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "company_name",
-    data: "company name",
-    prompt: "return {{data}} on its own.",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "dob",
-    data: "date of birth",
-    prompt: "return {{data}} only with no other text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "martial_status",
-    data: "martial status",
-    prompt: "return {{data}} only with no other text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "dependants",
-    data: "number of dependants",
-    prompt: "return {{data}} as a number with no other text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "tax_status",
-    data: "tax status",
-    prompt: "return {{data}} as simply as possible with no additional text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "uptodate_will",
-    data: "uptodate will in place",
-    prompt: "return {{data}} as a boolean with no additional text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "state_of_health",
-    data: "current state of health",
-    prompt: "return {{data}} as simply as possible with no additional text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "investment_type",
-    data: "investment type",
-    prompt: "return {{data}} only with no other text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "investment_provider",
-    data: "investment provider",
-    prompt: "return {{data}}",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "policy_number",
-    data: "policy number",
-    prompt: "return {{data}} as simply as possible with no additional text",
-    uuid: uuidv4(),
-  },
-  {
-    tag: "amount_invested",
-    data: "amount invested in their investment",
-    prompt: "return {{data}} as a number with no other text",
-    uuid: uuidv4(),
-  },
-];
+const tagMapping = {
+  BasicReport: BasicReportTags,
+  SuitabilityReportCarlton: SRCarltonTags,
+};
 
 const promptTypes = [
   "return {{data}}",
@@ -105,9 +24,14 @@ const promptTypes = [
   "return {{data}} as a boolean with no additional text",
 ];
 
-const createDocx = async (setLoading: any, session: any, tags: any) => {
+const createDocx = async (
+  reportState: any,
+  setLoading: any,
+  session: any,
+  tags: any
+) => {
   setLoading(true);
-  const docId = "6540f212b51c880e1ae48d3d";
+  const docId = reportState?.documentIds; //"6540f212b51c880e1ae48d3d";
   let tagResults: any = {};
 
   await Promise.all(
@@ -115,7 +39,7 @@ const createDocx = async (setLoading: any, session: any, tags: any) => {
     tags?.map(async (item, i) => {
       const { data } = await chat(
         item.prompt?.replace("{{data}}", item?.data),
-        [docId],
+        [...docId],
         session?.authToken
       );
       const { answer } = data;
@@ -306,7 +230,7 @@ const CreateNewReport = ({
   setLoading,
 }: any) => {
   const [reportState, updateReportState] = useState(defaultState);
-  const [tags, updateTags] = useState(defaultTags);
+  const [tags, updateTags] = useState([]);
 
   return (
     <Flex sx={{ flexDirection: "column", width: "650px", mb: "200px" }}>
@@ -410,6 +334,8 @@ const CreateNewReport = ({
               ...reportState,
               baseTemplate: values?.value,
             });
+            //@ts-ignore
+            updateTags(tagMapping[values?.value]);
           }}
           styles={{
             control: (provided) => ({
@@ -439,17 +365,22 @@ const CreateNewReport = ({
         />
 
         <Box>
-          {tags?.map((item, i) => (
-            <TagAndPromptItem //@ts-ignore
-              key={`${item.uuid}`} //@ts-ignore
-              uuid={item.uuid}
-              data={item.data}
-              tag={item.tag}
-              prompt={item.prompt}
-              tags={tags}
-              updateTags={updateTags}
-            />
-          ))}
+          {tags?.map(
+            (
+              item: { uuid: string; data: string; tag: string; prompt: string },
+              i
+            ) => (
+              <TagAndPromptItem //@ts-ignore
+                key={`${item.uuid}`} //@ts-ignore
+                uuid={item.uuid}
+                data={item.data}
+                tag={item.tag}
+                prompt={item.prompt}
+                tags={tags}
+                updateTags={updateTags}
+              />
+            )
+          )}
         </Box>
         <Flex sx={{ justifyContent: "flex-start" }}>
           <Paragraph
@@ -484,7 +415,9 @@ const CreateNewReport = ({
               fontSize: "14px",
               zIndex: 9999,
             }}
-            onClick={async () => await createDocx(setLoading, session, tags)}
+            onClick={async () =>
+              await createDocx(reportState, setLoading, session, tags)
+            }
           >
             Generate
           </Button>

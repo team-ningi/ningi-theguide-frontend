@@ -25,19 +25,17 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
             -> updte documents model in API to allow document_type set templates  ❌
                 to a type of template DONT show them in regular searches , set default document_type to be 'file'
 
-
 **** 2
-          - PAGINATION ON DASH
-            - API already supports it ... 
-
-**** 3
           - UPLOAD AUDIO FILES ❌
             - IF MP3 -> TRANSCRIBE AND CREATE EMBED
           
           - UPLOAD IMAGE FILES ❌    
             - TEXTRACT   CHAT
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
-              https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
+
+**** 3
+          - PAGINATION ON DASH
+            - API already supports it ... 
 
 **** 4
           - WHEN LOG IN ❌
