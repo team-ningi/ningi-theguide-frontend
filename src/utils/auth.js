@@ -2,9 +2,7 @@ import axios from "axios";
 
 export const authTokenVerification = async (token) => {
   try {
-    const {
-      data: { session_id: sessionID, uuid },
-    } = await axios({
+    const { data } = await axios({
       method: "get",
       url: `${process.env.NEXT_PUBLIC_MANAGE_API_URL}/v1/tokens`,
       params: { token, journey: "" },
@@ -13,6 +11,13 @@ export const authTokenVerification = async (token) => {
       },
       maxRedirects: 0,
     });
+
+    const { session_id: sessionID, uuid, role } = data;
+
+    if (role === "super_admin") {
+      //TODO
+      //CALL api and make them superadmin
+    }
 
     return { valid: true, sessionID, uuid };
   } catch (error) {

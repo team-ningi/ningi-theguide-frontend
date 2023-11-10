@@ -22,7 +22,8 @@ export default async function handler(req, res) {
 
     await axios({
       method: "post",
-      url: `${process.env.NEXT_PUBLIC_MANAGE_API_URL}/v1/auth`,
+      url: `${process.env.NEXT_PUBLIC_MANAGE_API_URL}/v1/client_portal/auth`,
+      // url: `${process.env.NEXT_PUBLIC_MANAGE_API_URL}/v1/auth`,
       data: {
         user: {
           email,
