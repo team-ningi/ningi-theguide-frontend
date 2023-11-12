@@ -1,12 +1,13 @@
 import { Flex, Box, Paragraph } from "theme-ui";
 import {
-  House,
+  FileDotted,
   Files,
   Chat,
   SignOut,
   CaretRight,
   List,
   FilePlus,
+  FileCode,
 } from "phosphor-react";
 import {
   ReactNode,
@@ -39,17 +40,25 @@ const items = [
     testId: "sidebar-dashboard",
   },
   {
+    name: "Templates",
+    icon: <FileDotted size={24} />,
+    url: "/templates",
+    testId: "sidebar-templates",
+  },
+  {
+    name: "Reports",
+    icon: <FileCode size={24} />,
+    url: "/reports",
+    testId: "sidebar-reports",
+  },
+
+  {
     name: "Chat",
     icon: <Chat size={24} />,
     url: "/chat",
     testId: "sidebar-chat",
   },
-  {
-    name: "Reports",
-    icon: <FilePlus size={24} />,
-    url: "/reports",
-    testId: "sidebar-reports",
-  },
+
   {
     name: "Logout",
     icon: <SignOut size={24} />,

@@ -40,7 +40,8 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {state?.ready && <Documents user={state?.user} session={session} />}
+        {/* {state?.ready && <Documents user={state?.user} session={session} />} */}
+        DASHBOARD
       </Wrapper>
     </>
   );
