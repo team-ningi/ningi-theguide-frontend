@@ -478,6 +478,8 @@ const ReportsComponent = ({
           docs={docs}
           reports={reports}
           setLoading={setLoading}
+          showNotification={showNotification}
+          hideNotification={hideNotification}
         />
       )}
     </Box>

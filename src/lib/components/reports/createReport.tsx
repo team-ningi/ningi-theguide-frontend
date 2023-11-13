@@ -4,13 +4,16 @@ import { useState } from "react";
 import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
-import { DocType } from "@/lib/types";
+import { DocType, SessionType, SetLoadingType } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
 import { BasicReportTags, SRCarltonTags } from "./tags";
 
+//TODO make dynamic
 const baseTemplates = ["BasicReport", "SuitabilityReportCarlton"];
+const tagLists = ["Empty", "BasicReport", "SuitabilityReportCarlton"];
 
 const tagMapping = {
+  Empty: [],
   BasicReport: BasicReportTags,
   SuitabilityReportCarlton: SRCarltonTags,
 };
@@ -24,15 +27,27 @@ const promptTypes = [
   "return {{data}} as a boolean with no additional text",
 ];
 
-const createDocx = async (
+const saveReport = async (
   reportState: any,
-  setLoading: any,
-  session: any,
-  tags: any
+  setLoading: SetLoadingType,
+  session: SessionType,
+  tags: { prompt: "string"; tag: "string"; data: string; uuid: string }[],
+  generateDoc: boolean,
+  showNotification: any,
+  hideNotification: any
 ) => {
-  setLoading(true);
-  const docId = reportState?.documentIds; //"6540f212b51c880e1ae48d3d";
+  const docId = reportState?.documentIds;
   let tagResults: any = {};
+
+  if (!tags?.length) {
+    showNotification({
+      text: "You must add at least 1 tag.",
+      type: "error",
+    });
+    setTimeout(() => hideNotification(), 3000);
+    return;
+  }
+  setLoading(true);
 
   await Promise.all(
     //@ts-ignore
@@ -46,10 +61,17 @@ const createDocx = async (
       tagResults[item.tag] = answer;
     })
   );
+
+  // TODO
+  // CREATE REPORT IN DB
+  // set generated to false
+
   setLoading(false);
 
   console.log({ tagResults });
-  generateDocx(tagResults, session?.authToken);
+
+  if (generateDoc) generateDocx(tagResults, session?.authToken);
+
   return tagResults;
 };
 
@@ -57,6 +79,7 @@ const defaultState = {
   reportName: "",
   documentIds: [],
   baseTemplate: "",
+  tagsSelected: "Empty",
   tags: [],
 };
 
@@ -228,6 +251,8 @@ const CreateNewReport = ({
   docs,
   reports,
   setLoading,
+  showNotification,
+  hideNotification,
 }: any) => {
   const [reportState, updateReportState] = useState(defaultState);
   const [tags, updateTags] = useState([]);
@@ -360,10 +385,42 @@ const CreateNewReport = ({
             textAlign: "left",
             width: "650px",
           }}
-          title="Tag Replacements"
-          subtitle=""
+          title="Tags"
+          subtitle=" *"
         />
-
+        <ReactSelect
+          value={tagLists.map((item: any) => {
+            if (reportState.tagsSelected === item) {
+              return {
+                value: item,
+                label: item,
+              };
+            }
+          })}
+          onChange={(values: any) => {
+            updateReportState({
+              ...reportState,
+              tagsSelected: values?.value,
+            });
+            //@ts-ignore
+            updateTags(tagMapping[values?.value]);
+          }}
+          styles={{
+            control: (provided) => ({
+              ...provided,
+              width: "650px",
+              outline: "none",
+              minHeight: "45px",
+              marginBottom: "20px",
+            }),
+          }}
+          options={tagLists?.map((item: any) => {
+            return {
+              value: item,
+              label: item,
+            };
+          })}
+        />
         <Box>
           {tags?.map(
             (
@@ -397,7 +454,7 @@ const CreateNewReport = ({
               updateTags(newTags);
             }}
           >
-            + add row
+            + add tag
           </Paragraph>
         </Flex>
 
@@ -405,21 +462,56 @@ const CreateNewReport = ({
           <Button
             variant="primary"
             sx={{
-              color: "white",
+              color: "#444",
+              border: "1px solid #444",
+              background: "transparent",
               cursor: "pointer",
               mt: "40px",
-              mr: "60px",
+              mr: "20px",
               mb: "10px",
               height: "40px",
               width: "150px",
               fontSize: "14px",
-              zIndex: 9999,
             }}
             onClick={async () =>
-              await createDocx(reportState, setLoading, session, tags)
+              await saveReport(
+                reportState,
+                setLoading,
+                session,
+                tags,
+                false,
+                showNotification,
+                hideNotification
+              )
             }
           >
-            Generate
+            Save For Later
+          </Button>
+          <Button
+            variant="primary"
+            sx={{
+              color: "white",
+              cursor: "pointer",
+              mt: "40px",
+              // mr: "60px",
+              mb: "10px",
+              height: "40px",
+              width: "150px",
+              fontSize: "14px",
+            }}
+            onClick={async () =>
+              await saveReport(
+                reportState,
+                setLoading,
+                session,
+                tags,
+                true,
+                showNotification,
+                hideNotification
+              )
+            }
+          >
+            Create report
           </Button>
         </Flex>
       </Box>

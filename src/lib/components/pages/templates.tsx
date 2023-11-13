@@ -26,12 +26,12 @@ import {
   DownloadSimple,
   Files,
 } from "phosphor-react";
-import { getUserTemplates } from "@/utils/api-helper";
+import { getUserTemplates, getSignedURL } from "@/utils/api-helper";
 import { AddNewForm } from "@/lib/components/addContent/add-new-template";
 import moment from "moment";
 import axios from "axios";
-/*
 
+/*
   1 -> MIMIC ALL DOC WORK IN UI FOR TEMPLATES
   2 -> WHEN ADDING A TEMPLATE ABILITY TO CREATE TAGS 
 
@@ -102,10 +102,16 @@ const FileKeyValue = ({
   theKey,
   theValue,
   isLink,
+  saved_filename,
+  userId,
+  authToken,
 }: {
   theKey: string;
   theValue?: string;
   isLink?: string;
+  saved_filename?: string;
+  userId?: string;
+  authToken?: string;
 }) => (
   <Flex sx={{ width: "100%", ml: "26px", mb: "8px" }}>
     <Paragraph
@@ -134,7 +140,14 @@ const FileKeyValue = ({
             mr: "5px",
             cursor: "pointer",
           }}
-          onClick={() => window.location.assign(`${isLink}`)}
+          onClick={async () => {
+            const { data } = await getSignedURL(
+              userId!,
+              saved_filename!,
+              authToken!
+            );
+            window.location.assign(`${data?.signedURL}`);
+          }}
         >
           Click Here{" "}
         </Paragraph>
@@ -149,15 +162,17 @@ const TableItem = ({
   i,
   authToken,
   setLoading,
+  userId,
 }: {
   item: any;
   i: number;
   authToken: string;
   setLoading: SetLoadingType;
+  userId?: string;
 }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
 
-  const { file_type, label, embedding_created } = item;
+  const { file_type, label, saved_filename } = item;
   const isEven = i % 2 === 0;
   console.log(item);
   return (
@@ -228,7 +243,13 @@ const TableItem = ({
             theValue={moment(item.updated_at).format("dddd, MMMM Do YYYY")}
           />
           <FileKeyValue theKey="File Type" theValue={item.file_type} />
-          <FileKeyValue theKey="Download Template" isLink={item.file_url} />
+          <FileKeyValue
+            theKey="Download Template"
+            isLink={item.file_url}
+            saved_filename={saved_filename}
+            userId={userId}
+            authToken={authToken}
+          />
           <FileKeyValue
             theKey="Original Filename"
             theValue={item.original_filename}
@@ -549,6 +570,7 @@ const TemplateComponent = ({
                 key={`${item.label}`}
                 authToken={session?.authToken}
                 setLoading={setLoading}
+                userId={user._id}
               />
             ))}
           </Box>

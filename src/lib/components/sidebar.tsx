@@ -6,7 +6,7 @@ import {
   SignOut,
   CaretRight,
   List,
-  FilePlus,
+  HouseSimple,
   FileCode,
 } from "phosphor-react";
 import {
@@ -34,10 +34,16 @@ const destroySession = async () => {
 
 const items = [
   {
+    name: "Dashboard",
+    icon: <HouseSimple size={24} />,
+    url: "/dashboard",
+    testId: "sidebar-dashboard",
+  },
+  {
     name: "Documents",
     icon: <Files size={24} />,
     url: "/documents",
-    testId: "sidebar-dashboard",
+    testId: "sidebar-documents",
   },
   {
     name: "Templates",

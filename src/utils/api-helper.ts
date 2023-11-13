@@ -103,3 +103,18 @@ export const updateHistory = async (
       authToken,
     },
   });
+
+export const getSignedURL = async (
+  id: string,
+  file: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-signed-url",
+    data: {
+      user_id: id,
+      file,
+      authToken,
+    },
+  });
