@@ -184,8 +184,9 @@ export const AddNewForm = ({
 
   const handleUpload: MouseEventHandler<HTMLButtonElement> = async (e) => {
     try {
-      await setLoading(true);
       e.preventDefault();
+      if (state.label === "") return;
+      await setLoading(true);
       const validatedForm = await validateForm(
         state,
         errorState,
@@ -277,13 +278,13 @@ export const AddNewForm = ({
               alignSelf: "flex-end",
               mb: "10px",
               height: "40px",
-              width: "100px",
+              width: "140px",
               fontSize: "14px",
               zIndex: 9999,
             }}
             onClick={() => updateState({ ...state, mode: "add" })}
           >
-            Add
+            Add Template
           </Button>
         </Flex>
       )}
@@ -385,21 +386,20 @@ export const AddNewForm = ({
               mb: "20px",
             }}
           >
-            {state.label !== "" && (
-              <Button
-                variant="primary"
-                sx={{
-                  color: "white",
-                  cursor: "pointer",
-                  height: "40px",
-                  width: "100px",
-                  fontSize: "14px",
-                }}
-                onClick={handleUpload}
-              >
-                Upload
-              </Button>
-            )}
+            <Button
+              variant="primary"
+              sx={{
+                color: "white",
+                cursor:
+                  state.label === "" ? "not-allowed !important" : "pointer",
+                height: "40px",
+                width: "100px",
+                fontSize: "14px",
+              }}
+              onClick={handleUpload}
+            >
+              Upload
+            </Button>
           </Box>
         </Flex>
       )}

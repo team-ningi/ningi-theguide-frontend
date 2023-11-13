@@ -18,6 +18,7 @@ import {
 } from "@/lib/types";
 import { Files, XCircle } from "phosphor-react";
 import { getUserReports, getUserDocuments } from "@/utils/api-helper";
+import { Title, Description } from "@/lib/components/TextItems";
 import axios from "axios";
 import CreateNewReport from "../reports/createReport";
 import { TableHeader, TableItem } from "../reports/table";
@@ -370,6 +371,13 @@ const ReportsComponent = ({
         position: "relative",
       }}
     >
+      <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
+        <Title text="Generated Reports" />
+        <Description
+          text={`
+          Generate personalized reports by importing a base template and utilizing data from your uploaded documents.`}
+        />
+      </Box>
       <Flex
         sx={{
           flexDirection: "row",
@@ -387,7 +395,7 @@ const ReportsComponent = ({
             alignSelf: "flex-end",
             mb: "10px",
             height: "40px",
-            width: "100px",
+            width: "140px",
             fontSize: "14px",
             zIndex: 9999,
           }}
@@ -398,22 +406,10 @@ const ReportsComponent = ({
             })
           }
         >
-          {state?.mode === "start" ? "Create" : "Go Back"}
+          {state?.mode === "start" ? "Create Report" : "Go Back"}
         </Button>
       </Flex>
-      {state?.reportsFound && state?.mode === "start" && (
-        <Paragraph
-          sx={{
-            position: "absolute",
-            top: "10px",
-            left: "0px",
-            fontWeight: "600",
-            color: "#555",
-          }}
-        >
-          Filter Reports
-        </Paragraph>
-      )}
+
       {state.mode === "start" && state?.reportsFound && (
         <Filters
           state={state}

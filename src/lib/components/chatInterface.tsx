@@ -13,6 +13,7 @@ import {
   updateHistory as updateHistoryAPI,
 } from "@/utils/api-helper";
 import { HideNotificationType, ShowNotificationType } from "../types";
+import { Title, Description } from "@/lib/components/TextItems";
 
 type ChatItem = {
   question: string;
@@ -251,7 +252,7 @@ const ChatInterface = ({
   }, [history]);
 
   return (
-    <Flex sx={{ width: "870px", margin: "60px 0 0 0" }}>
+    <Flex sx={{ width: "870px", margin: "30px 0 0 0" }}>
       {state.loading && <Spinner />}
       {state.isReady && (
         <>
@@ -268,6 +269,13 @@ const ChatInterface = ({
               p: "0px",
             }}
           >
+            <Box sx={{ border: "0px red solid", mb: "40px", width: "680px" }}>
+              <Title text="Chat" />
+              <Description
+                text={`
+          Query your uploaded documents for information, simply select one or many documents and ask some questions`}
+              />
+            </Box>
             <Box>
               <InputLabel
                 customSX={{ textAlign: "left", width: "300px" }}

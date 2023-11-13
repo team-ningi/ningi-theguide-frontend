@@ -28,6 +28,7 @@ import {
 } from "phosphor-react";
 import { getUserDocuments, getSignedURL } from "@/utils/api-helper";
 import { AddNewForm } from "@/lib/components/addContent/add-new-document";
+import { Title, Description } from "@/lib/components/TextItems";
 import moment from "moment";
 import axios from "axios";
 
@@ -400,6 +401,7 @@ const Filters = ({
         mt: "0px",
         height: "80px",
         alignItems: "flex-start",
+        position: "relative",
       }}
     >
       <>
@@ -626,6 +628,14 @@ const DashboardComponent = ({
         position: "relative",
       }}
     >
+      <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
+        <Title text="Supporting Documents" />
+        <Description
+          text={`
+          Please upload the necessary support documents for data extraction in order to generate your reports.`}
+        />
+      </Box>
+
       <AddNewForm
         state={state}
         updateState={updateState}
@@ -635,19 +645,7 @@ const DashboardComponent = ({
         hideNotification={hideNotification}
         showNotification={showNotification}
       />
-      {state?.docsFound && (
-        <Paragraph
-          sx={{
-            position: "absolute",
-            top: "10px",
-            left: "0px",
-            fontWeight: "600",
-            color: "#555",
-          }}
-        >
-          {state.mode === "start" ? "Filter Documents" : "Add Document"}
-        </Paragraph>
-      )}
+
       {state.mode === "start" && state?.docsFound && (
         <Filters
           state={state}

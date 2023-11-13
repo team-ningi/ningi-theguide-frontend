@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import Wrapper from "@/lib/components/appWrapper";
-import Documents from "@/lib/components/pages/documents";
+import Dashboard from "@/lib/components/pages/dashboard";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { connect } from "react-redux";
@@ -40,8 +40,7 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {/* {state?.ready && <Documents user={state?.user} session={session} />} */}
-        DASHBOARD
+        {state?.ready && <Dashboard user={state?.user} session={session} />}
       </Wrapper>
     </>
   );

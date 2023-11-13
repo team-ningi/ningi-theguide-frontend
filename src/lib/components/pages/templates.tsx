@@ -27,6 +27,7 @@ import {
   Files,
 } from "phosphor-react";
 import { getUserTemplates, getSignedURL } from "@/utils/api-helper";
+import { Title, Description } from "@/lib/components/TextItems";
 import { AddNewForm } from "@/lib/components/addContent/add-new-template";
 import moment from "moment";
 import axios from "axios";
@@ -519,6 +520,13 @@ const TemplateComponent = ({
         position: "relative",
       }}
     >
+      <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
+        <Title text="Base Templates" />
+        <Description
+          text={`
+          Prior to generating reports, it is essential to upload the base templates.`}
+        />
+      </Box>
       <AddNewForm
         state={state}
         updateState={updateState}
@@ -528,19 +536,7 @@ const TemplateComponent = ({
         hideNotification={hideNotification}
         showNotification={showNotification}
       />
-      {state?.docsFound && (
-        <Paragraph
-          sx={{
-            position: "absolute",
-            top: "10px",
-            left: "0px",
-            fontWeight: "600",
-            color: "#555",
-          }}
-        >
-          {state.mode === "start" ? "Filter Templates" : "Add Template"}
-        </Paragraph>
-      )}
+
       {state.mode === "start" && state?.docsFound && (
         <Filters
           state={state}
