@@ -24,7 +24,7 @@ import {
   ArrowCircleRight,
 } from "phosphor-react";
 import { getUserDocuments } from "@/utils/api-helper";
-import { Title } from "@/lib/components/TextItems";
+import { Title, Description } from "@/lib/components/TextItems";
 import moment from "moment";
 import axios from "axios";
 
@@ -55,7 +55,15 @@ const defaultState = {
   docsFound: false,
 };
 
-const Item = ({ icon, title }: { icon: string; title: string }) => (
+const Item = ({
+  icon,
+  title,
+  type,
+}: {
+  icon: string;
+  title: string;
+  type: string;
+}) => (
   <Box
     sx={{
       border: "1px lightgrey dashed",
@@ -99,47 +107,77 @@ const Item = ({ icon, title }: { icon: string; title: string }) => (
         alignItems: "center",
       }}
     >
-      <Button
-        variant="primary"
-        sx={{
-          color: "white",
-          cursor: "pointer",
-          mt: "25px",
+      {type !== "chat" && (
+        <Button
+          variant="primary"
+          sx={{
+            color: "white",
+            cursor: "pointer",
+            mt: "25px",
 
-          height: "40px",
-          width: "110px",
-          fontSize: "14px",
-        }}
-        onClick={async () => {}}
-      >
-        <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
-          <Paragraph sx={{ mr: "3px" }}>View</Paragraph>
+            height: "40px",
+            width: "110px",
+            fontSize: "14px",
+          }}
+          onClick={async () => {}}
+        >
+          <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
+            <Paragraph sx={{ mr: "3px" }}>View</Paragraph>
 
-          {
-            // @ts-ignore
-            itemMapSmall[icon]
-          }
-        </Flex>
-      </Button>
-      <Button
-        variant="primary"
-        sx={{
-          color: "#444",
-          border: "1px solid #444",
-          background: "transparent",
-          cursor: "pointer",
-          mt: "20px",
-          height: "40px",
-          width: "110px",
-          fontSize: "14px",
-        }}
-        onClick={async () => {}}
-      >
-        <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
-          <Paragraph sx={{ mr: "3px" }}>Upload</Paragraph>
-          <UploadSimple size={16} />
-        </Flex>
-      </Button>
+            {
+              // @ts-ignore
+              itemMapSmall[icon]
+            }
+          </Flex>
+        </Button>
+      )}
+      {type !== "chat" && (
+        <>
+          <Button
+            variant="primary"
+            sx={{
+              color: "white",
+              cursor: "pointer",
+              mt: "25px",
+
+              height: "40px",
+              width: "110px",
+              fontSize: "14px",
+            }}
+            onClick={async () => {}}
+          >
+            <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
+              <Paragraph sx={{ mr: "3px" }}>View</Paragraph>
+
+              {
+                // @ts-ignore
+                itemMapSmall[icon]
+              }
+            </Flex>
+          </Button>
+          <Button
+            variant="primary"
+            sx={{
+              color: "#444",
+              border: "1px solid #444",
+              background: "transparent",
+              cursor: "pointer",
+              mt: "20px",
+              height: "40px",
+              width: "110px",
+              fontSize: "14px",
+            }}
+            onClick={async () => {}}
+          >
+            <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
+              <Paragraph sx={{ mr: "3px" }}>
+                {type === "reports" ? "Create" : "Upload"}
+              </Paragraph>
+              <UploadSimple size={16} />
+            </Flex>
+          </Button>
+        </>
+      )}
     </Flex>
   </Box>
 );
@@ -209,10 +247,13 @@ const DashboardComponent = ({
       }}
     >
       <Title text="Welcome Back" />
-
+      <Description
+        text={`
+          Choose your desired action and allow us to assist you, or select a quick link from the options provided.`}
+      />
       <Flex
         sx={{
-          height: "450px",
+          height: "400px",
           width: "100%",
           borderBottom: "1px lightgrey dashed",
           mt: "20px",
@@ -239,10 +280,10 @@ const DashboardComponent = ({
           mt: "20px",
         }}
       >
-        <Item icon="Documents" title="Documents" />
-        <Item icon="Reports" title="Reports" />
-        <Item icon="Templates" title="Templates" />
-        <Item icon="Chat" title="Chat" />
+        <Item icon="Reports" title="Reports" type="reports" />
+        <Item icon="Documents" title="Documents" type="documents" />
+        <Item icon="Templates" title="Templates" type="templates" />
+        <Item icon="Chat" title="Chat" type="chat" />
       </Flex>
     </Box>
   );
