@@ -321,7 +321,7 @@ const defaultState = {
   searchEmbedded: "all",
   searchFileType: "all",
   filters: false,
-  docsFound: false,
+  docsFound: true,
 };
 
 const InputLabel = ({
@@ -604,7 +604,7 @@ const DashboardComponent = ({
       );
 
       updateDocs(data);
-      const docsFound = !!data?.length;
+      const docsFound = data?.length > 0;
       // TODO DELETE
       console.log("data: ", data);
       console.log("data?.length: ", data?.length);
