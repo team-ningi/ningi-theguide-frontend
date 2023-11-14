@@ -601,16 +601,16 @@ const DashboardComponent = ({
       );
 
       updateDocs(data);
-
+      const docsFound = !!data?.length;
       // TODO DELETE
       console.log("data: ", data);
       console.log("data?.length: ", data?.length);
-      console.log(" search params: ", search);
+      console.log(" docsFound ", docsFound);
 
       updateState({
         ...state,
         user_id: user?._id,
-        docsFound: data?.length > 0,
+        docsFound,
         mode,
       });
       setLoading(false);
@@ -687,7 +687,7 @@ const DashboardComponent = ({
               <TableItem
                 item={item}
                 i={i}
-                key={`${item.label}`}
+                key={`${item.label}-${i}`}
                 authToken={session?.authToken}
                 setLoading={setLoading}
                 userId={user._id}
