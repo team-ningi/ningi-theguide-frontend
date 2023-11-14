@@ -55,7 +55,7 @@ const items = [
   {
     name: "Tags",
     icon: <Tag size={24} />,
-    url: "/templates",
+    url: "/tags",
     testId: "sidebar-templates",
   },
   {

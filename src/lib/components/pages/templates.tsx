@@ -32,15 +32,6 @@ import { AddNewForm } from "@/lib/components/addContent/add-new-template";
 import moment from "moment";
 import axios from "axios";
 
-/*
-  1 -> MIMIC ALL DOC WORK IN UI FOR TEMPLATES
-  2 -> WHEN ADDING A TEMPLATE ABILITY TO CREATE TAGS 
-
-  3 -> ABILITY TO VIEW / EDIT TAGS FOR AN UPLOADED TEMPLATE
-  
-  4 -> ON REPORTS SCREEN WHEN USER PICKS TEMPLATE - PULL TAGS FROM DB
-        -> WHEN THEY CLICK CREATE IT OVERRIDES THE TAGS IN DB
-  */
 const IconMap = {
   docx: <FileDoc size={22} />,
   txt: <FileText size={22} />,
