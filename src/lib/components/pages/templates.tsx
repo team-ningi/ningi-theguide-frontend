@@ -303,7 +303,7 @@ const filterTemplates = async (
   session: SessionType,
   updateDocs: any
 ) => {
-  const { searchLabel, searchEmbedded, searchFileType } = state;
+  const { user_id, searchLabel, searchEmbedded, searchFileType } = state;
   let body = {};
   if (searchFileType !== "all") {
     //@ts-ignore
@@ -316,6 +316,7 @@ const filterTemplates = async (
     method: "post",
     url: "/api/db/search-templates",
     data: {
+      user_id,
       search: searchLabel,
       limit: 100,
       skip: 0,

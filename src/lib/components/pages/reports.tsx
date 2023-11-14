@@ -23,37 +23,6 @@ import axios from "axios";
 import CreateNewReport from "../reports/createReport";
 import { TableHeader, TableItem } from "../reports/table";
 
-/************TODO
-PAGES:
- - LANDING ❌
-    - REVIEW ❌
- - CREATE ❌
-    - GIVE NAME ❌
-    - SELECT FILES ❌
-    - REPLACE TAGS ❌
-    - GENERATE FILE ❌
-
-1 Landing Page
-  - Show all Reports generated before in a Table (similar to dashboard)
-  - Can click into each report and provide feedback
-    - This was accurate
-    - Provide different reports and re generate (will keep existing one)
-    - Hide (This will flag it and hide from the UI ... will have a button to show hidden ones)
-    - Upload a corrected version (do some kind of comparison of the 2 reports)
-
-2 Create New Report :
-  - Give it a name
-  - select reports to use as the context 
-    - Client data
-    - FactFinds
-    - Personal statements etc
-  - Upload a template with {{THIS WILL BE THE QUESTION FOR THE Ai}} THRUOUT 
-  
-  CLICK NEXT
-  - Generates answers for all {{ QUESTIONS }} and put them into the template doc (using string replace)
-  - Save Report to users profile / display on landing
-*/
-
 const defaultState = {
   user_id: "",
   reportType: "",

@@ -8,14 +8,24 @@ import { DocType, SessionType, SetLoadingType } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
 import { BasicReportTags, SRCarltonTags } from "./tags";
 
-//TODO make dynamic
+//TODO
+// 1 -> the template dropdown shud be pulling in from the list of templates uploaded [BasicReport , ...users_templates]
+
+// 2 -> in future the tag lists will need to be in its own table (Tags)
+/*
+
+  tagName
+  tagsArray
+
+  ** alow user to create their own tags examples that will then show up in the dropdown
+*/
 const baseTemplates = ["BasicReport", "SuitabilityReportCarlton"];
-const tagLists = ["Empty", "BasicReport", "SuitabilityReportCarlton"];
+const tagLists = ["Reset", "Basic Report Example", "Suitability Report"];
 
 const tagMapping = {
-  Empty: [],
-  BasicReport: BasicReportTags,
-  SuitabilityReportCarlton: SRCarltonTags,
+  Reset: [],
+  "Basic Report Example": BasicReportTags,
+  "Suitability Report": SRCarltonTags,
 };
 
 const promptTypes = [
@@ -64,6 +74,7 @@ const saveReport = async (
 
   // TODO
   // CREATE REPORT IN DB
+  // ALSO SET TAGS WITH IT
   // set generated to false
 
   setLoading(false);
@@ -79,7 +90,7 @@ const defaultState = {
   reportName: "",
   documentIds: [],
   baseTemplate: "",
-  tagsSelected: "Empty",
+  tagsSelected: "",
   tags: [],
 };
 
@@ -360,7 +371,7 @@ const CreateNewReport = ({
               baseTemplate: values?.value,
             });
             //@ts-ignore
-            updateTags(tagMapping[values?.value]);
+            // updateTags(tagMapping[values?.value]);
           }}
           styles={{
             control: (provided) => ({
@@ -385,8 +396,8 @@ const CreateNewReport = ({
             textAlign: "left",
             width: "100%",
           }}
-          title="Tags"
-          subtitle=" *"
+          title="Tags - Select from one of our examples or start from scratch"
+          subtitle=""
         />
         <ReactSelect
           value={tagLists.map((item: any) => {

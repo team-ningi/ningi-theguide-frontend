@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { file_type, search, limit, skip, authToken } = req.body;
+  const { user_id, file_type, search, limit, skip, authToken } = req.body;
   try {
     let body = {};
     if (file_type) {
@@ -15,6 +15,7 @@ export default async function handler(req, res) {
       method: "post",
       url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/search-templates`,
       data: {
+        user_id,
         limit,
         skip,
         ...body,

@@ -13,17 +13,9 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 /*
 // TODO
 
-*** MAKER SURE WHEN SEARCHING DOCUMENTS IT SENDS USER_ID
----> OTHERWISE YOUR GETTING ALL DOCUMENTS FOR ALL USERS
-
-**** 1            
-          - REPORT BUILDER ❌
-            -> GENERATE DOC WITH TAGS REPLACED ✅
-            -> UI FOR REPORTS ✅
-            -> refine UI ❌
-                -> actually select a template + add ability to upload a new one ❌
-            -> updte documents model in API to allow document_type set templates  ❌
-                to a type of template DONT show them in regular searches , set default document_type to be 'file'
+*** 1
+            MAKER SURE WHEN SEARCHING DOCUMENTS IT SENDS USER_ID ❌
+              ---> OTHERWISE YOUR GETTING ALL DOCUMENTS FOR ALL USERS ❌
 
 **** 2
           - UPLOAD AUDIO FILES ❌
@@ -34,7 +26,7 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
 
 **** 3
-          - PAGINATION ON DASH
+          - PAGINATION ON LISTS
             - API already supports it ... 
 
 **** 4
