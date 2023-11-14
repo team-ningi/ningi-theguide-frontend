@@ -5,7 +5,7 @@ import { debounce } from "debounce";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   SessionType,
   SetLoadingType,
@@ -478,10 +478,17 @@ const TemplateComponent = ({
   const [state, updateState] = useState<DashboardStateType>(defaultState);
   const [docs, updateDocs] = useState<DocType[]>([]);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     (async () => {
       setLoading(true);
+      let mode = "start";
+      const search = searchParams.get("mode");
+      if (search) {
+        mode = search;
+      }
+
       const { data } = await getUserTemplates(user._id, session?.authToken);
 
       updateDocs(data);
@@ -489,6 +496,7 @@ const TemplateComponent = ({
         ...state,
         user_id: user?._id,
         docsFound: data?.length > 0,
+        mode,
       });
       setLoading(false);
     })();

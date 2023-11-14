@@ -25,8 +25,10 @@ import {
 } from "phosphor-react";
 import { getUserDocuments } from "@/utils/api-helper";
 import { Title, Description } from "@/lib/components/TextItems";
+import { GetStarted } from "@/lib/components/getStarted";
 import moment from "moment";
 import axios from "axios";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 const itemMap = {
   Documents: <Files size={24} />,
@@ -35,7 +37,7 @@ const itemMap = {
   Chat: <Chat size={24} />,
 };
 
-const itemMapSmall = {
+export const itemMapSmall = {
   Documents: <Files size={16} />,
   Templates: <FileDotted size={16} />,
   Reports: <FileCode size={16} />,
@@ -53,20 +55,25 @@ const defaultState = {
   searchFileType: "all",
   filters: false,
   docsFound: false,
+  step1: "",
 };
 
 const Item = ({
   icon,
   title,
   type,
+  urls,
+  router,
 }: {
   icon: string;
   title: string;
   type: string;
+  urls: string[];
+  router: AppRouterInstance;
 }) => (
   <Box
     sx={{
-      border: "1px lightgrey dashed",
+      border: "1px grey dashed",
       borderRadius: "12px",
       backgroundColor: "transparent",
       // backgroundColor: "#9999ff",
@@ -107,11 +114,14 @@ const Item = ({
         alignItems: "center",
       }}
     >
-      {type !== "chat" && (
+      {type === "chat" && (
         <Button
           variant="primary"
           sx={{
-            color: "white",
+            color: "#444",
+            border: "1px solid #444",
+            background: "transparent",
+            // color: "white",
             cursor: "pointer",
             mt: "25px",
 
@@ -119,10 +129,10 @@ const Item = ({
             width: "110px",
             fontSize: "14px",
           }}
-          onClick={async () => {}}
+          onClick={async () => router.push(urls[0])}
         >
           <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
-            <Paragraph sx={{ mr: "3px" }}>View</Paragraph>
+            <Paragraph sx={{ mr: "3px" }}>Chat</Paragraph>
 
             {
               // @ts-ignore
@@ -136,7 +146,10 @@ const Item = ({
           <Button
             variant="primary"
             sx={{
-              color: "white",
+              color: "#444",
+              border: "1px solid #444",
+              background: "transparent",
+              // color: "white",
               cursor: "pointer",
               mt: "25px",
 
@@ -144,7 +157,7 @@ const Item = ({
               width: "110px",
               fontSize: "14px",
             }}
-            onClick={async () => {}}
+            onClick={async () => router.push(urls[0])}
           >
             <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
               <Paragraph sx={{ mr: "3px" }}>View</Paragraph>
@@ -167,7 +180,7 @@ const Item = ({
               width: "110px",
               fontSize: "14px",
             }}
-            onClick={async () => {}}
+            onClick={async () => router.push(urls[1])}
           >
             <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
               <Paragraph sx={{ mr: "3px" }}>
@@ -246,29 +259,23 @@ const DashboardComponent = ({
         position: "relative",
       }}
     >
-      <Title text="Welcome Back" />
-      <Description
-        text={`
+      <Box sx={{}}>
+        <Title text="Welcome Back" />
+        <Description
+          text={`
           Choose your desired action and allow us to assist you, or select a quick link from the options provided.`}
-      />
+        />
+      </Box>
       <Flex
         sx={{
-          height: "400px",
+          minHeight: "350px",
           width: "100%",
           borderBottom: "1px lightgrey dashed",
           mt: "20px",
           mb: "40px",
         }}
       >
-        <Paragraph
-          sx={{
-            fontWeight: "500",
-            fontSize: "18px",
-            textAlign: "left",
-            color: "#555",
-            mt: "8px",
-          }}
-        ></Paragraph>
+        <GetStarted state={state} updateState={updateState} router={router} />
       </Flex>
 
       <Title text="Quick Links" />
@@ -280,10 +287,34 @@ const DashboardComponent = ({
           mt: "20px",
         }}
       >
-        <Item icon="Reports" title="Reports" type="reports" />
-        <Item icon="Documents" title="Documents" type="documents" />
-        <Item icon="Templates" title="Templates" type="templates" />
-        <Item icon="Chat" title="Chat" type="chat" />
+        <Item
+          icon="Reports"
+          title="Reports"
+          type="reports"
+          urls={["/reports", "/reports?mode=create"]}
+          router={router}
+        />
+        <Item
+          icon="Documents"
+          title="Documents"
+          type="documents"
+          urls={["/documents", "/documents?mode=add"]}
+          router={router}
+        />
+        <Item
+          icon="Templates"
+          title="Templates"
+          type="templates"
+          urls={["/templates", "/templates?mode=add"]}
+          router={router}
+        />
+        <Item
+          icon="Chat"
+          title="Chat"
+          type="chat"
+          urls={["/chat"]}
+          router={router}
+        />
       </Flex>
     </Box>
   );

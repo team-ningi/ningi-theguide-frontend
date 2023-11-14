@@ -99,7 +99,7 @@ const TagAndPromptItem = ({
     <Flex
       sx={{
         justifyContent: "space-between",
-        width: "650px",
+        width: "100%",
         border: "0px solid red",
       }}
     >
@@ -258,12 +258,12 @@ const CreateNewReport = ({
   const [tags, updateTags] = useState([]);
 
   return (
-    <Flex sx={{ flexDirection: "column", width: "650px", mb: "200px" }}>
+    <Flex sx={{ flexDirection: "column", width: "100%", mb: "200px" }}>
       <Box>
         <InputLabel
           customSX={{
             textAlign: "left",
-            width: "650px",
+            width: "100%",
           }}
           title="Report Name"
           subtitle=" *"
@@ -274,7 +274,7 @@ const CreateNewReport = ({
             height: "40px",
             borderRadius: 0,
             borderColor: "inputBorder",
-            width: "650px",
+            width: "100%",
             mt: "0px",
             mb: "20px",
             border: "1px solid lightgrey",
@@ -296,7 +296,7 @@ const CreateNewReport = ({
         <InputLabel
           customSX={{
             textAlign: "left",
-            width: "650px",
+            width: "100%",
           }}
           title="Select Documents"
           subtitle=" *"
@@ -321,7 +321,7 @@ const CreateNewReport = ({
           styles={{
             control: (provided) => ({
               ...provided,
-              width: "650px",
+              width: "100%",
               outline: "none",
               minHeight: "45px",
               marginBottom: "20px",
@@ -340,7 +340,7 @@ const CreateNewReport = ({
         <InputLabel
           customSX={{
             textAlign: "left",
-            width: "650px",
+            width: "100%",
           }}
           title="Base Template"
           subtitle=" *"
@@ -365,7 +365,7 @@ const CreateNewReport = ({
           styles={{
             control: (provided) => ({
               ...provided,
-              width: "650px",
+              width: "100%",
               outline: "none",
               minHeight: "45px",
               marginBottom: "20px",
@@ -383,7 +383,7 @@ const CreateNewReport = ({
         <InputLabel
           customSX={{
             textAlign: "left",
-            width: "650px",
+            width: "100%",
           }}
           title="Tags"
           subtitle=" *"
@@ -408,7 +408,7 @@ const CreateNewReport = ({
           styles={{
             control: (provided) => ({
               ...provided,
-              width: "650px",
+              width: "100%",
               outline: "none",
               minHeight: "45px",
               marginBottom: "20px",
@@ -459,6 +459,18 @@ const CreateNewReport = ({
         </Flex>
 
         <Flex sx={{ justifyContent: "flex-end" }}>
+          <Paragraph
+            sx={{
+              mt: "50px",
+              mr: "20px",
+              color: "grey",
+              fontSize: "15px",
+              cursor: "pointer",
+            }}
+            onClick={() => window.location.reload()}
+          >
+            Cancel
+          </Paragraph>
           <Button
             variant="primary"
             sx={{
