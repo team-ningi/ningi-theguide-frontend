@@ -8,6 +8,7 @@ import {
   List,
   HouseSimple,
   FileCode,
+  Tag,
 } from "phosphor-react";
 import {
   ReactNode,
@@ -48,6 +49,12 @@ const items = [
   {
     name: "Templates",
     icon: <FileDotted size={24} />,
+    url: "/templates",
+    testId: "sidebar-templates",
+  },
+  {
+    name: "Tags",
+    icon: <Tag size={24} />,
     url: "/templates",
     testId: "sidebar-templates",
   },
