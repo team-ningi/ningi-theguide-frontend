@@ -601,6 +601,12 @@ const DashboardComponent = ({
       );
 
       updateDocs(data);
+
+      // TODO DELETE
+      console.log("data: ", data);
+      console.log("data?.length: ", data?.length);
+      console.log(" search params: ", search);
+
       updateState({
         ...state,
         user_id: user?._id,
