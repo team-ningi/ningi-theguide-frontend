@@ -353,6 +353,8 @@ const filterDocuments = async (
   session: SessionType,
   updateDocs: any
 ) => {
+  if (!state?.docsFound) return;
+
   const { user_id, searchLabel, searchEmbedded, searchFileType } = state;
   let body = {};
   if (searchFileType !== "all") {
@@ -661,7 +663,7 @@ const DashboardComponent = ({
         showNotification={showNotification}
       />
 
-      {state.mode === "start" && state?.docsFound && (
+      {state.mode === "start" && (
         <Filters
           state={state}
           updateState={updateState}
