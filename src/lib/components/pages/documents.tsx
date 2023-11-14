@@ -353,6 +353,7 @@ const filterDocuments = async (
   session: SessionType,
   updateDocs: any
 ) => {
+  console.log({ state });
   if (!state?.docsFound) return;
 
   const { user_id, searchLabel, searchEmbedded, searchFileType } = state;
