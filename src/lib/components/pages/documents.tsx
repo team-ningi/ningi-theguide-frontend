@@ -353,7 +353,6 @@ const filterDocuments = async (
   session: SessionType,
   updateDocs: any
 ) => {
-  console.log({ state });
   if (!state?.docsFound) return;
 
   const { user_id, searchLabel, searchEmbedded, searchFileType } = state;
@@ -604,16 +603,11 @@ const DashboardComponent = ({
       );
 
       updateDocs(data);
-      const docsFound = data?.length > 0;
-      // TODO DELETE
-      console.log("data: ", data);
-      console.log("data?.length: ", data?.length);
-      console.log(" docsFound ", docsFound);
 
       updateState({
         ...state,
         user_id: user?._id,
-        docsFound,
+        docsFound: data?.length > 0,
         mode,
       });
       setLoading(false);

@@ -271,7 +271,7 @@ const defaultState = {
   searchEmbedded: "all",
   searchFileType: "all",
   filters: false,
-  docsFound: false,
+  docsFound: true,
 };
 
 const InputLabel = ({
@@ -303,6 +303,8 @@ const filterTemplates = async (
   session: SessionType,
   updateDocs: any
 ) => {
+  if (!state?.docsFound) return;
+
   const { user_id, searchLabel, searchEmbedded, searchFileType } = state;
   let body = {};
   if (searchFileType !== "all") {
@@ -546,7 +548,7 @@ const TemplateComponent = ({
         showNotification={showNotification}
       />
 
-      {state.mode === "start" && state?.docsFound && (
+      {state.mode === "start" && (
         <Filters
           state={state}
           updateState={updateState}
