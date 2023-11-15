@@ -345,7 +345,7 @@ const TagComponent = ({
               fontSize: "14px",
             }}
             onClick={async () => {
-              updateState(defaultState);
+              updateState({ ...state, newLabel: "", mode: "start" });
               updateTagsInView([]);
             }}
           >
@@ -441,6 +441,7 @@ const TagComponent = ({
             }}
             onClick={async () => {
               const { user_id, newLabel, authToken } = state;
+
               if (
                 user_id &&
                 authToken &&
@@ -454,9 +455,6 @@ const TagComponent = ({
                   tagsInView,
                   authToken
                 );
-                // updateState(defaultState);
-                // updateTagsInView([]);
-                // setLoading(false);
                 window.location.reload();
               } else {
                 //TODO SHOW ERROR MSG
@@ -484,7 +482,7 @@ const TagComponent = ({
               fontSize: "14px",
             }}
             onClick={async () => {
-              updateState(defaultState);
+              updateState({ ...state, newLabel: "", mode: "start" });
               updateTagsInView([]);
             }}
           >
@@ -556,9 +554,7 @@ const TagComponent = ({
                   setLoading(true);
                   const { authToken, id, label } = state.tagsToEdit;
                   await updateTagsAndPrompts(id, label, tagsInView, authToken);
-                  // updateState(defaultState);
-                  // updateTagsInView([]);
-                  // setLoading(false);
+
                   window.location.reload();
                 }}
               >

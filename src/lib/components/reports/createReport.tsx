@@ -72,11 +72,13 @@ const saveReport = async (
       outputName,
       session?.authToken
     );
-  //TODO
-  //RELOAD PAGE
+  showNotification({
+    text: "Your document has been generated! 🚀",
+    type: "success",
+  });
+  setTimeout(() => hideNotification(), 3000);
   setLoading(false);
-
-  return tagResults;
+  return;
 };
 
 const defaultState = {
@@ -482,7 +484,7 @@ const CreateNewReportComponent = ({
           >
             Cancel
           </Paragraph>
-          <Button
+          {/* <Button
             variant="primary"
             sx={{
               color: "#444",
@@ -510,7 +512,7 @@ const CreateNewReportComponent = ({
             }
           >
             Save For Later
-          </Button>
+          </Button> */}
           <Button
             variant="primary"
             sx={{
@@ -523,7 +525,7 @@ const CreateNewReportComponent = ({
               width: "150px",
               fontSize: "14px",
             }}
-            onClick={async () =>
+            onClick={async () => {
               await saveReport(
                 reportState,
                 setLoading,
@@ -533,8 +535,11 @@ const CreateNewReportComponent = ({
                 showNotification,
                 hideNotification,
                 state?.user_id
-              )
-            }
+              );
+
+              updateState({ ...state, mode: "start", success: true });
+              updateReportState(defaultState);
+            }}
           >
             Create report
           </Button>

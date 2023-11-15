@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { useRouter, useSearchParams } from "next/navigation";
+import ConfettiExplosion from "react-confetti-explosion";
 import {
   SessionType,
   SetLoadingType,
@@ -37,6 +38,7 @@ const defaultState = {
   searchReportType: "all",
   filters: false,
   reportsFound: false,
+  success: false,
 };
 
 export const InputLabel = ({
@@ -413,6 +415,15 @@ const ReportsComponent = ({
           updateReports={updateReports}
         />
       )}
+      {state.success && (
+        <ConfettiExplosion
+          particleCount={350}
+          duration={3000}
+          width={1600}
+          force={0.8}
+        />
+      )}
+
       {reports?.length > 0 && state?.mode === "start" && (
         <>
           <Box
