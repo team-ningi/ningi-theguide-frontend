@@ -11,13 +11,13 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.449.0",
-    "@aws-sdk/s3-request-presigner": "^3.449.0",
+    "@aws-sdk/client-s3": "3.449.0",
+    "@aws-sdk/s3-request-presigner": "3.449.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.6.3",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
-    "aws-sdk": "^2.1470.0",
+    "aws-sdk": "2.1470.0",
     "axios": "^1.5.1",
     "country-code-emoji": "^2.3.0",
     "debounce": "^1.2.1",
