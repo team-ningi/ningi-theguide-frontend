@@ -40,7 +40,6 @@ const saveReport = async (
   setLoading(true);
 
   await Promise.all(
-    //@ts-ignore
     tags?.map(async (item, i) => {
       const { data } = await chat(
         item.prompt?.replace("{{data}}", item?.data),
@@ -73,7 +72,8 @@ const saveReport = async (
       outputName,
       session?.authToken
     );
-
+  //TODO
+  //RELOAD PAGE
   setLoading(false);
 
   return tagResults;
