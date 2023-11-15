@@ -1,20 +1,11 @@
 import { Box, Paragraph, Flex, Input, Button } from "theme-ui";
-import { chat, generateDocx } from "@/utils/api-helper";
+import { chat, generateDocx, createNewReport } from "@/utils/api-helper";
 import { useState } from "react";
 import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
 import { DocType, SessionType, SetLoadingType } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
-
-const baseTemplates = ["BasicReport", "SuitabilityReportCarlton"];
-
-// const tagLists = ["Reset", "Basic Report Example", "Suitability Report"];
-// const tagMapping = {
-//   Reset: [],
-//   "Basic Report Example": [], //BasicReportExample,
-//   "Suitability Report": [], //SuitabilityReportExample,
-// };
 
 const promptTypes = [
   "return {{data}}",
@@ -32,7 +23,8 @@ const saveReport = async (
   tags: { prompt: "string"; tag: "string"; data: string; uuid: string }[],
   generateDoc: boolean,
   showNotification: any,
-  hideNotification: any
+  hideNotification: any,
+  user_id: string
 ) => {
   const docId = reportState?.documentIds;
   let tagResults: any = {};
@@ -60,16 +52,29 @@ const saveReport = async (
     })
   );
 
-  // TODO
-  // CREATE REPORT IN DB
-  // ALSO SET TAGS WITH IT
-  // set generated to false
+  const { data } = await createNewReport(
+    user_id,
+    reportState?.reportName,
+    tags,
+    tagResults,
+    reportState?.documentIds,
+    reportState?.baseTemplateURL,
+    session?.authToken
+  );
+  const reportId = data?.report?._id;
+  const templateURL = data?.report?.base_template_url;
+  const outputName = `${uuidv4()}.${data?.report?.file_type}`;
+
+  if (generateDoc)
+    await generateDocx(
+      tagResults,
+      reportId,
+      templateURL,
+      outputName,
+      session?.authToken
+    );
 
   setLoading(false);
-
-  console.log({ tagResults });
-
-  if (generateDoc) generateDocx(tagResults, session?.authToken);
 
   return tagResults;
 };
@@ -78,6 +83,7 @@ const defaultState = {
   reportName: "",
   documentIds: [],
   baseTemplate: "",
+  baseTemplateURL: "",
   tagsSelected: "",
   tags: [],
 };
@@ -244,7 +250,7 @@ export const TagAndPromptItem = ({
   );
 };
 
-const CreateNewReport = ({
+const CreateNewReportComponent = ({
   state,
   updateState,
   session,
@@ -254,6 +260,7 @@ const CreateNewReport = ({
   showNotification,
   hideNotification,
   tagList,
+  baseTemplates = [],
 }: any) => {
   const [reportState, updateReportState] = useState(defaultState);
   const [tags, updateTags] = useState([]);
@@ -348,17 +355,18 @@ const CreateNewReport = ({
         />
         <ReactSelect
           value={baseTemplates.map((item: any) => {
-            if (reportState.baseTemplate === item) {
+            if (reportState.baseTemplate === item.label) {
               return {
-                value: item,
-                label: item,
+                value: item.value,
+                label: item.label,
               };
             }
           })}
           onChange={(values: any) => {
             updateReportState({
               ...reportState,
-              baseTemplate: values?.value,
+              baseTemplate: values?.label,
+              baseTemplateURL: values?.value,
             });
           }}
           styles={{
@@ -372,8 +380,8 @@ const CreateNewReport = ({
           }}
           options={baseTemplates?.map((item: any) => {
             return {
-              value: item,
-              label: item,
+              value: item.value,
+              label: item.label,
             };
           })}
         />
@@ -405,7 +413,7 @@ const CreateNewReport = ({
             const TagsToUse = tagList?.find(
               (item: any) => item?.label === values?.value
             );
-            console.log("TagsToUse", TagsToUse);
+
             updateTags(TagsToUse?.tags);
           }}
           styles={{
@@ -496,7 +504,8 @@ const CreateNewReport = ({
                 tags,
                 false,
                 showNotification,
-                hideNotification
+                hideNotification,
+                state?.user_id
               )
             }
           >
@@ -522,7 +531,8 @@ const CreateNewReport = ({
                 tags,
                 true,
                 showNotification,
-                hideNotification
+                hideNotification,
+                state?.user_id
               )
             }
           >
@@ -534,4 +544,4 @@ const CreateNewReport = ({
   );
 };
 
-export default CreateNewReport;
+export default CreateNewReportComponent;

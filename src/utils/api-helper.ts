@@ -1,11 +1,21 @@
+import { TagItemType } from "@/lib/types";
 import axios from "axios";
 
-export const generateDocx = async (tags: object, authToken: string) =>
+export const generateDocx = async (
+  tags: object,
+  reportId: string,
+  templateURL: string,
+  outputName: string,
+  authToken: string
+) =>
   await axios({
     method: "post",
     url: "/api/db/generate-docx",
     data: {
       tags,
+      reportId,
+      templateURL,
+      outputName,
       authToken,
     },
   });
@@ -95,6 +105,29 @@ export const getUserReports = async (id: string, authToken: string) =>
     url: "/api/db/get-users-reports",
     data: {
       user_id: id,
+      authToken,
+    },
+  });
+
+export const createNewReport = async (
+  user_id: string,
+  report_name: string,
+  tags: any[],
+  tagResults: any[],
+  document_ids: string[],
+  baseTemplateURL: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/create-report",
+    data: {
+      user_id,
+      report_name,
+      tags,
+      tagResults,
+      document_ids,
+      baseTemplateURL,
       authToken,
     },
   });

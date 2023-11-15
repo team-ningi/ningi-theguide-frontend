@@ -18,10 +18,14 @@ import {
   TagItemType,
 } from "@/lib/types";
 import { Files, XCircle } from "phosphor-react";
-import { getUserReports, getUserDocuments } from "@/utils/api-helper";
+import {
+  getUserReports,
+  getUserDocuments,
+  getUserTemplates,
+} from "@/utils/api-helper";
 import { Title, Description } from "@/lib/components/TextItems";
 import axios from "axios";
-import CreateNewReport from "../reports/createReport";
+import CreateNewReportComponent from "../reports/createReport";
 import { TableHeader, TableItem } from "../reports/table";
 
 const defaultState = {
@@ -290,6 +294,7 @@ const ReportsComponent = ({
   const [state, updateState] = useState<ReportsStateType>(defaultState);
   const [reports, updateReports] = useState<ReportType[]>([]);
   const [docs, updateDocs] = useState<DocType[]>([]);
+  const [baseTemplates, updateTemplates] = useState<any[]>([]);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -311,6 +316,17 @@ const ReportsComponent = ({
         "all"
       );
       updateDocs(docs);
+
+      const { data: userTemplates } = await getUserTemplates(
+        user._id,
+        session?.authToken
+      );
+
+      const templatesForSelect = userTemplates?.map((item: any) => ({
+        value: item.file_url,
+        label: item?.label,
+      }));
+      updateTemplates(templatesForSelect);
 
       updateState({
         ...state,
@@ -446,7 +462,7 @@ const ReportsComponent = ({
       )}
 
       {state?.mode === "create" && (
-        <CreateNewReport
+        <CreateNewReportComponent
           state={state}
           updateState={updateState}
           session={session}
@@ -456,6 +472,7 @@ const ReportsComponent = ({
           showNotification={showNotification}
           hideNotification={hideNotification}
           tagList={tagList}
+          baseTemplates={baseTemplates}
         />
       )}
     </Box>

@@ -166,7 +166,7 @@ const TableItem = ({
 
   const { file_type, label, saved_filename } = item;
   const isEven = i % 2 === 0;
-  console.log(item);
+
   return (
     <Flex
       sx={{

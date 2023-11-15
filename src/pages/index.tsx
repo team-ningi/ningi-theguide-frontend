@@ -11,13 +11,13 @@ import { LoginTypes } from "../lib/types";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
 /*
-// TODO
-
+TODO
+FOR ALPHA
 *** 1
-            MAKER SURE WHEN SEARCHING DOCUMENTS IT SENDS USER_ID ❌
-              ---> OTHERWISE YOUR GETTING ALL DOCUMENTS FOR ALL USERS ❌
+          WHEN REPORT IS CREATED BUT NOT GENERATED ALLOW USER TO CONTINUE EDITING IT ❌
 
-**** 2
+NOT FOR ALPHA 
+**** 1
           - UPLOAD AUDIO FILES ❌
             - IF MP3 -> TRANSCRIBE AND CREATE EMBED
           
@@ -25,20 +25,20 @@ import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
             - TEXTRACT   CHAT
               https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
 
-**** 3
+**** 2
           - PAGINATION ON LISTS
             - API already supports it ... 
 
-**** 4
+**** 3
           - WHEN LOG IN ❌
             -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR
 
-***** 5
+***** 4
           - LIVE BLOCKS HOW CAN WE USE IT?
             https://vercel.com/templates/next.js/liveblocks-starter-kit
 
 
-****** 6
+****** 5
           - Look into function calling
             https://platform.openai.com/docs/guides/function-calling
 
