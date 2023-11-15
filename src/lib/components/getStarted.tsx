@@ -11,6 +11,8 @@ const textMap = {
     "Supporting documents contain all the necessary information that can be extracted for report creation.",
   queryDocuments:
     "After the processing of your uploaded documents, you can query them and extract information. It is possible to select multiple documents and interrogate them for the required data.",
+  tagsAndPrompts:
+    "Tags and prompts play a crucial role in generating reports. Your templates must include {tag references}, you must create tags & prompts to facilitate the extraction of the necessary data for populating your report.",
 };
 
 const InputLabel = ({ title, subtitle, customSX = {} }: any) => (
@@ -34,6 +36,7 @@ const Step1Options = [
   { label: "Upload A Base Template", value: "uploadTemplate" },
   { label: "Upload A Supporting Document", value: "uploadDocument" },
   { label: "Query Uploaded Documents", value: "queryDocuments" },
+  { label: "Create Tags & Prompts", value: "tagsAndPrompts" },
 ];
 
 export const GetStarted = ({ state, updateState, router }: any) => {
@@ -46,8 +49,7 @@ export const GetStarted = ({ state, updateState, router }: any) => {
         ml: "150px",
       }}
     >
-      {/* <Title text="DSD" /> */}
-      <Box sx={{ width: "500px", mt: "80px" }}>
+      <Box sx={{ width: "500px", mt: "60px" }}>
         <InputLabel
           customSX={{ textAlign: "left", width: "500px" }}
           title="What would you like to do?"
@@ -125,6 +127,8 @@ export const GetStarted = ({ state, updateState, router }: any) => {
             router.push("/reports?mode=create");
           } else if (state?.step1 === "queryDocuments") {
             router.push("/chat");
+          } else if (state?.step1 === "tagsAndPrompts") {
+            router.push("/tags");
           }
         }}
       >

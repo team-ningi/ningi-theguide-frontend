@@ -4,6 +4,12 @@ export type SetLoadingType = (loading: boolean) => {
   type: string;
   loading: boolean;
 };
+export type TagItemType = {
+  _id?: string;
+  id: string;
+  label: string;
+  tags: any[];
+};
 
 export type ShowNotificationType = (data: any) => {
   type: string;
@@ -162,6 +168,24 @@ export type DashboardStateType = {
   mode: string;
   filters: boolean;
   docsFound: boolean;
+};
+
+export type TagsStateType = {
+  authToken: string;
+  newLabel: string;
+  user_id: string;
+  customFilename: string;
+  label: string;
+  mode: string;
+  filters: boolean;
+  tagsFound: boolean;
+  tagsToEdit: {
+    userId: string;
+    label: string;
+    id: string;
+    tags: TagItemType[];
+    authToken: string;
+  };
 };
 
 export type ReportsStateType = {

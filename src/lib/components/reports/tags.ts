@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-export const SRCarltonTags = [
+export const SuitabilityReportExample = [
   {
     tag: "Title",
     data: "client 1s title",
@@ -219,7 +219,7 @@ export const SRCarltonTags = [
   },
 ];
 
-export const BasicReportTags = [
+export const BasicReportExample = [
   {
     tag: "first_name",
     data: "first name",

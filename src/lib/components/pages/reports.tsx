@@ -15,6 +15,7 @@ import {
   HideNotificationType,
   ShowNotificationType,
   DocType,
+  TagItemType,
 } from "@/lib/types";
 import { Files, XCircle } from "phosphor-react";
 import { getUserReports, getUserDocuments } from "@/utils/api-helper";
@@ -276,6 +277,7 @@ const ReportsComponent = ({
   hideNotification,
   showNotification,
   loading,
+  tagList,
 }: {
   user: UserType;
   session: SessionType;
@@ -283,6 +285,7 @@ const ReportsComponent = ({
   hideNotification: HideNotificationType;
   showNotification: ShowNotificationType;
   loading: boolean;
+  tagList: TagItemType[];
 }) => {
   const [state, updateState] = useState<ReportsStateType>(defaultState);
   const [reports, updateReports] = useState<ReportType[]>([]);
@@ -452,6 +455,7 @@ const ReportsComponent = ({
           setLoading={setLoading}
           showNotification={showNotification}
           hideNotification={hideNotification}
+          tagList={tagList}
         />
       )}
     </Box>

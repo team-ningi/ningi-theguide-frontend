@@ -6,27 +6,15 @@ import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
 import { DocType, SessionType, SetLoadingType } from "@/lib/types";
 import { v4 as uuidv4 } from "uuid";
-import { BasicReportTags, SRCarltonTags } from "./tags";
 
-//TODO
-// 1 -> the template dropdown shud be pulling in from the list of templates uploaded [BasicReport , ...users_templates]
-
-// 2 -> in future the tag lists will need to be in its own table (Tags)
-/*
-
-  tagName
-  tagsArray
-
-  ** alow user to create their own tags examples that will then show up in the dropdown
-*/
 const baseTemplates = ["BasicReport", "SuitabilityReportCarlton"];
-const tagLists = ["Reset", "Basic Report Example", "Suitability Report"];
 
-const tagMapping = {
-  Reset: [],
-  "Basic Report Example": BasicReportTags,
-  "Suitability Report": SRCarltonTags,
-};
+// const tagLists = ["Reset", "Basic Report Example", "Suitability Report"];
+// const tagMapping = {
+//   Reset: [],
+//   "Basic Report Example": [], //BasicReportExample,
+//   "Suitability Report": [], //SuitabilityReportExample,
+// };
 
 const promptTypes = [
   "return {{data}}",
@@ -94,7 +82,7 @@ const defaultState = {
   tags: [],
 };
 
-const TagAndPromptItem = ({
+export const TagAndPromptItem = ({
   uuid,
   tag,
   data,
@@ -103,9 +91,10 @@ const TagAndPromptItem = ({
   updateTags,
 }: any) => {
   const idx = tags?.findIndex((item: any) => item.uuid === uuid);
-  const [thePrompt, updatePrompt] = useState(prompt);
+  const [thePrompt, updatePrompt] = useState(prompt); //|| promptTypes[0]
   const [theTag, updateTheTag] = useState(tag);
   const [theData, updateTheData] = useState(data);
+
   return (
     <Flex
       sx={{
@@ -264,6 +253,7 @@ const CreateNewReport = ({
   setLoading,
   showNotification,
   hideNotification,
+  tagList,
 }: any) => {
   const [reportState, updateReportState] = useState(defaultState);
   const [tags, updateTags] = useState([]);
@@ -370,8 +360,6 @@ const CreateNewReport = ({
               ...reportState,
               baseTemplate: values?.value,
             });
-            //@ts-ignore
-            // updateTags(tagMapping[values?.value]);
           }}
           styles={{
             control: (provided) => ({
@@ -400,11 +388,11 @@ const CreateNewReport = ({
           subtitle=""
         />
         <ReactSelect
-          value={tagLists.map((item: any) => {
-            if (reportState.tagsSelected === item) {
+          value={tagList.map((item: any) => {
+            if (reportState.tagsSelected === item?.label) {
               return {
-                value: item,
-                label: item,
+                value: item?.label,
+                label: item?.label,
               };
             }
           })}
@@ -413,8 +401,12 @@ const CreateNewReport = ({
               ...reportState,
               tagsSelected: values?.value,
             });
-            //@ts-ignore
-            updateTags(tagMapping[values?.value]);
+
+            const TagsToUse = tagList?.find(
+              (item: any) => item?.label === values?.value
+            );
+            console.log("TagsToUse", TagsToUse);
+            updateTags(TagsToUse?.tags);
           }}
           styles={{
             control: (provided) => ({
@@ -425,10 +417,10 @@ const CreateNewReport = ({
               marginBottom: "20px",
             }),
           }}
-          options={tagLists?.map((item: any) => {
+          options={tagList?.map((item: any) => {
             return {
-              value: item,
-              label: item,
+              value: item?.label,
+              label: item?.label,
             };
           })}
         />

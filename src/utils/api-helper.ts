@@ -25,6 +25,60 @@ export const getUserDocuments = async (
     },
   });
 
+export const getTags = async (id: string, authToken: string) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-users-tags",
+    data: {
+      user_id: id,
+      authToken,
+    },
+  });
+
+export const updateTagsAndPrompts = async (
+  id: string,
+  label: string,
+  tags: any[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/update-tags",
+    data: {
+      id,
+      label,
+      tags,
+      authToken,
+    },
+  });
+
+export const addTagsAndPrompts = async (
+  user_id: string,
+  label: string,
+  tags: any[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/create-tags",
+    data: {
+      user_id,
+      label,
+      tags,
+      authToken,
+    },
+  });
+
+export const deleteTagsAndPrompts = async (id: string, authToken: string) =>
+  await axios({
+    method: "post",
+    url: "/api/db/delete-tags",
+    data: {
+      id,
+      authToken,
+    },
+  });
+
 export const getUserTemplates = async (id: string, authToken: string) =>
   await axios({
     method: "post",

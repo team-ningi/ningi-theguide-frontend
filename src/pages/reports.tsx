@@ -8,12 +8,22 @@ import { useParams } from "next/navigation";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
-import { SessionType, UserType, PageTypes } from "../lib/types";
+import { getTags } from "@/utils/api-helper";
+import {
+  BasicReportExample,
+  SuitabilityReportExample,
+} from "../lib/components/reports/tags";
+import { SessionType, UserType, PageTypes, TagItemType } from "../lib/types";
 
 const Page = ({ session, setCoreData, user }: PageTypes) => {
-  const [state, updateContent] = useState<{ ready: boolean; user: UserType }>({
+  const [state, updateContent] = useState<{
+    ready: boolean;
+    user: UserType;
+    tags: TagItemType[];
+  }>({
     ready: false, //@ts-ignore
     user: null,
+    tags: [],
   });
   const params = useParams();
 
@@ -23,7 +33,30 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         if (!user) {
           await setCoreData(session.email, session, false);
         } else {
-          updateContent({ ...state, ready: true, user });
+          // get tags put into state
+          const { data } = await getTags(user._id, session?.authToken);
+
+          let TagsToDisplay = [
+            { id: "0", label: "Reset", tags: [] },
+            { id: "1", label: "Basic Example", tags: BasicReportExample },
+            {
+              id: "2",
+              label: "Suitability Report Example",
+              tags: SuitabilityReportExample,
+            },
+          ];
+          const UsersTags = data?.map((item: TagItemType) => ({
+            id: item._id,
+            label: item.label,
+            tags: item.tags,
+          }));
+
+          updateContent({
+            ...state,
+            ready: true,
+            user,
+            tags: [...TagsToDisplay, ...UsersTags],
+          });
         }
       } else {
         window.location.assign("/");
@@ -40,7 +73,9 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        {state?.ready && <Reports user={state?.user} session={session} />}
+        {state?.ready && (
+          <Reports user={state?.user} session={session} tagList={state.tags} />
+        )}
       </Wrapper>
     </>
   );

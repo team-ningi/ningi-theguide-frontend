@@ -22,6 +22,7 @@ import {
   Files,
   UploadSimple,
   ArrowCircleRight,
+  Tag,
 } from "phosphor-react";
 import { getUserDocuments } from "@/utils/api-helper";
 import { Title, Description } from "@/lib/components/TextItems";
@@ -42,6 +43,7 @@ export const itemMapSmall = {
   Templates: <FileDotted size={16} />,
   Reports: <FileCode size={16} />,
   Chat: <Chat size={16} />,
+  Tags: <Tag size={16} />,
 };
 
 const defaultState = {
@@ -64,12 +66,14 @@ const Item = ({
   type,
   urls,
   router,
+  singleLink,
 }: {
   icon: string;
   title: string;
   type: string;
   urls: string[];
   router: AppRouterInstance;
+  singleLink?: boolean;
 }) => (
   <Box
     sx={{
@@ -114,7 +118,7 @@ const Item = ({
         alignItems: "center",
       }}
     >
-      {type === "chat" && (
+      {singleLink && (
         <Button
           variant="primary"
           sx={{
@@ -132,7 +136,7 @@ const Item = ({
           onClick={async () => router.push(urls[0])}
         >
           <Flex sx={{ justifyContent: "center", alignItems: "center" }}>
-            <Paragraph sx={{ mr: "3px" }}>Chat</Paragraph>
+            <Paragraph sx={{ mr: "3px" }}>{title}</Paragraph>
 
             {
               // @ts-ignore
@@ -141,7 +145,7 @@ const Item = ({
           </Flex>
         </Button>
       )}
-      {type !== "chat" && (
+      {!singleLink && (
         <>
           <Button
             variant="primary"
@@ -309,11 +313,20 @@ const DashboardComponent = ({
           router={router}
         />
         <Item
+          icon="Tags"
+          title="Tags"
+          type="tags"
+          urls={["/tags"]}
+          router={router}
+          singleLink
+        />
+        <Item
           icon="Chat"
           title="Chat"
           type="chat"
           urls={["/chat"]}
           router={router}
+          singleLink
         />
       </Flex>
     </Box>
