@@ -113,7 +113,7 @@ export const createNewReport = async (
   user_id: string,
   report_name: string,
   tags: any[],
-  tagResults: any[],
+  tagResults: any,
   document_ids: string[],
   baseTemplateURL: string,
   authToken: string
@@ -146,8 +146,10 @@ export const chat = async (
   question: string,
   documentIds: string[],
   authToken: string
-) =>
-  await axios({
+) => {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+
+  return await axios({
     method: "post",
     url: "/api/db/chat",
     data: {
@@ -156,6 +158,7 @@ export const chat = async (
       authToken,
     },
   });
+};
 
 export const createHistory = async (
   user_id: string,
