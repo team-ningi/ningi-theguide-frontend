@@ -547,7 +547,7 @@ const TemplateComponent = ({
           updateDocs={updateDocs}
         />
       )}
-      {docs?.length > 0 && (
+      {docs?.length > 0 && state.mode === "start" && (
         <>
           <Box
             style={{
