@@ -39,6 +39,7 @@ const defaultState = {
   filters: false,
   reportsFound: false,
   success: false,
+  refreshReports: false,
 };
 
 export const InputLabel = ({
@@ -325,7 +326,7 @@ const ReportsComponent = ({
       );
 
       const templatesForSelect = userTemplates?.map((item: any) => ({
-        value: item.file_url,
+        value: item.saved_filename,
         label: item?.label,
       }));
       updateTemplates(templatesForSelect);
@@ -339,6 +340,23 @@ const ReportsComponent = ({
       setLoading(false);
     })();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (state?.refreshReports) {
+        setLoading(true);
+
+        const { data } = await getUserReports(user._id, session?.authToken);
+        updateReports(data);
+
+        updateState({
+          ...state,
+          refreshReports: false,
+        });
+        setLoading(false);
+      }
+    })();
+  }, [state?.refreshReports]);
 
   if (loading) return;
 
@@ -439,7 +457,13 @@ const ReportsComponent = ({
           >
             <TableHeader />
             {reports?.map((item: ReportType, i: number) => (
-              <TableItem item={item} i={i} key={`${item.report_name}`} />
+              <TableItem
+                item={item}
+                i={i}
+                key={`${item.report_name}`}
+                userId={state?.user_id}
+                authToken={session?.authToken}
+              />
             ))}
           </Box>
         </>

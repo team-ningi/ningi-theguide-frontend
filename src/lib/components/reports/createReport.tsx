@@ -76,7 +76,8 @@ const saveReport = async (
     text: "Your document has been generated! 🚀",
     type: "success",
   });
-  setTimeout(() => hideNotification(), 3000);
+
+  setTimeout(() => hideNotification(), 4500);
   setLoading(false);
   return;
 };
@@ -537,7 +538,12 @@ const CreateNewReportComponent = ({
                 state?.user_id
               );
 
-              updateState({ ...state, mode: "start", success: true });
+              updateState({
+                ...state,
+                mode: "start",
+                success: true,
+                refreshReports: true,
+              });
               updateReportState(defaultState);
             }}
           >

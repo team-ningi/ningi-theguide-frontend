@@ -192,6 +192,7 @@ export type ReportsStateType = {
   user_id: string;
   reportType: string;
   success: boolean;
+  refreshReports: boolean;
   mode: string;
   searchReportName: string;
   searchFileType: string;

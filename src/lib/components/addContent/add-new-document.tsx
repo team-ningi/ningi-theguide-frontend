@@ -17,14 +17,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { S3 } from "aws-sdk";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
-const s3 = new S3({
-  accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+const s3Client = new S3Client({
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+  },
   region: process.env.NEXT_PUBLIC_AWS_KEY_REGION,
 });
 
@@ -185,7 +185,7 @@ export const AddNewForm = ({
   const [errorState, updateErrorState] =
     useState<AddContentErrorStateType>(defaultErrorState);
   const [file, setFile] = useState<File | null>(null);
-  const [upload, setUpload] = useState<S3.ManagedUpload | null>(null);
+  const [upload, setUpload] = useState<any>(null);
 
   useEffect(() => {
     setUpload(null);
@@ -229,12 +229,8 @@ export const AddNewForm = ({
           Key: savedFileName,
           Body: file !== null ? file : undefined,
         };
-
-        const options = { partSize: 10 * 1024 * 1024, queueSize: 1 };
-        const upload = s3.upload(params, options);
-        setUpload(upload);
-
-        await upload.promise();
+        const command = new PutObjectCommand(params);
+        await s3Client.send(command);
 
         const { data } = await addDocument(
           state?.user_id,
@@ -249,7 +245,6 @@ export const AddNewForm = ({
 
         const doc = data?.document || {};
         const { user_id, file_url, _id, file_type } = doc;
-        console.log(user_id, file_url, _id, file_type);
 
         try {
           if (supportedDocTypes.includes(file_type)) {

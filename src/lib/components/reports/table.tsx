@@ -11,6 +11,7 @@ import {
   DownloadSimple,
 } from "phosphor-react";
 import moment from "moment";
+import { getSignedURL } from "@/utils/api-helper";
 
 const IconMap = {
   docx: <FileDoc size={22} />,
@@ -75,10 +76,16 @@ const FileKeyValue = ({
   theKey,
   theValue,
   isLink,
+  saved_filename,
+  userId,
+  authToken,
 }: {
   theKey: string;
   theValue?: string;
   isLink?: string;
+  saved_filename?: string;
+  userId?: string;
+  authToken?: string;
 }) => (
   <Flex sx={{ width: "100%", ml: "26px", mb: "8px" }}>
     <Paragraph
@@ -107,7 +114,14 @@ const FileKeyValue = ({
             mr: "5px",
             cursor: "pointer",
           }}
-          onClick={() => window.location.assign(`${isLink}`)}
+          onClick={async () => {
+            const { data } = await getSignedURL(
+              userId!,
+              saved_filename!,
+              authToken!
+            );
+            window.location.assign(`${data?.signedURL}`);
+          }}
         >
           Click Here{" "}
         </Paragraph>
@@ -117,9 +131,19 @@ const FileKeyValue = ({
   </Flex>
 );
 
-export const TableItem = ({ item, i }: { item: any; i: number }) => {
+export const TableItem = ({
+  item,
+  i,
+  userId,
+  authToken,
+}: {
+  item: any;
+  i: number;
+  userId: string;
+  authToken: string;
+}) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
-  const { file_type, report_name, report_type } = item;
+  const { file_type, report_name, report_type, saved_filename } = item;
   const isEven = i % 2 === 0;
 
   return (
@@ -193,11 +217,17 @@ export const TableItem = ({ item, i }: { item: any; i: number }) => {
           <FileKeyValue
             theKey="Download Report"
             isLink={item.generated_report_url}
+            saved_filename={item.generated_report_url}
+            userId={userId}
+            authToken={authToken}
           />
           <FileKeyValue theKey="File Type" theValue={item.file_type} />
           <FileKeyValue
             theKey="Download Template"
             isLink={item.base_template_url}
+            saved_filename={item.base_template_url}
+            userId={userId}
+            authToken={authToken}
           />
 
           {/* <FileKeyValue theKey="Documents Used" theValue={item.document_ids} /> */}
