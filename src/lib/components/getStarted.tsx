@@ -18,7 +18,7 @@ const textMap = {
 const InputLabel = ({ title, subtitle, customSX = {} }: any) => (
   <Paragraph
     sx={{
-      fontSize: "13px",
+      fontSize: "14px",
       color: "#555",
       mb: "3px",
       ml: "2px",
@@ -47,9 +47,10 @@ export const GetStarted = ({ state, updateState, router }: any) => {
         width: "500px",
         flexDirection: "column",
         ml: "150px",
+        mb: "60px",
       }}
     >
-      <Box sx={{ width: "500px", mt: "60px" }}>
+      <Box sx={{ width: "500px", mt: "20px" }}>
         <InputLabel
           customSX={{ textAlign: "left", width: "500px" }}
           title="What would you like to do?"

@@ -1,42 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Paragraph, Flex, Button } from "theme-ui";
-import ReactSelect from "react-select";
-import { debounce } from "debounce";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { useRouter } from "next/navigation";
-import {
-  SessionType,
-  SetLoadingType,
-  UserType,
-  DocType,
-  DashboardStateType,
-  HideNotificationType,
-  ShowNotificationType,
-} from "@/lib/types";
+import { DashboardStateType } from "@/lib/types";
 import {
   FileDotted,
   FileCode,
   Chat,
   Files,
   UploadSimple,
-  ArrowCircleRight,
   Tag,
+  CaretRight,
+  ArrowFatRight,
 } from "phosphor-react";
-import { getUserDocuments } from "@/utils/api-helper";
 import { Title, Description } from "@/lib/components/TextItems";
 import { GetStarted } from "@/lib/components/getStarted";
-import moment from "moment";
-import axios from "axios";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-
-const itemMap = {
-  Documents: <Files size={24} />,
-  Templates: <FileDotted size={24} />,
-  Reports: <FileCode size={24} />,
-  Chat: <Chat size={24} />,
-};
 
 export const itemMapSmall = {
   Documents: <Files size={16} />,
@@ -46,19 +27,75 @@ export const itemMapSmall = {
   Tags: <Tag size={16} />,
 };
 
+export const itemMapBig = {
+  Documents: <Files size={45} color="#9999ff" />,
+  Templates: <FileDotted size={45} color="#9999ff" />,
+  Reports: <FileCode size={45} color="#9999ff" />,
+  Chat: <Chat size={45} color="#9999ff" />,
+  Tags: <Tag size={45} color="#9999ff" />,
+};
+
 const defaultState = {
   showSuccess: false,
   user_id: "",
   customFilename: "",
   label: "",
-  mode: "start", // start | add | success | error
+  mode: "start",
   searchLabel: "",
   searchEmbedded: "all",
   searchFileType: "all",
   filters: false,
   docsFound: false,
-  step1: "",
+  step1: "createReport",
 };
+
+const StepItem = ({
+  step,
+  title,
+  icon,
+  description,
+}: {
+  step: string;
+  title: string;
+  icon: string;
+  description: string;
+}) => (
+  <Flex
+    sx={{
+      width: "180px",
+      height: "280px",
+      borderRadius: "8px",
+      boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      alignItems: "center",
+      p: "10px 10px",
+    }}
+  >
+    <Box sx={{ minHeight: "120px", width: "100%", border: "0px red solid" }}>
+      <Paragraph sx={{ fontSize: "18px", color: "#666" }}>{step}</Paragraph>
+      <Paragraph
+        sx={{
+          height: "25px",
+          fontSize: "14px",
+          mb: "20px",
+          mt: "5px",
+          color: "grey",
+        }}
+      >
+        {title}
+      </Paragraph>
+
+      {
+        // @ts-ignore
+        itemMapBig[icon]
+      }
+    </Box>
+    <Paragraph sx={{ color: "#666", fontSize: "15px", mt: "25px" }}>
+      {description}
+    </Paragraph>
+  </Flex>
+);
 
 const Item = ({
   icon,
@@ -80,10 +117,6 @@ const Item = ({
       border: "1px grey dashed",
       borderRadius: "12px",
       backgroundColor: "transparent",
-      // backgroundColor: "#9999ff",
-      // background:
-      //   "linear-gradient(180deg, rgba(139,132,255,1) 60%, rgba(73,64,255,1) 100%)",
-      // boxShadow: "0px 0px 5px rgba(0,0,0,0.1)",
       width: "160px",
       height: "200px",
       mb: "40px",
@@ -199,42 +232,12 @@ const Item = ({
   </Box>
 );
 
-const DashboardComponent = ({
-  user,
-  session,
-  setLoading,
-  hideNotification,
-  showNotification,
-  loading,
-}: {
-  user: UserType;
-  session: SessionType;
-  setLoading: SetLoadingType;
-  hideNotification: HideNotificationType;
-  showNotification: ShowNotificationType;
-  loading: boolean;
-}) => {
+const DashboardComponent = ({ loading }: { loading: boolean }) => {
   const [state, updateState] = useState<DashboardStateType>(defaultState);
-  const [docs, updateDocs] = useState<DocType[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    (async () => {
-      // setLoading(true);
-      // const { data } = await getUserDocuments(
-      //   user._id,
-      //   session?.authToken,
-      //   "all"
-      // );
-      // updateDocs(data);
-      // updateState({
-      //   ...state,
-      //   user_id: user?._id,
-      //   docsFound: data?.length > 0,
-      // });
-      // setLoading(false);
-    })();
-  }, []);
+  useEffect(() => {}, []);
+
   if (loading) return;
 
   return (
@@ -244,6 +247,7 @@ const DashboardComponent = ({
         width: "900px",
         opacity: 1,
         mt: "30px",
+        mb: "100px",
         minHeight: "600px",
         textAlign: "center",
         backgroundColor: "transparent",
@@ -265,21 +269,65 @@ const DashboardComponent = ({
     >
       <Box sx={{}}>
         <Title text="Welcome Back" />
-        <Description
-          text={`
-          Choose your desired action and allow us to assist you, or select a quick link from the options provided.`}
-        />
       </Box>
       <Flex
         sx={{
-          minHeight: "350px",
+          minHeight: "250px",
           width: "100%",
           borderBottom: "1px lightgrey dashed",
-          mt: "20px",
+          mt: "40px",
           mb: "40px",
         }}
       >
         <GetStarted state={state} updateState={updateState} router={router} />
+      </Flex>
+      <Flex
+        sx={{
+          minHeight: "390px",
+          width: "100%",
+          borderBottom: "1px lightgrey dashed",
+          mt: "20px",
+          mb: "40px",
+          flexDirection: "column",
+        }}
+      >
+        <Title text="How To Generate A Report" />
+        <Flex
+          sx={{
+            width: "100%",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: "30px",
+          }}
+        >
+          <StepItem
+            step="Step 1"
+            title="Upload  Documents"
+            icon="Documents"
+            description="Support documents that contain all of the information to populate your report."
+          />
+          <ArrowFatRight size={30} color="#9999ff" weight="fill" />
+          <StepItem
+            step="Step 2"
+            title="Upload A Base Template"
+            icon="Templates"
+            description="A Template must contain all of the reference {tags} that you want to replace."
+          />
+          <ArrowFatRight size={30} color="#9999ff" weight="fill" />{" "}
+          <StepItem
+            step="Step 3"
+            title="Create Tags & Prompts"
+            icon="Tags"
+            description="Tags & Prompts retrieve the information for your report from your documents."
+          />
+          <ArrowFatRight size={30} color="#9999ff" weight="fill" />{" "}
+          <StepItem
+            step="Step 4"
+            title="Create A Report"
+            icon="Reports"
+            description="Once the first 3 steps are complete you are ready to generate your report."
+          />
+        </Flex>
       </Flex>
 
       <Title text="Quick Links" />
@@ -288,7 +336,7 @@ const DashboardComponent = ({
           width: "900px",
           flexWrap: "wrap",
           justifyContent: "space-between",
-          mt: "20px",
+          mt: "30px",
         }}
       >
         <Item
