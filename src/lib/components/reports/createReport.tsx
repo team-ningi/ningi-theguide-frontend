@@ -41,13 +41,15 @@ const saveReport = async (
 
   await Promise.all(
     tags?.map(async (item, i) => {
-      const { data } = await chat(
-        item.prompt?.replace("{{data}}", item?.data),
-        [...docId],
-        session?.authToken
-      );
-      const { answer } = data;
-      tagResults[item.tag] = answer;
+      setTimeout(async () => {
+        const { data } = await chat(
+          item.prompt?.replace("{{data}}", item?.data),
+          [...docId],
+          session?.authToken
+        );
+        const { answer } = data;
+        tagResults[item.tag] = answer;
+      }, 200);
     })
   );
 
