@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import Head from "next/head";
-import Wrapper from "@/lib/components/appWrapper";
-import Reports from "@/lib/components/pages/reports";
+import Wrapper from "../lib/components/appWrapper";
+import Reports from "../lib/components/pages/reports";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
-import { getTags } from "@/utils/api-helper";
+import { getTags } from "../utils/api-helper";
 import {
   BasicReportExample,
   SuitabilityReportExample,
@@ -35,6 +35,7 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         } else {
           // get tags put into state
           const { data } = await getTags(user._id, session?.authToken);
+          console.log("data ", data);
 
           let TagsToDisplay = [
             { id: "0", label: "Reset", tags: [] },

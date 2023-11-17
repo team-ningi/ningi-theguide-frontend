@@ -26,9 +26,9 @@ import {
   DownloadSimple,
   Files,
 } from "phosphor-react";
-import { getUserTemplates, getSignedURL } from "@/utils/api-helper";
-import { Title, Description } from "@/lib/components/TextItems";
-import { AddNewForm } from "@/lib/components/addContent/add-new-template";
+import { getUserTemplates, getSignedURL } from "../../../utils/api-helper";
+import { Title, Description } from "../../../lib/components/TextItems";
+import { AddNewForm } from "../../../lib/components/addContent/add-new-template";
 import moment from "moment";
 import axios from "axios";
 

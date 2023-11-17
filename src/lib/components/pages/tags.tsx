@@ -12,15 +12,15 @@ import {
   HideNotificationType,
   ShowNotificationType,
   TagItemType,
-} from "@/lib/types";
-import { FilePdf, FileText, FileDoc, CaretRight } from "phosphor-react";
+} from "../../../lib/types";
+import { CaretRight } from "phosphor-react";
 import {
   getTags,
   updateTagsAndPrompts,
   addTagsAndPrompts,
   deleteTagsAndPrompts,
-} from "@/utils/api-helper";
-import { Title, Description } from "@/lib/components/TextItems";
+} from "../../../utils/api-helper";
+import { Title, Description } from "../../../lib/components/TextItems";
 import { BasicReportExample, SuitabilityReportExample } from "../reports/tags";
 import { TagAndPromptItem } from "../reports/createReport";
 import { v4 as uuidv4 } from "uuid";
@@ -461,6 +461,7 @@ const TagComponent = ({
                 console.log("show error msg");
               }
             }}
+            data-testid="save-btn"
           >
             Save Tags
           </Button>

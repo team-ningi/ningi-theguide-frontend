@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { useRouter } from "next/navigation";
-import { DashboardStateType } from "@/lib/types";
+import { DashboardStateType } from "../../../lib/types";
 import {
   FileDotted,
   FileCode,
@@ -15,8 +15,8 @@ import {
   CaretRight,
   ArrowFatRight,
 } from "phosphor-react";
-import { Title, Description } from "@/lib/components/TextItems";
-import { GetStarted } from "@/lib/components/getStarted";
+import { Title, Description } from "../../../lib/components/TextItems";
+import { GetStarted } from "../../../lib/components/getStarted";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const itemMapSmall = {

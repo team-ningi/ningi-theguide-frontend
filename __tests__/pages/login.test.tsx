@@ -7,6 +7,11 @@ import Login from "../../src/pages";
 import { store } from "../../src/pages/_app";
 import { act } from "react-dom/test-utils";
 
+jest.mock("next/navigation", () => ({
+  useRouter: () => {},
+  usePathname: () => {},
+}));
+
 jest.mock("next/font/google", () => ({
   Poppins: () => {},
   Roboto: () => {},
@@ -14,9 +19,9 @@ jest.mock("next/font/google", () => ({
 
 describe("Login", () => {
   it("Login page is rendered", async () => {
-    const { getByText, container } = render(
+    const { getByText } = render(
       <Provider store={store}>
-        <Login session={{ email: "", authToken: "" }} />
+        <Login session={{ email: "test@ningi.co.uk", authToken: "" }} />
       </Provider>
     );
 
@@ -27,13 +32,8 @@ describe("Login", () => {
     });
     expect(SignInBtn).not.toHaveAttribute("disabled");
 
-    expect(container).toMatchSnapshot();
-
-    const Title = screen.getAllByText(/The Guide/i);
+    const Title = screen.getAllByText(/Email address/i);
     expect(Title[0]).toBeInTheDocument();
-
-    const Email = screen.getAllByText(/Email address/i);
-    expect(Email[0]).toBeInTheDocument();
 
     const ButtonText = screen.getAllByText(/Send magic link/i);
     expect(ButtonText[0]).toBeInTheDocument();

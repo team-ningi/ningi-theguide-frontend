@@ -1,8 +1,8 @@
 import { Flex, Box } from "theme-ui";
-import Sidebar from "@/lib/components/sidebar";
-import Header from "@/lib/components/header";
+import Sidebar from "../../lib/components/sidebar";
+import Header from "../../lib/components/header";
 import { connect } from "react-redux";
-import { Spinner } from "@/lib/components/spinner";
+import { Spinner } from "../../lib/components/spinner";
 import { ReactNode } from "react";
 import { Dispatch } from "redux";
 import NotificationWidget from "./notifications";

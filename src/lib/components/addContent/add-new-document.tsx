@@ -429,6 +429,7 @@ export const AddNewForm = ({
                 fontSize: "14px",
               }}
               onClick={handleUpload}
+              data-testid="upload-btn"
             >
               Upload
             </Button>

@@ -11,7 +11,7 @@ import {
   DownloadSimple,
 } from "phosphor-react";
 import moment from "moment";
-import { getSignedURL } from "@/utils/api-helper";
+import { getSignedURL } from "../../../utils/api-helper";
 
 const IconMap = {
   docx: <FileDoc size={22} />,

@@ -14,7 +14,7 @@ import {
   DashboardStateType,
   HideNotificationType,
   ShowNotificationType,
-} from "@/lib/types";
+} from "../../../lib/types";
 import {
   FilePdf,
   FileText,
@@ -26,9 +26,9 @@ import {
   DownloadSimple,
   Files,
 } from "phosphor-react";
-import { getUserDocuments, getSignedURL } from "@/utils/api-helper";
-import { AddNewForm } from "@/lib/components/addContent/add-new-document";
-import { Title, Description } from "@/lib/components/TextItems";
+import { getUserDocuments, getSignedURL } from "../../../utils/api-helper";
+import { AddNewForm } from "../../../lib/components/addContent/add-new-document";
+import { Title, Description } from "../../../lib/components/TextItems";
 import moment from "moment";
 import axios from "axios";
 

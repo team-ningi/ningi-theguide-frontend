@@ -1,10 +1,10 @@
 import { Box, Paragraph, Flex, Input, Button } from "theme-ui";
-import { chat, generateDocx, createNewReport } from "@/utils/api-helper";
+import { chat, generateDocx, createNewReport } from "../../../utils/api-helper";
 import { useState } from "react";
 import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
-import { DocType, SessionType, SetLoadingType } from "@/lib/types";
+import { DocType, SessionType, SetLoadingType } from "../../../lib/types";
 import { v4 as uuidv4 } from "uuid";
 
 const promptTypes = [

@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import Head from "next/head";
-import Wrapper from "@/lib/components/appWrapper";
-import Templates from "@/lib/components/pages/templates";
+import Wrapper from "../lib/components/appWrapper";
+import Templates from "../lib/components/pages/templates";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { connect } from "react-redux";

@@ -23,8 +23,8 @@ import {
   getUserReports,
   getUserDocuments,
   getUserTemplates,
-} from "@/utils/api-helper";
-import { Title, Description } from "@/lib/components/TextItems";
+} from "../../../utils/api-helper";
+import { Title, Description } from "../../../lib/components/TextItems";
 import axios from "axios";
 import CreateNewReportComponent from "../reports/createReport";
 import { TableHeader, TableItem } from "../reports/table";

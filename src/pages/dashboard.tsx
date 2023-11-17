@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import Head from "next/head";
-import Wrapper from "@/lib/components/appWrapper";
-import Dashboard from "@/lib/components/pages/dashboard";
+import Wrapper from "../lib/components/appWrapper";
+import Dashboard from "../lib/components/pages/dashboard";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { connect } from "react-redux";
