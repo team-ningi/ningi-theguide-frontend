@@ -1,0 +1,107 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2023-09-08T07:49:58.835Z",
+    "end": "2023-09-08T07:49:58.927Z",
+    "duration": 92,
+    "testsRegistered": 1,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "770567e6-51cc-4a79-8dab-b68f5b9b73ca",
+      "title": "",
+      "fullFile": "cypress/e2e/example.spec.cy.ts",
+      "file": "cypress/e2e/example.spec.cy.ts",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "f35e35d7-6ddb-4449-8c03-a98cf9167450",
+          "title": "This is the example ",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should navigate around and press the nav buttons ",
+              "fullTitle": "This is the example  should navigate around and press the nav buttons ",
+              "timedOut": null,
+              "duration": 45,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "return __awaiter(void 0, void 0, void 0, function () {\n        return __generator(this, function (_a) {\n            cy.url().should('include', '/');\n            (0, dashboard_1.HomeButton)().click({ force: true });\n            cy.waitForSpinner();\n            return [2 /*return*/];\n        });\n    });",
+              "err": {},
+              "uuid": "00b328f0-a55f-4f20-abe9-39eef08e263a",
+              "parentUUID": "f35e35d7-6ddb-4449-8c03-a98cf9167450",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "00b328f0-a55f-4f20-abe9-39eef08e263a"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 45,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": {
+        "id": "default",
+        "reportDir": "cypress/reports/mocha",
+        "quite": true,
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "6.2.0"
+    }
+  }
+}

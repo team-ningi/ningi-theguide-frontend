@@ -56,7 +56,7 @@ const items = [
     name: "Tags",
     icon: <Tag size={24} />,
     url: "/tags",
-    testId: "sidebar-templates",
+    testId: "sidebar-tags",
   },
   {
     name: "Reports",
@@ -124,6 +124,7 @@ const MenuItem = ({
         router.push(`${item.url}`);
       }
     }}
+    data-testid={item?.testId}
   >
     <Flex
       sx={{

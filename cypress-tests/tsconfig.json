@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es5", "dom", "esnext"],
+        "types": ["cypress", "node", "faker", "@testing-library/cypress"],
+        "resolveJsonModule": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true
+    },
+    "include": ["**/*.ts"]
+}

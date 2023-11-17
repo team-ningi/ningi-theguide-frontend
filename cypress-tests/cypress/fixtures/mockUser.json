@@ -1,0 +1,17 @@
+{
+    "firstName": "Joey",
+    "lastName": "Greco",
+    "middleNames": "Hank",
+    "dob": "21101980",
+    "placeOfBirth": "Coventry",
+    "countryOfBirth": "England",
+    "pid": "12345",
+    "citizenOf": "GBR",
+    "address": {
+        "line1": "Automation 1",
+        "line2": "Automation 2",
+        "town": "Automation 3",
+        "postCode": "B13 9DF",
+        "state": "Birmingham"
+    }
+}

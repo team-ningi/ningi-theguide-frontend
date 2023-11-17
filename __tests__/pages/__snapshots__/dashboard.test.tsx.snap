@@ -34,6 +34,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
           >
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-dashboard"
             >
               <div
                 class="css-4s1fvz-Flex"
@@ -72,6 +73,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
             </div>
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-documents"
             >
               <div
                 class="css-4s1fvz-Flex"
@@ -140,6 +142,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
             </div>
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-templates"
             >
               <div
                 class="css-4s1fvz-Flex"
@@ -232,6 +235,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
             </div>
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-tags"
             >
               <div
                 class="css-4s1fvz-Flex"
@@ -275,6 +279,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
             </div>
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-reports"
             >
               <div
                 class="css-4s1fvz-Flex"
@@ -337,6 +342,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
             </div>
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-chat"
             >
               <div
                 class="css-4s1fvz-Flex"
@@ -375,6 +381,7 @@ exports[`Dashboard Dashboard page is rendered 1`] = `
             </div>
             <div
               class="css-14p1f3h-Flex"
+              data-testid="sidebar-logout"
             >
               <div
                 class="css-4s1fvz-Flex"

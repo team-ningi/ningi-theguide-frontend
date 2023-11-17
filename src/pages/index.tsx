@@ -73,10 +73,7 @@ const Login = ({ setCoreData, darkMode, session }: LoginTypes) => {
               await setCoreData(atob(encoded), session, false);
 
               if (atob(encoded) === "test@ningi.co.uk") {
-                // TODO
-                // E2E TEST ROUTE
-                //  window.location.assign("/tests");
-                alert("we are testing E2E baby");
+                window.location.assign("/dashboard");
               } else {
                 window.location.assign("/chat");
               }

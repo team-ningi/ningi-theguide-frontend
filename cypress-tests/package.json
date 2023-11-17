@@ -1,0 +1,48 @@
+{
+    "name": "web-e2e",
+    "version": "0.1.0",
+    "scripts": {
+        "cy:version": "DEBUG=cypress:* cypress version",
+        "lint": "eslint ./cypress --ext .ts",
+        "lint:fix": "npm run lint --fix",
+        "cy:run": "cypress run --env configFile=uat",
+        "cy:uat:headless": "cypress run --spec cypress/e2e/user-interaction/*.ts --env configFile=uat",
+        "cy:record": "cypress run --env configFile=uat --record --key cb8abd02-7915-4c99-a0f2-86be2674013a",
+        "create:project": "npm run clean && ts-node scripts/test-audit-update.ts",
+        "cy:json": "cypress run --env configFile=uat --spec cypress/e2e/user-interaction/*.ts --reporter mochawesome",
+        "merge:reports": "mochawesome-merge cypress/reports/mocha/*.json > scripts/test-report/cypress-combined-report.json",
+        "create:html:report": "npm run merge:reports && marge scripts/test-report/cypress-combined-report.json --inline -o scripts/test-report/",
+        "clean": "rm -rf cypress/reports/mocha && mkdir cypress/reports/mocha && rm -rf scripts/test-report/ && mkdir scripts/test-report/",
+        "cy:browser": "cypress open --e2e --browser chrome "
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@testing-library/cypress": "^8.0.3",
+        "@types/fs-extra": "^11.0.1",
+        "@typescript-eslint/eslint-plugin": "5.39.0",
+        "@typescript-eslint/parser": "5.39.0",
+        "cypress": "^13.3.2",
+        "cypress-multi-reporters": "1.6.1",
+        "eslint": "^8.24.0",
+        "eslint-config-prettier": "8.5.0",
+        "eslint-plugin-mocha": "10.1.0",
+        "eslint-plugin-prettier": "4.2.1",
+        "mocha": "10.1.0",
+        "mochawesome": "7.1.3",
+        "mochawesome-merge": "4.2.1",
+        "mochawesome-report-generator": "6.2.0",
+        "prettier": "2.7.1",
+        "ts-node": "10.9.1",
+        "typescript": "4.8.4"
+    },
+    "dependencies": {
+        "@types/node": "18.8.2",
+        "axios": "1.4.0",
+        "config": "3.3.8",
+        "dotenv": "16.0.3",
+        "fs": "0.0.1-security",
+        "moment": "2.29.1",
+        "uuid": "9.0.0"
+    }
+}
