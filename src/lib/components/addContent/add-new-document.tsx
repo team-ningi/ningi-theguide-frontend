@@ -8,6 +8,7 @@ import {
   SetLoadingType,
   SessionType,
 } from "@/lib/types";
+import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
 import {
   ChangeEventHandler,
@@ -100,6 +101,8 @@ const addDocument = async (
   original_filename: string,
   saved_filename: string,
   custom_filename: string,
+  type_of_embedding: string,
+  additional_context: string,
   authToken: string
 ) =>
   await axios({
@@ -113,6 +116,8 @@ const addDocument = async (
       original_filename,
       saved_filename,
       custom_filename,
+      type_of_embedding,
+      additional_context,
       metadata: {},
       authToken,
     },
@@ -123,6 +128,8 @@ const createEmbeddings = async (
   file_url: string,
   document_id: string,
   file_type: string,
+  type_of_embedding: string,
+  additional_context: string,
   authToken: string
 ) =>
   await axios({
@@ -133,6 +140,8 @@ const createEmbeddings = async (
       file_url,
       document_id,
       file_type,
+      type_of_embedding,
+      additional_context,
       authToken,
     },
   });
@@ -240,6 +249,8 @@ export const AddNewForm = ({
           orginalFileName,
           savedFileName,
           customFileName,
+          state?.type_of_embedding!,
+          state?.additional_context!,
           session?.authToken
         );
 
@@ -253,6 +264,8 @@ export const AddNewForm = ({
               file_url,
               _id,
               file_type,
+              state?.type_of_embedding!,
+              state?.additional_context!,
               session?.authToken
             );
             console.log("create embedding");
@@ -322,118 +335,218 @@ export const AddNewForm = ({
       )}
 
       {state?.mode === "add" && (
-        <Flex
-          sx={{
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "100%",
-            height: "90px",
-            mt: "30px",
-            border: "0px solid red",
-            position: "relative",
-          }}
-        >
-          <Paragraph
+        <Flex sx={{ flexDirection: "column" }}>
+          <Flex
             sx={{
-              position: "absolute",
-              top: "-20px",
-              right: 0,
-              fontWeight: "400",
-              color: "#555",
-              cursor: "pointer",
-              zIndex: 999,
-            }}
-            onClick={() => {
-              updateState({ ...state, mode: "start" });
-              updateErrorState({ ...defaultErrorState });
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              width: "100%",
+              height: "70px",
+              mt: "30px",
+              border: "0px solid green",
+              position: "relative",
             }}
           >
-            <XCircle size={18} weight="fill" />
-          </Paragraph>
-          <Box
-            sx={{
-              border: errorState.label ? "1px firebrick solid" : "unset",
-            }}
-          >
-            <InputLabel
-              customSX={{
-                textAlign: "left",
-                width: "300px",
-                mt: "20px",
-              }}
-              title="Label"
-              subtitle=" *"
-            />
-            <Input
+            <Box
               sx={{
-                backgroundColor: "white",
-                height: "40px",
-                borderRadius: 0,
-                borderColor: "inputBorder",
-                width: "300px",
-
-                mb: "20px",
-                border: "1px solid #E8E8E8",
+                border: errorState.label ? "1px firebrick solid" : "unset",
               }}
-              type="text"
-              data-testid="add-content-label"
-              id="add-content-label"
-              name="add-content-label"
-              placeholder=""
-              value={state.label}
-              onChange={(e: { target: { value: string } }) => {
-                updateState({ ...state, label: e.target.value });
-                updateErrorState({ ...errorState, label: false });
+            >
+              <InputLabel
+                customSX={{
+                  textAlign: "left",
+                  width: "300px",
+                  mt: "10px",
+                }}
+                title="Type Of File"
+                subtitle=" *"
+              />
+              <ReactSelect
+                value={{
+                  value: state?.type_of_embedding,
+                  label: state?.type_of_embedding,
+                }}
+                onChange={async (values: any) => {
+                  updateState({
+                    ...state,
+                    type_of_embedding: values.value,
+                    additional_context: "",
+                  });
+                }}
+                placeholder="All"
+                styles={{
+                  control: (provided) => ({
+                    ...provided,
+                    width: "300px",
+                    fontSize: "14px",
+                    outline: "none",
+                    minHeight: "40px",
+                    marginLeft: "0px",
+                    textAlign: "left",
+                  }),
+                }}
+                options={[
+                  { value: "document", label: "Document" },
+                  { value: "image", label: "Image" },
+                ]}
+              />
+            </Box>
+            {state?.type_of_embedding === "image" && (
+              <Box
+                sx={{
+                  border: errorState.label ? "1px firebrick solid" : "unset",
+                }}
+              >
+                <InputLabel
+                  customSX={{
+                    textAlign: "left",
+                    width: "300px",
+                    mt: "10px",
+                    ml: "20px",
+                  }}
+                  title="Description of image"
+                  subtitle=" *"
+                />
+                <Input
+                  sx={{
+                    backgroundColor: "white",
+                    height: "40px",
+                    borderRadius: 0,
+                    borderColor: "inputBorder",
+                    width: "300px",
+                    ml: "20px",
+                    mb: "20px",
+                    border: "1px solid #E8E8E8",
+                  }}
+                  type="text"
+                  data-testid="type-of-file"
+                  id="type-of-file"
+                  name="type-of-file"
+                  placeholder=""
+                  value={state.additional_context}
+                  onChange={(e: { target: { value: string } }) => {
+                    updateState({
+                      ...state,
+                      additional_context: e.target.value,
+                    });
+                  }}
+                />
+              </Box>
+            )}
+            <Paragraph
+              sx={{
+                position: "absolute",
+                top: "-20px",
+                right: 0,
+                fontWeight: "400",
+                color: "#555",
+                cursor: "pointer",
+                zIndex: 999,
               }}
-            />
-          </Box>
-          <Box
+              onClick={() => {
+                updateState({ ...state, mode: "start" });
+                updateErrorState({ ...defaultErrorState });
+              }}
+            >
+              <XCircle size={18} weight="fill" />
+            </Paragraph>
+          </Flex>
+          <Flex
             sx={{
-              width: "380px",
-              ml: "20px",
-              border: errorState.file_url ? "1px firebrick solid" : "unset",
-            }}
-          >
-            <InputLabel
-              customSX={{
-                textAlign: "left",
-                width: "300px",
-                mt: "20px",
-              }}
-              title="File (pdf, txt, docx, png)"
-              subtitle=" *"
-            />
-            <input
-              style={{ width: "100%", color: "#444" }}
-              type="file"
-              onChange={handleFileChange}
-            />
-          </Box>
-          <Box
-            sx={{
-              height: "40px",
-              width: "100px",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              width: "100%",
+              height: "90px",
               mt: "0px",
-              alignSelf: "flex-end",
-              mb: "20px",
+              border: "0px solid red",
+              position: "relative",
             }}
           >
-            <Button
-              variant="primary"
+            <Box
               sx={{
-                color: "white",
-                cursor:
-                  state.label === "" ? "not-allowed !important" : "pointer",
+                border: errorState.label ? "1px firebrick solid" : "unset",
+              }}
+            >
+              <InputLabel
+                customSX={{
+                  textAlign: "left",
+                  width: "300px",
+                  mt: "20px",
+                }}
+                title="Label"
+                subtitle=" *"
+              />
+              <Input
+                sx={{
+                  backgroundColor: "white",
+                  height: "40px",
+                  borderRadius: 0,
+                  borderColor: "inputBorder",
+                  width: "300px",
+
+                  mb: "20px",
+                  border: "1px solid #E8E8E8",
+                }}
+                type="text"
+                data-testid="add-content-label"
+                id="add-content-label"
+                name="add-content-label"
+                placeholder=""
+                value={state.label}
+                onChange={(e: { target: { value: string } }) => {
+                  updateState({ ...state, label: e.target.value });
+                  updateErrorState({ ...errorState, label: false });
+                }}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: "380px",
+                ml: "20px",
+                border: errorState.file_url ? "1px firebrick solid" : "unset",
+              }}
+            >
+              <InputLabel
+                customSX={{
+                  textAlign: "left",
+                  width: "300px",
+                  mt: "20px",
+                }}
+                title="File (pdf, txt, docx, png)"
+                subtitle=" *"
+              />
+              <input
+                style={{ width: "100%", color: "#444" }}
+                type="file"
+                onChange={handleFileChange}
+              />
+            </Box>
+            <Box
+              sx={{
                 height: "40px",
                 width: "100px",
-                fontSize: "14px",
+                mt: "0px",
+                alignSelf: "flex-end",
+                mb: "20px",
               }}
-              onClick={handleUpload}
-              data-testid="upload-btn"
             >
-              Upload
-            </Button>
-          </Box>
+              <Button
+                variant="primary"
+                sx={{
+                  color: "white",
+                  cursor:
+                    state.label === "" ? "not-allowed !important" : "pointer",
+                  height: "40px",
+                  width: "100px",
+                  fontSize: "14px",
+                }}
+                onClick={handleUpload}
+                data-testid="upload-btn"
+              >
+                Upload
+              </Button>
+            </Box>
+          </Flex>
         </Flex>
       )}
     </Flex>

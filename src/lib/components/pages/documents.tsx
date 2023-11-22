@@ -48,6 +48,8 @@ const createEmbedding = async (
   document_id: string,
   file_url: string,
   file_type: string,
+  type_of_embedding: string,
+  additional_context: string,
   authToken: string
 ) => {
   await axios({
@@ -58,6 +60,8 @@ const createEmbedding = async (
       document_id,
       file_url,
       file_type,
+      type_of_embedding,
+      additional_context,
       authToken,
     },
   });
@@ -264,7 +268,12 @@ const TableItem = ({
             theKey="Uploaded"
             theValue={moment(item.updated_at).format("dddd, MMMM Do YYYY")}
           />
-          <FileKeyValue theKey="File Type" theValue={item.file_type} />
+          <FileKeyValue
+            theKey="Types"
+            theValue={`File = ${item.file_type} , Embed = ${
+              item.type_of_embedding || "document"
+            }`}
+          />
 
           <FileKeyValue
             theKey="Download Original"
@@ -301,6 +310,8 @@ const TableItem = ({
                   item._id,
                   item.file_url,
                   item.file_type,
+                  item.type_of_embedding,
+                  item.additional_context,
                   authToken
                 );
                 setLoading(false);
@@ -321,12 +332,14 @@ const defaultState = {
   user_id: "",
   customFilename: "",
   label: "",
-  mode: "start", // start | add | success | error
+  mode: "start", // start | add
   searchLabel: "",
   searchEmbedded: "all",
   searchFileType: "all",
   filters: false,
   docsFound: true,
+  type_of_embedding: "document",
+  additional_context: "",
 };
 
 const InputLabel = ({

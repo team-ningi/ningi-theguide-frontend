@@ -168,6 +168,8 @@ export type DashboardStateType = {
   mode: string;
   filters: boolean;
   docsFound: boolean;
+  type_of_embedding?: string;
+  additional_context?: string;
 };
 
 export type TagsStateType = {

@@ -2,7 +2,15 @@
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { user_id, document_id, file_url, file_type, authToken } = req.body;
+  const {
+    user_id,
+    document_id,
+    file_url,
+    file_type,
+    authToken,
+    type_of_embedding = "document",
+    additional_context = "",
+  } = req.body;
   try {
     const { data } = await axios({
       method: "post",
@@ -12,6 +20,8 @@ export default async function handler(req, res) {
         document_id,
         document_url: file_url,
         file_type,
+        type_of_embedding,
+        additional_context,
       },
       headers: {
         Authorization: process.env.MANAGE_APPLICATION_TOKEN,

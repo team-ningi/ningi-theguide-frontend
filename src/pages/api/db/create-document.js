@@ -10,6 +10,8 @@ export default async function handler(req, res) {
     original_filename,
     saved_filename,
     custom_filename,
+    type_of_embedding = "document",
+    additional_context = "",
     metadata,
     authToken,
   } = req.body;
@@ -25,6 +27,8 @@ export default async function handler(req, res) {
         original_filename,
         saved_filename,
         custom_filename,
+        type_of_embedding,
+        additional_context,
         metadata,
       },
       headers: {
