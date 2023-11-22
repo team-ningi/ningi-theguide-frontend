@@ -148,16 +148,20 @@ export const chat = async (
   authToken: string
 ) => {
   await new Promise((resolve) => setTimeout(resolve, 400));
-
-  return await axios({
-    method: "post",
-    url: "/api/db/chat",
-    data: {
-      question,
-      documentIds,
-      authToken,
-    },
-  });
+  try {
+    return await axios({
+      method: "post",
+      url: "/api/db/chat",
+      data: {
+        question,
+        documentIds,
+        authToken,
+      },
+    });
+  } catch (e) {
+    //swallow failure
+    return { data: { answer: "" } };
+  }
 };
 
 export const createHistory = async (
