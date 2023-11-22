@@ -25,6 +25,8 @@ import {
   CaretDown,
   DownloadSimple,
   Files,
+  FilePng,
+  FileJpg,
 } from "phosphor-react";
 import { getUserDocuments, getSignedURL } from "../../../utils/api-helper";
 import { AddNewForm } from "../../../lib/components/addContent/add-new-document";
@@ -36,6 +38,9 @@ const IconMap = {
   docx: <FileDoc size={22} />,
   txt: <FileText size={22} />,
   pdf: <FilePdf size={22} />,
+  png: <FilePng size={22} />,
+  jpg: <FileJpg size={22} />,
+  jpeg: <FileJpg size={22} />,
 };
 
 const createEmbedding = async (

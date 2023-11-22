@@ -8,13 +8,29 @@ import { DocType, SessionType, SetLoadingType } from "../../../lib/types";
 import { v4 as uuidv4 } from "uuid";
 
 const promptTypes = [
-  "return {{data}}",
-  "return {{data}} on its own.",
-  "return {{data}} only with no other text",
-  "return {{data}} as a number with no other text",
-  "return {{data}} as simply as possible with no additional text",
-  "return {{data}} as a boolean with no additional text",
+  "{{data}} . return the answer to this query on its own, please keep context and dont return anything you are unsure of.",
+  "{{data}} . return the answer to this query as a number with no additional text and please do not go out of context.",
+  "{{data}} . return the answer to this query as simple as possible with no additional text that is out of context.",
+  "{{data}} . return the answer to this query as a boolean with no additional text and please do not go out of context.",
 ];
+
+const returnPrePrompt = (clientNames: {
+  client1Name: string;
+  client1NameAlias: string;
+  client2Name: string;
+  client2NameAlias: string;
+}) => {
+  const { client1Name, client1NameAlias, client2Name, client2NameAlias } =
+    clientNames;
+  const Client1Name = client1Name ? client1Name : "";
+  const Client1NameAlias =
+    client1NameAlias !== "" ? client1NameAlias : client1Name;
+  const Client2Name = client2Name ? client2Name : "";
+  const Client2NameAlias =
+    client2NameAlias !== "" ? client2NameAlias : client2Name;
+
+  return `Client 1 is ${Client1Name} they also go by the name of ${Client1NameAlias}, client 2 is ${Client2Name} they also go by the name of ${Client2NameAlias}. `;
+};
 
 const saveReport = async (
   reportState: any,
@@ -24,25 +40,35 @@ const saveReport = async (
   generateDoc: boolean,
   showNotification: any,
   hideNotification: any,
-  user_id: string
+  user_id: string,
+  clientNames: any
 ) => {
   const docId = reportState?.documentIds;
   let tagResults: any = {};
 
-  if (!tags?.length) {
+  //Antonio Gerardo Cervi  Toni Cervi
+  const additionalPrompt = returnPrePrompt(clientNames);
+
+  if (
+    !tags?.length ||
+    clientNames?.Client1Name === "" ||
+    !reportState?.reportName ||
+    !reportState?.documentIds?.length ||
+    !reportState?.baseTemplateURL
+  ) {
     showNotification({
-      text: "You must add at least 1 tag.",
+      text: "You must complete all required fields.",
       type: "error",
     });
-    setTimeout(() => hideNotification(), 3000);
-    return;
+    setTimeout(() => hideNotification(), 5500);
+    return false;
   }
   setLoading(true);
 
   await Promise.all(
     tags?.map(async (item, i) => {
       const { data } = await chat(
-        item.prompt?.replace("{{data}}", item?.data),
+        `${additionalPrompt} ${item.prompt?.replace("{{data}}", item?.data)}`,
         [...docId],
         session?.authToken
       );
@@ -50,6 +76,9 @@ const saveReport = async (
       tagResults[item.tag] = answer;
     })
   );
+
+  console.log({ tagResults });
+  // return false;
 
   const { data } = await createNewReport(
     user_id,
@@ -64,7 +93,7 @@ const saveReport = async (
   const templateURL = data?.report?.base_template_url;
   const outputName = `${uuidv4()}.${data?.report?.file_type}`;
 
-  if (generateDoc)
+  if (generateDoc) {
     await generateDocx(
       tagResults,
       reportId,
@@ -72,14 +101,16 @@ const saveReport = async (
       outputName,
       session?.authToken
     );
-  showNotification({
-    text: "Your document has been generated! 🚀",
-    type: "success",
-  });
+    showNotification({
+      text: "Your document has been generated! 🚀",
+      type: "success",
+    });
 
-  setTimeout(() => hideNotification(), 4500);
+    setTimeout(() => hideNotification(), 4500);
+  }
+
   setLoading(false);
-  return;
+  return true;
 };
 
 const defaultState = {
@@ -87,7 +118,7 @@ const defaultState = {
   documentIds: [],
   baseTemplate: "",
   baseTemplateURL: "",
-  tagsSelected: "",
+  tagsSelected: "Custom",
   tags: [],
 };
 
@@ -266,10 +297,169 @@ const CreateNewReportComponent = ({
   baseTemplates = [],
 }: any) => {
   const [reportState, updateReportState] = useState(defaultState);
+  const [clientNames, updateClientNames] = useState({
+    client1Name: "",
+    client1NameAlias: "",
+    client2Name: "",
+    client2NameAlias: "",
+  });
   const [tags, updateTags] = useState([]);
 
   return (
     <Flex sx={{ flexDirection: "column", width: "100%", mb: "200px" }}>
+      <Box>
+        <InputLabel
+          customSX={{
+            textAlign: "left",
+            width: "100%",
+          }}
+          title="Client 1 Full Name"
+          subtitle=" *"
+        />
+        <Input
+          sx={{
+            backgroundColor: "white",
+            height: "40px",
+            borderRadius: 0,
+            borderColor: "inputBorder",
+            width: "100%",
+            mt: "0px",
+            mb: "20px",
+            border: "1px solid lightgrey",
+            fontSize: "14px",
+            color: "#555",
+            fontStyle: "normal",
+          }}
+          type="text"
+          data-testid="client1Name"
+          id="client1Name"
+          name="client1Name"
+          placeholder=""
+          onChange={(e) =>
+            updateClientNames({ ...clientNames, client1Name: e?.target?.value })
+          }
+        />
+      </Box>
+      <Box>
+        <InputLabel
+          customSX={{
+            textAlign: "left",
+            width: "100%",
+          }}
+          title="Client 1 Alias"
+          subtitle=""
+        />
+        <Paragraph
+          sx={{ fontSize: "13px", color: "#666", textAlign: "left", mb: "5px" }}
+        >
+          leave empty if they dont have an alias
+        </Paragraph>
+        <Input
+          sx={{
+            backgroundColor: "white",
+            height: "40px",
+            borderRadius: 0,
+            borderColor: "inputBorder",
+            width: "100%",
+            mt: "0px",
+            mb: "20px",
+            border: "1px solid lightgrey",
+            fontSize: "14px",
+            color: "#555",
+            fontStyle: "normal",
+          }}
+          type="text"
+          data-testid="client1NameAlias"
+          id="client1NameAlias"
+          name="client1NameAlias"
+          placeholder=""
+          onChange={(e) =>
+            updateClientNames({
+              ...clientNames,
+              client1NameAlias: e?.target?.value,
+            })
+          }
+        />
+      </Box>
+      <Box>
+        <InputLabel
+          customSX={{
+            textAlign: "left",
+            width: "100%",
+          }}
+          title="Client 2 Full Name"
+          subtitle=" "
+        />
+        <Paragraph
+          sx={{ fontSize: "13px", color: "#666", textAlign: "left", mb: "5px" }}
+        >
+          leave empty if there is no client 2 for this report
+        </Paragraph>
+        <Input
+          sx={{
+            backgroundColor: "white",
+            height: "40px",
+            borderRadius: 0,
+            borderColor: "inputBorder",
+            width: "100%",
+            mt: "0px",
+            mb: "20px",
+            border: "1px solid lightgrey",
+            fontSize: "14px",
+            color: "#555",
+            fontStyle: "normal",
+          }}
+          type="text"
+          data-testid="client2Name"
+          id="client2Name"
+          name="client2Name"
+          placeholder=""
+          onChange={(e) =>
+            updateClientNames({ ...clientNames, client2Name: e?.target?.value })
+          }
+        />
+      </Box>
+      <Box>
+        <InputLabel
+          customSX={{
+            textAlign: "left",
+            width: "100%",
+          }}
+          title="Client 2 Alias"
+          subtitle=""
+        />
+        <Paragraph
+          sx={{ fontSize: "13px", color: "#666", textAlign: "left", mb: "5px" }}
+        >
+          leave empty if they dont have an alias
+        </Paragraph>
+        <Input
+          sx={{
+            backgroundColor: "white",
+            height: "40px",
+            borderRadius: 0,
+            borderColor: "inputBorder",
+            width: "100%",
+            mt: "0px",
+            mb: "20px",
+            border: "1px solid lightgrey",
+            fontSize: "14px",
+            color: "#555",
+            fontStyle: "normal",
+          }}
+          type="text"
+          data-testid="client2NameAlias"
+          id="client2NameAlias"
+          name="client2NameAlias"
+          placeholder=""
+          onChange={(e) =>
+            updateClientNames({
+              ...clientNames,
+              client2NameAlias: e?.target?.value,
+            })
+          }
+        />
+      </Box>
       <Box>
         <InputLabel
           customSX={{
@@ -395,9 +585,15 @@ const CreateNewReportComponent = ({
             textAlign: "left",
             width: "100%",
           }}
-          title="Tags - Select from one of our examples or start from scratch"
-          subtitle=""
+          title="Tags"
+          subtitle=" *"
         />
+        <Paragraph
+          sx={{ fontSize: "13px", color: "#666", textAlign: "left", mb: "5px" }}
+        >
+          Select from one of the saved collections or create a one off custom
+          set
+        </Paragraph>
         <ReactSelect
           value={tagList.map((item: any) => {
             if (reportState.tagsSelected === item?.label) {
@@ -435,43 +631,56 @@ const CreateNewReportComponent = ({
             };
           })}
         />
-        <Box>
-          {tags?.map(
-            (
-              item: { uuid: string; data: string; tag: string; prompt: string },
-              i
-            ) => (
-              <TagAndPromptItem //@ts-ignore
-                key={`${item.uuid}`} //@ts-ignore
-                uuid={item.uuid}
-                data={item.data}
-                tag={item.tag}
-                prompt={item.prompt}
-                tags={tags}
-                updateTags={updateTags}
-              />
-            )
-          )}
-        </Box>
-        <Flex sx={{ justifyContent: "flex-start" }}>
-          <Paragraph
-            sx={{
-              cursor: "pointer",
-              color: "green",
-              fontWeight: "500",
-              fontSize: "14px",
-            }}
-            onClick={() => {
-              let newTags = [...tags];
-              //@ts-ignore
-              newTags.push({ tag: "", data: "", prompt: "", uuid: uuidv4() });
-              updateTags(newTags);
-            }}
-          >
-            + add tag
-          </Paragraph>
-        </Flex>
-
+        {reportState.tagsSelected === "Custom" && (
+          <>
+            <Box>
+              {tags?.map(
+                (
+                  item: {
+                    uuid: string;
+                    data: string;
+                    tag: string;
+                    prompt: string;
+                  },
+                  i
+                ) => (
+                  <TagAndPromptItem //@ts-ignore
+                    key={`${item.uuid}`} //@ts-ignore
+                    uuid={item.uuid}
+                    data={item.data}
+                    tag={item.tag}
+                    prompt={item.prompt}
+                    tags={tags}
+                    updateTags={updateTags}
+                  />
+                )
+              )}
+            </Box>
+            <Flex sx={{ justifyContent: "flex-start" }}>
+              <Paragraph
+                sx={{
+                  cursor: "pointer",
+                  color: "green",
+                  fontWeight: "500",
+                  fontSize: "14px",
+                }}
+                onClick={() => {
+                  let newTags = [...tags];
+                  //@ts-ignore
+                  newTags.push({
+                    tag: "",
+                    data: "",
+                    prompt: "",
+                    uuid: uuidv4(),
+                  });
+                  updateTags(newTags);
+                }}
+              >
+                + add tag
+              </Paragraph>
+            </Flex>
+          </>
+        )}
         <Flex sx={{ justifyContent: "flex-end" }}>
           <Paragraph
             sx={{
@@ -527,7 +736,7 @@ const CreateNewReportComponent = ({
               fontSize: "14px",
             }}
             onClick={async () => {
-              await saveReport(
+              const saved = await saveReport(
                 reportState,
                 setLoading,
                 session,
@@ -535,16 +744,19 @@ const CreateNewReportComponent = ({
                 true,
                 showNotification,
                 hideNotification,
-                state?.user_id
+                state?.user_id,
+                clientNames
               );
 
-              updateState({
-                ...state,
-                mode: "start",
-                success: true,
-                refreshReports: true,
-              });
-              updateReportState(defaultState);
+              if (saved) {
+                updateState({
+                  ...state,
+                  mode: "start",
+                  success: true,
+                  refreshReports: true,
+                });
+                updateReportState(defaultState);
+              }
             }}
           >
             Create report

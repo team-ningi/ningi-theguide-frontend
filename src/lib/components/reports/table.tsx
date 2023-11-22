@@ -231,7 +231,7 @@ export const TableItem = ({
           />
 
           {/* <FileKeyValue theKey="Documents Used" theValue={item.document_ids} /> */}
-          <Flex
+          {/* <Flex
             sx={{
               width: "auto",
               textAlign: "right",
@@ -245,7 +245,7 @@ export const TableItem = ({
             onClick={() => alert("edit report ")}
           >
             Edit Report
-          </Flex>
+          </Flex> */}
         </Flex>
       )}
     </Flex>

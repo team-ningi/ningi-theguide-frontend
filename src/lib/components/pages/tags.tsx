@@ -21,7 +21,11 @@ import {
   deleteTagsAndPrompts,
 } from "../../../utils/api-helper";
 import { Title, Description } from "../../../lib/components/TextItems";
-import { BasicReportExample, SuitabilityReportExample } from "../reports/tags";
+import {
+  BasicReportExample,
+  SuitabilityReportExample,
+  FactFindExample,
+} from "../reports/tags";
 import { TagAndPromptItem } from "../reports/createReport";
 import { v4 as uuidv4 } from "uuid";
 
@@ -227,6 +231,11 @@ const TagComponent = ({
           id: "1",
           label: "Suitability Report Example",
           tags: SuitabilityReportExample,
+        },
+        {
+          id: "2",
+          label: "Fact Find Example",
+          tags: FactFindExample,
         },
       ];
 

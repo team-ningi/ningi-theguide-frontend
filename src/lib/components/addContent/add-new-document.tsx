@@ -28,7 +28,7 @@ const s3Client = new S3Client({
   region: process.env.NEXT_PUBLIC_AWS_KEY_REGION,
 });
 
-const supportedDocTypes = ["txt", "pdf", "docx"];
+const supportedDocTypes = ["txt", "pdf", "docx", "png", "jpg", "jpeg"];
 
 const defaultErrorState = {
   file_url: false,
@@ -400,7 +400,7 @@ export const AddNewForm = ({
                 width: "300px",
                 mt: "20px",
               }}
-              title="File (pdf, txt, docx)"
+              title="File (pdf, txt, docx, png)"
               subtitle=" *"
             />
             <input

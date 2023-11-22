@@ -12,6 +12,7 @@ import { getTags } from "../utils/api-helper";
 import {
   BasicReportExample,
   SuitabilityReportExample,
+  FactFindExample,
 } from "../lib/components/reports/tags";
 import { SessionType, UserType, PageTypes, TagItemType } from "../lib/types";
 
@@ -38,12 +39,17 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
           console.log("data ", data);
 
           let TagsToDisplay = [
-            { id: "0", label: "Reset", tags: [] },
+            { id: "0", label: "Custom", tags: [] },
             { id: "1", label: "Basic Example", tags: BasicReportExample },
             {
               id: "2",
               label: "Suitability Report Example",
               tags: SuitabilityReportExample,
+            },
+            {
+              id: "3",
+              label: "Fact Find Example",
+              tags: FactFindExample,
             },
           ];
           const UsersTags = data?.map((item: TagItemType) => ({
