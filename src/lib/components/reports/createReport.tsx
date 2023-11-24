@@ -1,18 +1,16 @@
 import { Box, Paragraph, Flex, Input, Button } from "theme-ui";
-import { chat, generateDocx, createNewReport } from "../../../utils/api-helper";
+import {
+  chat,
+  createTheTags,
+  generateDocx,
+  createNewReport,
+} from "../../../utils/api-helper";
 import { useState } from "react";
 import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
 import { DocType, SessionType, SetLoadingType } from "../../../lib/types";
 import { v4 as uuidv4 } from "uuid";
-
-const promptTypes = [
-  "{{data}} . return the answer to this query on its own, please keep context and dont return anything you are unsure of.",
-  "{{data}} . return the answer to this query as a number with no additional text and please do not go out of context.",
-  "{{data}} . return the answer to this query as simple as possible with no additional text that is out of context.",
-  "{{data}} . return the answer to this query as a boolean with no additional text and please do not go out of context.",
-];
 
 const returnPrePrompt = (clientNames: {
   client1Name: string;
@@ -24,19 +22,23 @@ const returnPrePrompt = (clientNames: {
     clientNames;
   const Client1Name = client1Name ? client1Name : "";
   const Client1NameAlias =
-    client1NameAlias !== "" ? client1NameAlias : client1Name;
+    client1NameAlias !== "" ? `aka ${client1NameAlias} ` : "";
   const Client2Name = client2Name ? client2Name : "";
   const Client2NameAlias =
-    client2NameAlias !== "" ? client2NameAlias : client2Name;
+    client2NameAlias !== "" ? `aka ${client2NameAlias} ` : "";
 
-  return `Client 1 is ${Client1Name} they also go by the name of ${Client1NameAlias}, client 2 is ${Client2Name} they also go by the name of ${Client2NameAlias}. `;
+  const client2Info = Client2Name
+    ? `, client 2 is ${Client2Name} ${Client2NameAlias}.`
+    : ".";
+
+  return `Client 1 is ${Client1Name} ${Client1NameAlias} ${client2Info}`;
 };
 
 const saveReport = async (
   reportState: any,
   setLoading: SetLoadingType,
   session: SessionType,
-  tags: { prompt: "string"; tag: "string"; data: string; uuid: string }[],
+  tags: { theKey: string; theValue: string }[],
   generateDoc: boolean,
   showNotification: any,
   hideNotification: any,
@@ -44,7 +46,6 @@ const saveReport = async (
   clientNames: any
 ) => {
   const docId = reportState?.documentIds;
-  let tagResults: any = {};
 
   //Antonio Gerardo Cervi  Toni Cervi
   const additionalPrompt = returnPrePrompt(clientNames);
@@ -65,50 +66,64 @@ const saveReport = async (
   }
   setLoading(true);
 
-  await Promise.all(
-    tags?.map(async (item, i) => {
-      const { data } = await chat(
-        `${additionalPrompt} ${item.prompt?.replace("{{data}}", item?.data)}`,
-        [...docId],
-        session?.authToken
-      );
-      const { answer } = data;
-      tagResults[item.tag] = answer;
-    })
-  );
-
-  console.log({ tagResults });
-  // return false;
-
+  //1 CREATE REPORT RECORD
+  //SET STATUS TO BE PROCESSING
   const { data } = await createNewReport(
     user_id,
     reportState?.reportName,
     tags,
-    tagResults,
+    {},
     reportState?.documentIds,
     reportState?.baseTemplateURL,
     session?.authToken
   );
   const reportId = data?.report?._id;
-  const templateURL = data?.report?.base_template_url;
-  const outputName = `${uuidv4()}.${data?.report?.file_type}`;
+  // const templateURL = data?.report?.base_template_url;
+  // const outputName = `${uuidv4()}.${data?.report?.file_type}`;
 
-  if (generateDoc) {
-    await generateDocx(
-      tagResults,
-      reportId,
-      templateURL,
-      outputName,
-      session?.authToken
-    );
+  //2 FIRE OFF REQUEST TO START GETTING ALL THE TAGS
+  // !!!SEND REPORT ID SO IT KNOWS WHAT TO UPDATE
+
+  // SEND reportId TO THE ENDPOINT !!! <<<<<<<> NEXT THINGG TO DO
+  createTheTags(
+    tags,
+    [...docId],
+    additionalPrompt,
+    session?.authToken,
+    reportId
+  );
+
+  //3 REFRESH PAGE
+
+  /*
+  try {   
+    // TODO GET THIS TO HAPPEN FROM LIST SCREEN AFTER RESULT IS READY
+    if (generateDoc) {
+      await generateDocx(
+        tagResults,
+        reportId,
+        templateURL,
+        outputName,
+        session?.authToken
+      );
+      showNotification({
+        text: "Your document has been generated! 🚀",
+        type: "success",
+      });
+
+      setTimeout(() => hideNotification(), 4500);
+    }
+  } catch (e) {
+    //failure
     showNotification({
-      text: "Your document has been generated! 🚀",
-      type: "success",
+      text: "Report creation failed",
+      type: "error",
     });
-
-    setTimeout(() => hideNotification(), 4500);
+    setTimeout(() => hideNotification(), 5500);
+    setLoading(false);
+    return false;
   }
-
+*/
   setLoading(false);
   return true;
 };
@@ -123,17 +138,17 @@ const defaultState = {
 };
 
 export const TagAndPromptItem = ({
-  uuid,
+  TheUuid,
   tag,
   data,
   prompt,
   tags,
   updateTags,
 }: any) => {
-  const idx = tags?.findIndex((item: any) => item.uuid === uuid);
-  const [thePrompt, updatePrompt] = useState(prompt); //|| promptTypes[0]
-  const [theTag, updateTheTag] = useState(tag);
-  const [theData, updateTheData] = useState(data);
+  const idx = tags?.findIndex((item: any) => item.id === TheUuid);
+  const { theKey, theValue, id } = tag;
+  const [theTag, updateTheTag] = useState(theKey);
+  const [theData, updateTheData] = useState(theValue);
 
   return (
     <Flex
@@ -143,11 +158,11 @@ export const TagAndPromptItem = ({
         border: "0px solid red",
       }}
     >
-      <Box sx={{ width: "140px" }}>
+      <Box sx={{ width: "200px" }}>
         <InputLabel
           customSX={{
             textAlign: "left",
-            width: "140px",
+            width: "200px",
             fontWeight: "500",
           }}
           title="Tag in template"
@@ -159,7 +174,7 @@ export const TagAndPromptItem = ({
             height: "40px",
             borderRadius: 0,
             borderColor: "inputBorder",
-            width: "140px",
+            width: "200px",
             mt: "0px",
             mb: "20px",
             border: "1px solid lightgrey",
@@ -174,19 +189,18 @@ export const TagAndPromptItem = ({
           placeholder=""
           value={theTag}
           onChange={(e) => {
-            // const idx = tags?.findIndex((item: any) => item.uuid === uuid);
             let tmpTags = tags;
-            tmpTags[idx].tag = e.target.value;
+            tmpTags[idx].theKey = e.target.value;
             updateTags(tmpTags);
             updateTheTag(e.target.value);
           }}
         />
       </Box>
-      <Box sx={{ width: "140px" }}>
+      <Box sx={{ width: "440px" }}>
         <InputLabel
           customSX={{
             textAlign: "left",
-            width: "140px",
+            width: "440px",
             fontWeight: "500",
           }}
           title="Data to extract"
@@ -198,7 +212,7 @@ export const TagAndPromptItem = ({
             height: "40px",
             borderRadius: 0,
             borderColor: "inputBorder",
-            width: "140px",
+            width: "440px",
             mt: "0px",
             mb: "20px",
             border: "1px solid lightgrey",
@@ -210,58 +224,17 @@ export const TagAndPromptItem = ({
           data-testid="tagName"
           id="tagName"
           name="tagName"
-          placeholder=""
+          placeholder="" //@ts-ignore
           value={theData}
           onChange={(e) => {
-            // const idx = tags?.findIndex((item: any) => item.uuid === uuid);
             let tmpTags = tags;
-            tmpTags[idx].data = e.target.value;
+            tmpTags[idx].theValue = e.target.value;
             updateTags(tmpTags);
             updateTheData(e.target.value);
           }}
         />
       </Box>
-      <Box sx={{ width: "300px" }}>
-        <InputLabel
-          customSX={{
-            textAlign: "left",
-            width: "300px",
-            fontWeight: "500",
-          }}
-          title="Prompt to use"
-          subtitle=" *"
-        />
-        <ReactSelect
-          value={{
-            value: thePrompt,
-            label: thePrompt?.replace("{{data}}", theTag),
-          }}
-          onChange={(values: any) => {
-            // const idx = tags?.findIndex((item: any) => item.uuid === uuid);
-            let tmpTags = tags;
-            tmpTags[idx].prompt = values.value;
-            updateTags(tmpTags);
-            updatePrompt(values.value);
-          }}
-          styles={{
-            control: (provided) => ({
-              ...provided,
-              width: "300px",
-              textAlign: "left",
-              fontSize: "13px",
-              outline: "none",
-              minHeight: "40px",
-              marginBottom: "20px",
-            }),
-          }}
-          options={promptTypes?.map((item: any) => {
-            return {
-              value: item,
-              label: item?.replace("{{data}}", theTag),
-            };
-          })}
-        />
-      </Box>
+
       <Flex
         sx={{
           width: "50px",
@@ -273,7 +246,7 @@ export const TagAndPromptItem = ({
         <Paragraph
           sx={{ cursor: "pointer", color: "firebrick" }}
           onClick={() => {
-            const newArr = tags.filter((item: any) => item.uuid !== uuid);
+            const newArr = tags.filter((item: any) => item.id !== id);
             updateTags(newArr);
           }}
         >
@@ -612,7 +585,6 @@ const CreateNewReportComponent = ({
             const TagsToUse = tagList?.find(
               (item: any) => item?.label === values?.value
             );
-
             updateTags(TagsToUse?.tags);
           }}
           styles={{
@@ -634,27 +606,15 @@ const CreateNewReportComponent = ({
         {reportState.tagsSelected === "Custom" && (
           <>
             <Box>
-              {tags?.map(
-                (
-                  item: {
-                    uuid: string;
-                    data: string;
-                    tag: string;
-                    prompt: string;
-                  },
-                  i
-                ) => (
-                  <TagAndPromptItem //@ts-ignore
-                    key={`${item.uuid}`} //@ts-ignore
-                    uuid={item.uuid}
-                    data={item.data}
-                    tag={item.tag}
-                    prompt={item.prompt}
-                    tags={tags}
-                    updateTags={updateTags}
-                  />
-                )
-              )}
+              {tags?.map((item: string[], i) => (
+                <TagAndPromptItem //@ts-ignore
+                  key={`${uuidv4()}`} //@ts-ignore
+                  TheUuid={item.id}
+                  tag={item}
+                  tags={tags}
+                  updateTags={updateTags}
+                />
+              ))}
             </Box>
             <Flex sx={{ justifyContent: "flex-start" }}>
               <Paragraph
@@ -668,12 +628,12 @@ const CreateNewReportComponent = ({
                   let newTags = [...tags];
                   //@ts-ignore
                   newTags.push({
-                    tag: "",
-                    data: "",
-                    prompt: "",
-                    uuid: uuidv4(),
+                    theKey: "",
+                    theValue: "",
+                    id: uuidv4(),
                   });
                   updateTags(newTags);
+                  console.log(newTags);
                 }}
               >
                 + add tag
@@ -736,11 +696,21 @@ const CreateNewReportComponent = ({
               fontSize: "14px",
             }}
             onClick={async () => {
+              let tagstoUse = tags;
+
+              //IF CUSTOM FILTER TAGS TO BE FLAT ARRAY
+              if (reportState.tagsSelected === "Custom") {
+                // @ts-ignore
+                tagstoUse = tags.map((item: any) => ({
+                  [item.theKey]: item?.theValue,
+                }));
+              }
+
               const saved = await saveReport(
                 reportState,
                 setLoading,
                 session,
-                tags,
+                tagstoUse,
                 true,
                 showNotification,
                 hideNotification,
@@ -752,7 +722,7 @@ const CreateNewReportComponent = ({
                 updateState({
                   ...state,
                   mode: "start",
-                  success: true,
+                  success: false,
                   refreshReports: true,
                 });
                 updateReportState(defaultState);

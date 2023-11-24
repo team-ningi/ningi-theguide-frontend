@@ -164,6 +164,32 @@ export const chat = async (
   }
 };
 
+export const createTheTags = async (
+  tags: { theKey: string; theValue: string }[],
+  documentIds: string[],
+  additionalPrompt: string,
+  authToken: string,
+  reportId: string
+) => {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  try {
+    return await axios({
+      method: "post",
+      url: "/api/db/chat-get-tags",
+      data: {
+        tags,
+        documentIds,
+        additionalPrompt,
+        authToken,
+        reportId,
+      },
+    });
+  } catch (e) {
+    //swallow failure
+    return { data: { answer: "" } };
+  }
+};
+
 export const createHistory = async (
   user_id: string,
   document_ids: string[],

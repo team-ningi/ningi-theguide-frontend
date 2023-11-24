@@ -143,7 +143,7 @@ export const TableItem = ({
   authToken: string;
 }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
-  const { file_type, report_name, report_type, saved_filename } = item;
+  const { file_type, report_name, report_type, saved_filename, status } = item;
   const isEven = i % 2 === 0;
 
   return (
@@ -193,7 +193,8 @@ export const TableItem = ({
             textTransform: "capitalize",
           }}
         >
-          {report_type}
+          {/* {report_type} */}
+          {status}
         </Box>
         <Box
           style={{

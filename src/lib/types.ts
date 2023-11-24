@@ -184,7 +184,8 @@ export type TagsStateType = {
   tagsToEdit: {
     userId: string;
     label: string;
-    id: string;
+    _id: string;
+    id?: string;
     tags: TagItemType[];
     authToken: string;
   };

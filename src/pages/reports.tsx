@@ -10,11 +10,11 @@ import { Dispatch } from "redux";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 import { getTags } from "../utils/api-helper";
 import {
-  BasicReportExample,
   SuitabilityReportExample,
   FactFindExample,
 } from "../lib/components/reports/tags";
 import { SessionType, UserType, PageTypes, TagItemType } from "../lib/types";
+import { v4 as uuidv4 } from "uuid";
 
 const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [state, updateContent] = useState<{
@@ -39,21 +39,23 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
           console.log("data ", data);
 
           let TagsToDisplay = [
-            { id: "0", label: "Custom", tags: [] },
-            { id: "1", label: "Basic Example", tags: BasicReportExample },
+            { id: "0", _id: "static", label: "Custom", tags: [] },
             {
               id: "2",
+              _id: "static",
               label: "Suitability Report Example",
               tags: SuitabilityReportExample,
             },
             {
               id: "3",
+              _id: "static",
               label: "Fact Find Example",
               tags: FactFindExample,
             },
           ];
           const UsersTags = data?.map((item: TagItemType) => ({
-            id: item._id,
+            _id: item._id,
+            id: uuidv4(),
             label: item.label,
             tags: item.tags,
           }));

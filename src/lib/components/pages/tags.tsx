@@ -21,11 +21,7 @@ import {
   deleteTagsAndPrompts,
 } from "../../../utils/api-helper";
 import { Title, Description } from "../../../lib/components/TextItems";
-import {
-  BasicReportExample,
-  SuitabilityReportExample,
-  FactFindExample,
-} from "../reports/tags";
+import { SuitabilityReportExample, FactFindExample } from "../reports/tags";
 import { TagAndPromptItem } from "../reports/createReport";
 import { v4 as uuidv4 } from "uuid";
 
@@ -45,7 +41,7 @@ const defaultState = {
   tagsToEdit: {
     userId: "",
     label: "",
-    id: "",
+    _id: "",
     tags: [],
     authToken: "",
   },
@@ -135,7 +131,7 @@ const TableItem = ({
   updateState: any;
   updateTagsInView: any;
 }) => {
-  const { label, id, tags } = item;
+  const { label, _id, tags } = item;
   const isEven = i % 2 === 0;
 
   return (
@@ -170,7 +166,7 @@ const TableItem = ({
             updateState({
               ...state,
               mode: "edit",
-              tagsToEdit: { userId, label, id, tags, authToken },
+              tagsToEdit: { userId, label, _id, tags, authToken },
             });
             updateTagsInView(tags);
           }}
@@ -226,25 +222,47 @@ const TagComponent = ({
       const { data } = await getTags(user._id, session?.authToken);
 
       let TagsToDisplay = [
-        { id: "0", label: "Basic Example", tags: BasicReportExample },
         {
           id: "1",
+          _id: "static",
           label: "Suitability Report Example",
           tags: SuitabilityReportExample,
         },
         {
           id: "2",
+          _id: "static",
           label: "Fact Find Example",
           tags: FactFindExample,
         },
       ];
 
       const UsersTags = data?.map((item: TagItemType) => ({
-        id: item._id,
+        _id: item._id,
+        id: uuidv4(),
         label: item.label,
         tags: item.tags,
       }));
-      updateTags([...UsersTags, ...TagsToDisplay]);
+
+      const tagsToUse = [...UsersTags, ...TagsToDisplay];
+      const updatedTags = tagsToUse.map((tag) => {
+        const updatedTags = tag.tags.map((item: any) => {
+          const tagData = Object.entries(item);
+          const [theKey, theValue] = tagData[0];
+          return {
+            theKey,
+            theValue,
+            id: uuidv4(),
+          };
+        });
+
+        return {
+          id: tag.id,
+          _id: tag._id,
+          label: tag.label,
+          tags: updatedTags,
+        };
+      });
+      updateTags(updatedTags);
 
       updateState({
         ...state,
@@ -409,11 +427,9 @@ const TagComponent = ({
           </Box>
           {tagsInView?.map((item: any, i) => (
             <TagAndPromptItem //@ts-ignore
-              key={`${item.uuid}`} //@ts-ignore
-              uuid={item.uuid}
-              data={item.data}
-              tag={item.tag}
-              prompt={item.prompt}
+              key={`${uuidv4()}`} //@ts-ignore
+              TheUuid={item.id}
+              tag={item}
               tags={tagsInView}
               updateTags={updateTagsInView}
             />
@@ -428,8 +444,13 @@ const TagComponent = ({
               }}
               onClick={() => {
                 let newTags = [...tagsInView];
-                //@ts-ignore
-                newTags.push({ tag: "", data: "", prompt: "", uuid: uuidv4() });
+                newTags.push({
+                  //@ts-ignore
+                  theKey: "",
+                  theValue: "",
+                  id: uuidv4(),
+                });
+
                 updateTagsInView(newTags);
               }}
             >
@@ -451,17 +472,21 @@ const TagComponent = ({
             onClick={async () => {
               const { user_id, newLabel, authToken } = state;
 
+              const cleanTagsForDB = tagsInView?.map((item: any) => ({
+                [item?.theKey]: item?.theValue,
+              }));
+
               if (
                 user_id &&
                 authToken &&
                 newLabel !== "" &&
-                tagsInView?.length > 0
+                cleanTagsForDB?.length > 0
               ) {
                 setLoading(true);
                 await addTagsAndPrompts(
                   user_id,
                   newLabel,
-                  tagsInView,
+                  cleanTagsForDB,
                   authToken
                 );
                 window.location.reload();
@@ -512,16 +537,15 @@ const TagComponent = ({
 
           {tagsInView?.map((item: any, i) => (
             <TagAndPromptItem //@ts-ignore
-              key={`${item.uuid}`} //@ts-ignore
-              uuid={item.uuid}
-              data={item.data}
-              tag={item.tag}
-              prompt={item.prompt}
+              key={`${uuidv4()}`} //@ts-ignore
+              TheUuid={item.id}
+              tag={item}
               tags={tagsInView}
               updateTags={updateTagsInView}
             />
           ))}
-          {!["0", "1", "2"].includes(state.tagsToEdit.id) && (
+
+          {!["static"].includes(state.tagsToEdit._id) && (
             <>
               <Flex sx={{ justifyContent: "flex-start" }}>
                 <Paragraph
@@ -533,13 +557,11 @@ const TagComponent = ({
                   }}
                   onClick={() => {
                     let newTags = [...tagsInView];
-
                     newTags.push({
                       //@ts-ignore
-                      tag: "",
-                      data: "",
-                      prompt: "",
-                      uuid: uuidv4(),
+                      theKey: "",
+                      theValue: "",
+                      id: uuidv4(),
                     });
                     updateTagsInView(newTags);
                   }}
@@ -561,10 +583,19 @@ const TagComponent = ({
                   fontSize: "14px",
                 }}
                 onClick={async () => {
-                  setLoading(true);
-                  const { authToken, id, label } = state.tagsToEdit;
-                  await updateTagsAndPrompts(id, label, tagsInView, authToken);
+                  // setLoading(true);
+                  const { authToken, _id, label } = state.tagsToEdit;
 
+                  const cleanTagsForDB = tagsInView?.map((item: any) => ({
+                    [item?.theKey]: item?.theValue,
+                  }));
+
+                  await updateTagsAndPrompts(
+                    _id,
+                    label,
+                    cleanTagsForDB,
+                    authToken
+                  );
                   window.location.reload();
                 }}
               >
@@ -583,8 +614,8 @@ const TagComponent = ({
                 onClick={async () => {
                   setLoading(true);
                   const { authToken } = state;
-                  const { id } = state?.tagsToEdit;
-                  await deleteTagsAndPrompts(id, authToken);
+                  const { _id } = state?.tagsToEdit;
+                  await deleteTagsAndPrompts(_id, authToken);
                   window.location.reload();
                 }}
               >
