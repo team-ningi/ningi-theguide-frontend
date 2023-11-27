@@ -10,40 +10,6 @@ import { LoginForm, Waiting, Verify } from "../lib/components/login";
 import { LoginTypes } from "../lib/types";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 
-/*
-TODO
-FOR ALPHA
-*** 1
-          WHEN REPORT IS CREATED BUT NOT GENERATED ALLOW USER TO CONTINUE EDITING IT ❌
-
-NOT FOR ALPHA 
-**** 1
-          - UPLOAD AUDIO FILES ❌
-            - IF MP3 -> TRANSCRIBE AND CREATE EMBED
-          
-          - UPLOAD IMAGE FILES ❌    
-            - TEXTRACT   CHAT
-              https://medium.com/@hatemalimam/extract-text-and-data-from-any-document-using-amazon-textract-in-node-js-9a72136c6e64
-
-**** 2
-          - PAGINATION ON LISTS
-            - API already supports it ... 
-
-**** 3
-          - WHEN LOG IN ❌
-            -> IF NO NAME SET SHOW UI TO ADD NAME + UPLOAD AVATAR
-
-***** 4
-          - LIVE BLOCKS HOW CAN WE USE IT?
-            https://vercel.com/templates/next.js/liveblocks-starter-kit
-
-
-****** 5
-          - Look into function calling
-            https://platform.openai.com/docs/guides/function-calling
-
-*/
-
 const defaultState = {
   username: "",
   mode: "login", //  login || verify || waiting

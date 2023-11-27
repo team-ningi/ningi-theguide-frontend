@@ -93,37 +93,6 @@ const saveReport = async (
     reportId
   );
 
-  //3 REFRESH PAGE
-
-  /*
-  try {   
-    // TODO GET THIS TO HAPPEN FROM LIST SCREEN AFTER RESULT IS READY
-    if (generateDoc) {
-      await generateDocx(
-        tagResults,
-        reportId,
-        templateURL,
-        outputName,
-        session?.authToken
-      );
-      showNotification({
-        text: "Your document has been generated! 🚀",
-        type: "success",
-      });
-
-      setTimeout(() => hideNotification(), 4500);
-    }
-  } catch (e) {
-    //failure
-    showNotification({
-      text: "Report creation failed",
-      type: "error",
-    });
-    setTimeout(() => hideNotification(), 5500);
-    setLoading(false);
-    return false;
-  }
-*/
   setLoading(false);
   return true;
 };
