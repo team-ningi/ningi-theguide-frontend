@@ -49,7 +49,9 @@ export const TagsForGeneration = ({ reportData }: any) => (
         mt: "25px",
       }}
     >
-      {/* Edit the tag values and regenerate your report */}
+      {/* 
+      TODO
+      Edit the tag values and regenerate your report */}
       Review the Tag values
     </Paragraph>
     <Flex sx={{ flexWrap: "wrap", justifyContent: "space-between" }}>

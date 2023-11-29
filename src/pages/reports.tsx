@@ -64,8 +64,7 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
           }));
           await new Promise((resolve) => setTimeout(resolve, 300));
           updateTagList([...TagsToDisplay, ...UsersTags]);
-          // /11.79 ---> 12.98 -> 11 tags per chunk
-          //  13.83 --->  ???? -> 12 tags per chunk ->
+
           updateContent({
             ...state,
             ready: true,

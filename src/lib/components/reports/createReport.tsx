@@ -74,7 +74,7 @@ const saveReport = async (
   }
   setLoading(true);
 
-  const chunks = chunkArrayInGroups(tags, 12);
+  const chunks = chunkArrayInGroups(tags, 11);
 
   const tag_chunks_to_process: any[] = chunks;
   const tag_chunks_processed: any[] = [];
