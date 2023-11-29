@@ -12,4 +12,6 @@ MANAGE_APPLICATION_TOKEN=utgig_E2E_uigikb98687_E2E_5645ry
 
 cd cypress
 npm run cy:browser
+
+
 ```
