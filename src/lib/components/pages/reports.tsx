@@ -18,7 +18,7 @@ import {
   DocType,
   TagItemType,
 } from "@/lib/types";
-import { Files, XCircle } from "phosphor-react";
+import { Files } from "phosphor-react";
 import {
   getUserReports,
   getUserDocuments,
@@ -27,12 +27,14 @@ import {
 import { Title, Description } from "../../../lib/components/TextItems";
 import axios from "axios";
 import CreateNewReportComponent from "../reports/createReport";
+import ReplaceTagsAndGenerate from "../reports/replaceTagsAndGenerate";
 import { TableHeader, TableItem } from "../reports/table";
 
 const defaultState = {
   user_id: "",
   reportType: "",
-  mode: "start", // start | create
+  mode: "start", // start | create | replace-tags
+  reportId: "",
   searchReportName: "",
   searchFileType: "all",
   searchReportType: "all",
@@ -386,43 +388,84 @@ const ReportsComponent = ({
         position: "relative",
       }}
     >
-      <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
-        <Title text="Generated Reports" />
-        <Description
-          text={`
-          Generate personalized reports by importing a base template and utilizing data from your uploaded documents.`}
-        />
-      </Box>
+      {state.mode !== "replace-tags" && (
+        <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
+          <Title text="Generated Reports" />
+          <Description
+            text={`Generate personalized reports by importing a base template and utilizing data from your uploaded documents.`}
+          />
+        </Box>
+      )}
+      {state.mode === "replace-tags" && (
+        <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
+          <Title text="Almost Complete" />
+          <Description
+            text={`
+            Before you can view your report, we must process all of the data.`}
+          />
+        </Box>
+      )}
+
       <Flex
         sx={{
           flexDirection: "row",
-          justifyContent: "flex-end",
+          justifyContent:
+            state.mode === "replace-tags" ? "flex-start" : "flex-end",
           width: "100%",
           height: "40px",
         }}
       >
-        <Button
-          variant="primary"
-          sx={{
-            color: "white",
-            cursor: "pointer",
-            mt: "0px",
-            alignSelf: "flex-end",
-            mb: "10px",
-            height: "40px",
-            width: "140px",
-            fontSize: "14px",
-            zIndex: 9999,
-          }}
-          onClick={() =>
-            updateState({
-              ...state,
-              mode: state?.mode === "start" ? "create" : "start",
-            })
-          }
-        >
-          {state?.mode === "start" ? "Create Report" : "View Reports"}
-        </Button>
+        {state.mode !== "replace-tags" && (
+          <Button
+            variant="primary"
+            sx={{
+              color: "white",
+              cursor: "pointer",
+              mt: "0px",
+              alignSelf: "flex-end",
+              mb: "10px",
+              height: "40px",
+              width: "140px",
+              fontSize: "14px",
+              zIndex: 9999,
+            }}
+            onClick={() =>
+              updateState({
+                ...state,
+                mode: state?.mode === "start" ? "create" : "start",
+              })
+            }
+          >
+            {state?.mode === "start" ? "Create Report" : "View Reports"}
+          </Button>
+        )}
+        {state.mode === "replace-tags" && (
+          <Button
+            variant="primary"
+            sx={{
+              color: "grey",
+              background: "transparent",
+              border: "1px solid grey",
+              cursor: "pointer",
+              mt: "0px",
+              alignSelf: "flex-start",
+              mb: "10px",
+              height: "40px",
+              width: "100px",
+              fontSize: "14px",
+              zIndex: 9999,
+            }}
+            onClick={() =>
+              updateState({
+                ...state,
+                mode: "start",
+                refreshReports: true,
+              })
+            }
+          >
+            Go back
+          </Button>
+        )}
       </Flex>
 
       {state.mode === "start" && state?.reportsFound && (
@@ -460,9 +503,11 @@ const ReportsComponent = ({
               <TableItem
                 item={item}
                 i={i}
-                key={`${item.report_name}`}
+                key={`${item.report_name}-${i}`}
                 userId={state?.user_id}
                 authToken={session?.authToken}
+                updateState={updateState}
+                state={state}
               />
             ))}
           </Box>
@@ -508,6 +553,16 @@ const ReportsComponent = ({
           hideNotification={hideNotification}
           tagList={tagList}
           baseTemplates={baseTemplates}
+        />
+      )}
+
+      {state.mode === "replace-tags" && (
+        <ReplaceTagsAndGenerate
+          state={state}
+          updateState={updateState}
+          session={session}
+          showNotification={showNotification}
+          hideNotification={hideNotification}
         />
       )}
     </Box>

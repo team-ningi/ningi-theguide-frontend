@@ -136,11 +136,15 @@ export const TableItem = ({
   i,
   userId,
   authToken,
+  updateState,
+  state,
 }: {
   item: any;
   i: number;
   userId: string;
   authToken: string;
+  updateState: any;
+  state: any;
 }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
   const { file_type, report_name, report_type, saved_filename, status } = item;
@@ -222,7 +226,7 @@ export const TableItem = ({
             userId={userId}
             authToken={authToken}
           />
-          <FileKeyValue theKey="File Type" theValue={item.file_type} />
+          <FileKeyValue theKey="View Tag screen" theValue={item.file_type} />
           <FileKeyValue
             theKey="Download Template"
             isLink={item.base_template_url}
@@ -232,7 +236,7 @@ export const TableItem = ({
           />
 
           {/* <FileKeyValue theKey="Documents Used" theValue={item.document_ids} /> */}
-          {/* <Flex
+          <Flex
             sx={{
               width: "auto",
               textAlign: "right",
@@ -243,10 +247,16 @@ export const TableItem = ({
               cursor: "pointer",
               alignSelf: "flex-end",
             }}
-            onClick={() => alert("edit report ")}
+            onClick={() =>
+              updateState({
+                ...state,
+                mode: "replace-tags",
+                reportId: item?._id,
+              })
+            }
           >
             Edit Report
-          </Flex> */}
+          </Flex>
         </Flex>
       )}
     </Flex>

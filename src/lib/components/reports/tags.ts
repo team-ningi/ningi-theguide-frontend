@@ -331,6 +331,160 @@ export const SuitabilityReportExample = [
   { GeneratedRiskScoreTitle: "generated risk score title" },
   { GeneratedRiskScoreDescription: "generated risk score description" },
   { WholeMarketProviderName: "whole market provider name" },
+
+  { CurrentInvestmentProvider: "client 1s current investment provider" },
+  { CurrentInvestmentPlanType: "client 1s current investment plan type" },
+  {
+    CurrentInvestmentPolicyNumber: "client 1s current investment policy number",
+  },
+  {
+    CurrentInvestmentFundsAndSplit:
+      "client 1s current investment funds and split",
+  },
+  { CurrentInvestmentValue: "client 1s current investment value" },
+  {
+    CurrentInvestmentTransferValue:
+      "client 1s current investment transfer value",
+  },
+  {
+    CurrentInvestmentRegularContribution:
+      "client 1s current investment regular contribution",
+  },
+  {
+    DoesCurrentInvestmentMatchRiskLevel:
+      "does client 1s current investment match their risk level",
+  },
+  {
+    CurrentInvestmentGuarantees:
+      "does client 1s current investment have any guarentees",
+  },
+  {
+    CurrentInvestmentOngoingChargesFund:
+      "client 1s current investment ongoing charges Fund",
+  },
+  {
+    CurrentInvestmentOngoingChargesDFM:
+      "client 1s current investment ongoing charges DFM",
+  },
+  {
+    CurrentInvestmentOngoingChargesAdviser:
+      "client 1s current investment ongoing charges adviser",
+  },
+  {
+    CurrentInvestmentOngoingChargesPlatform:
+      "client 1s current investment ongoing charges platform",
+  },
+  {
+    CurrentInvestmentSumOfOngoingCharges:
+      "client 1s current investment sum of all ongoing charges",
+  },
+  {
+    CurrentInvestmentInitialCharges:
+      "client 1s current investment initial charges",
+  },
+  {
+    CurrentInvestmentReductionInYield:
+      "client 1s current investment reduction in yield",
+  },
+  { CurrentInvestmentTransfer: "client 1s current investment transfer" },
+  { CurrentInvestmentReasons: "client 1s current investment reasons" },
+
+  { CurrentPensionProvider: "client 1s current pension provider" },
+  { CurrentPensionPlanType: "client 1s current pension plan type" },
+  { CurrentPensionPolicyNumber: "client 1s current pension policy number" },
+  { CurrentPensionFundsAndSplit: "client 1s current pension funds and split" },
+  { CurrentPensionValue: "client 1s current pension value" },
+  { CurrentPensionTransferValue: "client 1s current pension transfer value" },
+  {
+    CurrentPensionRegularContribution:
+      "client 1s current pension regular contribution",
+  },
+  {
+    DoesCurrentPensionMatchRiskLevel:
+      "client 1s current pension match their risk level",
+  },
+  { CurrentPensionGuarantees: "does client 1s current pension guarentees" },
+  {
+    CurrentPensionOngoingChargesFund:
+      "client 1s current pension ongoing charges Fund",
+  },
+  {
+    CurrentPensionOngoingChargesDFM:
+      "client 1s current pension ongoing charges DFM",
+  },
+  {
+    CurrentPensionOngoingChargesAdviser:
+      "client 1s current pension ongoing charges Adviser",
+  },
+  {
+    CurrentPensionOngoingChargesPlatform:
+      "client 1s current pension ongoing charges platform",
+  },
+  {
+    CurrentPensionSumOfOngoingCharges:
+      "client 1s current pension sum of all ongoing charges",
+  },
+  { CurrentPensionInitialCharges: "client 1s current pension initial charges" },
+  {
+    CurrentPensionReductionInYield:
+      "client 1s current pension reduciton in yield",
+  },
+  { CurrentPensionTransfer: "client 1s current pension transfer" },
+  { CurrentPensionReasons: "client 1s current pension reasons" },
+
+  { RecommendProductProvider: "client 1s reccomended product provider" },
+  { ReccomendedProductPlanType: "client 1s reccomended product plan type" },
+  {
+    ReccomendedProductFundsAndSplit:
+      "client 1s reccomended product funds and split",
+  },
+  { ReccomendedProductValue: "client 1s reccomended product value" },
+  {
+    ReccomendedProductTransferValue:
+      "client 1s reccomended product transfer value",
+  },
+  {
+    ReccomendedProductRegularContribution:
+      "client 1s reccomended product regular contribution",
+  },
+  {
+    DoesReccomendedProductMatchRiskLevel:
+      "does client 1s reccomended product match risk level",
+  },
+  {
+    ReccomendedProductGuarantees:
+      "does client 1s reccomended product have any guarentees",
+  },
+  {
+    ReccomendedProductOngoingChargesFund:
+      "client 1s reccomended product ongoing charges Fund",
+  },
+  {
+    ReccomendedProductOngoingChargesDFM:
+      "client 1s reccomended product ongoing charges DFM",
+  },
+  {
+    ReccomendedProductOngoingChargesAdviser:
+      "client 1s reccomended product ongoing charges Adviser",
+  },
+  {
+    ReccomendedProductOngoingChargesPlatform:
+      "client 1s reccomended product ongoing charges platform",
+  },
+  {
+    ReccomendedProductSumOfOngoingCharges:
+      "client 1s reccomended product sum of all the ongoing charges ",
+  },
+  {
+    ReccomendedProductInitialCharges:
+      "client 1s reccomended product initial charges",
+  },
+  {
+    ReccomendedProductReductionInYield:
+      "client 1s reccomended product reduction in yield",
+  },
+  { ReccomendedProductTransfer: "client 1s reccomended product transfer" },
+  { ReccomendedProductReasons: "client 1s reccomended product reasons" },
 ];
 
 // DID A SUBSET FOR THE ALPHA

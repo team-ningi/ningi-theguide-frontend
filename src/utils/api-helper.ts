@@ -116,6 +116,9 @@ export const createNewReport = async (
   tagResults: any,
   document_ids: string[],
   baseTemplateURL: string,
+  tag_chunks_to_process: any[],
+  tag_chunks_processed: any[],
+  initialPrompt: string,
   authToken: string
 ) =>
   await axios({
@@ -128,6 +131,9 @@ export const createNewReport = async (
       tagResults,
       document_ids,
       baseTemplateURL,
+      tag_chunks_to_process,
+      tag_chunks_processed,
+      initialPrompt,
       authToken,
     },
   });
@@ -190,6 +196,32 @@ export const createTheTags = async (
   }
 };
 
+export const getTagsSingleChunk = async (
+  tags: { theKey: string; theValue: string }[],
+  documentIds: string[],
+  additionalPrompt: string,
+  authToken: string,
+  reportId: string
+) => {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  try {
+    return await axios({
+      method: "post",
+      url: "/api/db/chat-get-tags-single",
+      data: {
+        tags,
+        documentIds,
+        additionalPrompt,
+        authToken,
+        reportId,
+      },
+    });
+  } catch (e) {
+    //swallow failure
+    return { data: { answer: "" } };
+  }
+};
+
 export const createHistory = async (
   user_id: string,
   document_ids: string[],
@@ -220,6 +252,35 @@ export const updateHistory = async (
     data: {
       user_id,
       history,
+      authToken,
+    },
+  });
+
+export const getSingleReport = async (report_id: string, authToken: string) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-individual-report",
+    data: {
+      report_id,
+      authToken,
+    },
+  });
+
+export const updateReportTagsProcessed = async (
+  user_id: string,
+  report_id: string,
+  tag_chunks_to_process: any[],
+  tag_chunks_processed: any[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/update-report-tags-processed",
+    data: {
+      user_id,
+      report_id,
+      tag_chunks_to_process,
+      tag_chunks_processed,
       authToken,
     },
   });

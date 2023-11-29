@@ -20,13 +20,13 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [state, updateContent] = useState<{
     ready: boolean;
     user: UserType;
-    tags: TagItemType[];
   }>({
     ready: false, //@ts-ignore
     user: null,
-    tags: [],
   });
   const params = useParams();
+
+  const [tagList, updateTagList] = useState<TagItemType[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -36,7 +36,10 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         } else {
           // get tags put into state
           const { data } = await getTags(user._id, session?.authToken);
-          console.log("data ", data);
+          console.log(
+            "SuitabilityReportExample ",
+            SuitabilityReportExample?.length
+          );
 
           let TagsToDisplay = [
             { id: "0", _id: "static", label: "Custom", tags: [] },
@@ -59,12 +62,14 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
             label: item.label,
             tags: item.tags,
           }));
-
+          await new Promise((resolve) => setTimeout(resolve, 300));
+          updateTagList([...TagsToDisplay, ...UsersTags]);
+          // /11.79 ---> 12.98 -> 11 tags per chunk
+          //  13.83 --->  ???? -> 12 tags per chunk ->
           updateContent({
             ...state,
             ready: true,
             user,
-            tags: [...TagsToDisplay, ...UsersTags],
           });
         }
       } else {
@@ -83,7 +88,7 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
       </Head>
       <Wrapper>
         {state?.ready && (
-          <Reports user={state?.user} session={session} tagList={state.tags} />
+          <Reports user={state?.user} session={session} tagList={tagList} />
         )}
       </Wrapper>
     </>

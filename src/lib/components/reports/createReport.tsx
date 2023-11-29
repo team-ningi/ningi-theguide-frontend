@@ -34,6 +34,14 @@ const returnPrePrompt = (clientNames: {
   return `Client 1 is ${Client1Name} ${Client1NameAlias} ${client2Info}`;
 };
 
+const chunkArrayInGroups = (arr: any, size: number) => {
+  let results = [];
+  while (arr.length) {
+    results.push(arr.splice(0, size));
+  }
+  return results;
+};
+
 const saveReport = async (
   reportState: any,
   setLoading: SetLoadingType,
@@ -48,8 +56,8 @@ const saveReport = async (
   const docId = reportState?.documentIds;
 
   //Antonio Gerardo Cervi  Toni Cervi
-  const additionalPrompt = returnPrePrompt(clientNames);
-
+  const initialPrompt = returnPrePrompt(clientNames);
+  console.log(tags);
   if (
     !tags?.length ||
     clientNames?.Client1Name === "" ||
@@ -66,8 +74,10 @@ const saveReport = async (
   }
   setLoading(true);
 
-  //1 CREATE REPORT RECORD
-  //SET STATUS TO BE PROCESSING
+  const chunks = chunkArrayInGroups(tags, 12);
+
+  const tag_chunks_to_process: any[] = chunks;
+  const tag_chunks_processed: any[] = [];
   const { data } = await createNewReport(
     user_id,
     reportState?.reportName,
@@ -75,26 +85,16 @@ const saveReport = async (
     {},
     reportState?.documentIds,
     reportState?.baseTemplateURL,
+    tag_chunks_to_process,
+    tag_chunks_processed,
+    initialPrompt,
     session?.authToken
   );
   const reportId = data?.report?._id;
-  // const templateURL = data?.report?.base_template_url;
-  // const outputName = `${uuidv4()}.${data?.report?.file_type}`;
 
-  //2 FIRE OFF REQUEST TO START GETTING ALL THE TAGS
-  // !!!SEND REPORT ID SO IT KNOWS WHAT TO UPDATE
-
-  // SEND reportId TO THE ENDPOINT !!! <<<<<<<> NEXT THINGG TO DO
-  createTheTags(
-    tags,
-    [...docId],
-    additionalPrompt,
-    session?.authToken,
-    reportId
-  );
-
+  console.log(reportId);
   setLoading(false);
-  return true;
+  return reportId;
 };
 
 const defaultState = {
@@ -623,35 +623,7 @@ const CreateNewReportComponent = ({
           >
             Cancel
           </Paragraph>
-          {/* <Button
-            variant="primary"
-            sx={{
-              color: "#444",
-              border: "1px solid #444",
-              background: "transparent",
-              cursor: "pointer",
-              mt: "40px",
-              mr: "20px",
-              mb: "10px",
-              height: "40px",
-              width: "150px",
-              fontSize: "14px",
-            }}
-            onClick={async () =>
-              await saveReport(
-                reportState,
-                setLoading,
-                session,
-                tags,
-                false,
-                showNotification,
-                hideNotification,
-                state?.user_id
-              )
-            }
-          >
-            Save For Later
-          </Button> */}
+
           <Button
             variant="primary"
             sx={{
@@ -675,7 +647,7 @@ const CreateNewReportComponent = ({
                 }));
               }
 
-              const saved = await saveReport(
+              const reportId = await saveReport(
                 reportState,
                 setLoading,
                 session,
@@ -687,10 +659,11 @@ const CreateNewReportComponent = ({
                 clientNames
               );
 
-              if (saved) {
+              if (reportId) {
                 updateState({
                   ...state,
-                  mode: "start",
+                  mode: "replace-tags",
+                  reportId,
                   success: false,
                   refreshReports: true,
                 });
