@@ -289,13 +289,25 @@ export const AddNewForm = ({
         }
       }
     } catch (err) {
-      showNotification({
-        text: "Your new document has NOT been saved.",
-        type: "error",
-      });
-      setTimeout(() => hideNotification(), 3000);
-
-      await setLoading(false);
+      if (state?.type_of_embedding === "image") {
+        showNotification({
+          text: "It is taking longer than expected to extract the text from your image, please check back in a moment.",
+          type: "warning",
+        });
+        setTimeout(() => {
+          hideNotification();
+          window.location.assign("/documents");
+        }, 4000);
+      } else {
+        showNotification({
+          text: "Your new document has NOT been saved.",
+          type: "error",
+        });
+        setTimeout(() => {
+          hideNotification();
+          window.location.assign("/documents");
+        }, 4000);
+      }
       console.error(err);
     }
   };

@@ -213,13 +213,12 @@ export const RefineText = ({
               window.location.reload();
             } catch (e) {
               showNotification({
-                text: "It is taking longer than expected to refine your text, check back in a momment.",
+                text: "It is taking longer than expected to refine your text, please check back in a moment.",
                 type: "warning",
               });
               setTimeout(() => {
                 hideNotification();
                 window.location.assign("/documents");
-                setLoading(false);
               }, 4200);
             }
           }}
