@@ -202,10 +202,26 @@ export const RefineText = ({
             cursor: "pointer",
           }}
           onClick={async () => {
-            setLoading(true);
-            const { originalText, document_id } = state;
-            await refineTheText(originalText, document_id, session?.authToken);
-            window.location.reload();
+            try {
+              setLoading(true);
+              const { originalText, document_id } = state;
+              await refineTheText(
+                originalText,
+                document_id,
+                session?.authToken
+              );
+              window.location.reload();
+            } catch (e) {
+              showNotification({
+                text: "It is taking longer than expected to refine your text, check back in a momment.",
+                type: "warning",
+              });
+              setTimeout(() => {
+                hideNotification();
+                window.location.assign("/documents");
+                setLoading(false);
+              }, 4200);
+            }
           }}
         >
           Click HERE if you would like to completely regenerate this text .
