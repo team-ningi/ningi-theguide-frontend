@@ -135,6 +135,33 @@ export type DetailsTypes = {
   setLoading: SetLoadingType;
 };
 
+export type RefinePageTypes = {
+  setCoreData: (
+    email: string,
+    session: {
+      email: string;
+      authToken: string;
+    },
+    keepLoadingSpinner: boolean
+  ) => {
+    type: string;
+    action: {
+      email: string;
+      session: {
+        email: string;
+        authToken: string;
+      };
+      keepLoadingSpinner: boolean;
+    };
+  };
+  session: SessionType;
+  user: UserType;
+  loading: boolean;
+  setLoading: SetLoadingType;
+  showNotification: ShowNotificationType;
+  hideNotification: HideNotificationType;
+};
+
 export type PageTypes = {
   setCoreData: (
     email: string,
@@ -164,6 +191,8 @@ export type PageTypes = {
 export type DashboardStateType = {
   user_id: string;
   customFilename: string;
+  refineText?: string;
+  refineDocId?: string;
   label: string;
   mode: string;
   filters: boolean;

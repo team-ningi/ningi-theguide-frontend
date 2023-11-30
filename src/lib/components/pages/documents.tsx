@@ -27,6 +27,7 @@ import {
   Files,
   FilePng,
   FileJpg,
+  XCircle,
 } from "phosphor-react";
 import { getUserDocuments, getSignedURL } from "../../../utils/api-helper";
 import { AddNewForm } from "../../../lib/components/addContent/add-new-document";
@@ -192,7 +193,7 @@ const TableItem = ({
   userId?: string;
 }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
-
+  console.log(item);
   const { file_type, label, embedding_created, saved_filename } = item;
   const isEven = i % 2 === 0;
 
@@ -251,13 +252,13 @@ const TableItem = ({
             textAlign: "center",
             width: "130px",
             borderRight: "0px solid #E2E8F0",
-            color: embedding_created ? "green" : "firebrick",
+            color: embedding_created ? "green" : "lightgrey",
           }}
         >
           {embedding_created ? (
             <CheckCircle size={22} />
           ) : (
-            <WarningCircle size={22} />
+            <XCircle size={22} />
           )}
         </Box>
       </Flex>
@@ -294,7 +295,26 @@ const TableItem = ({
                 : "failed (try again by clicking the button below)"
             }
           />
-          {!item.embedding_created && (
+
+          {item.type_of_embedding === "image" && (
+            <Paragraph
+              sx={{
+                fontWeight: "500",
+                width: "200px",
+                mt: "10px",
+                fontSize: "14px",
+                cursor: "pointer",
+              }}
+              onClick={async () => {
+                setLoading(true);
+                window.location.assign(`documents/refine/${item._id}`);
+              }}
+            >
+              View Extracted Text
+            </Paragraph>
+          )}
+
+          {!item.embedding_created && item.type_of_embedding !== "image" && (
             <Paragraph
               sx={{
                 fontWeight: "500",
@@ -333,6 +353,8 @@ const defaultState = {
   customFilename: "",
   label: "",
   mode: "start", // start | add
+  refineText: "",
+  refineDocId: "",
   searchLabel: "",
   searchEmbedded: "all",
   searchFileType: "all",

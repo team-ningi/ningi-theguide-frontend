@@ -266,6 +266,34 @@ export const getSingleReport = async (report_id: string, authToken: string) =>
     },
   });
 
+export const refineTheText = async (
+  original_text: string,
+  _id: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/refine-text",
+    data: {
+      original_text,
+      document_id: _id,
+      authToken,
+    },
+  });
+
+export const getSingleDocument = async (
+  document_id: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-individual-document",
+    data: {
+      document_id,
+      authToken,
+    },
+  });
+
 export const updateReportTagsProcessed = async (
   user_id: string,
   report_id: string,

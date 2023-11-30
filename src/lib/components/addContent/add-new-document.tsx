@@ -19,6 +19,8 @@ import {
   useState,
 } from "react";
 import axios from "axios";
+import { refineTheText } from "../../../utils/api-helper";
+
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 const s3Client = new S3Client({
@@ -256,10 +258,10 @@ export const AddNewForm = ({
 
         const doc = data?.document || {};
         const { user_id, file_url, _id, file_type } = doc;
-
+        let returnedText;
         try {
           if (supportedDocTypes.includes(file_type)) {
-            await createEmbeddings(
+            const { data } = await createEmbeddings(
               user_id,
               file_url,
               _id,
@@ -268,6 +270,7 @@ export const AddNewForm = ({
               state?.additional_context!,
               session?.authToken
             );
+            returnedText = data?.result;
             console.log("create embedding");
           } else {
             console.log("invalid filetype for an embedding");
@@ -277,7 +280,13 @@ export const AddNewForm = ({
           console.log("embeddings failed");
         }
 
-        window.location.reload();
+        if (state?.type_of_embedding === "image") {
+          await refineTheText(returnedText, _id, session?.authToken);
+
+          window.location.assign(`/documents/refine/${_id}`);
+        } else {
+          window.location.reload();
+        }
       }
     } catch (err) {
       showNotification({
