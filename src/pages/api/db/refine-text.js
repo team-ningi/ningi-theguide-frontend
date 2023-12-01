@@ -7,7 +7,6 @@ export default async function handler(req, res) {
   try {
     const { data } = await axios({
       method: "post",
-      // timeout: 60 * 4 * 1000,
       url: `${process.env.NEXT_PUBLIC_THE_GUIDE_API_URL}/refine-text`,
       data: {
         original_text,
