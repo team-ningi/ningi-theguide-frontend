@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/db/*.js": {
+      "maxDuration": 180
+    },
+    "pages/api/db/*.js": {
+      "maxDuration": 180
+    },
+    "src/pages/api/db/*.js": {
+      "maxDuration": 180
+    }
+  }
+}
