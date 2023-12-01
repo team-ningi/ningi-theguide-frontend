@@ -1,7 +1,7 @@
 {
   "functions": {
     "pages/api/db/*.js": {
-      "maxDuration": 180000
+      "maxDuration": 899
     }
   }
 }
