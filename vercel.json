@@ -1,12 +1,12 @@
 {
   "functions": {
-    "api/db/get-users-documents": {
+    "pages/api/db/get-users-documents": {
       "maxDuration": 300
     },
-    "api/db/refine-text.js": {
+    "pages/api/db/refine-text.js": {
       "maxDuration": 300
     },
-    "api/**": {
+    "pages/api/**": {
       "maxDuration": 300
     }
   }
