@@ -15,7 +15,4 @@ npm run cy:browser
 
 
 
-
-
-
 ```
