@@ -14,8 +14,4 @@ cd cypress
 npm run cy:browser
 
 
-
-
-
-
 ```
