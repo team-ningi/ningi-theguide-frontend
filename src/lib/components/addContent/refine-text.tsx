@@ -53,6 +53,22 @@ const InputLabel = ({
   </Paragraph>
 );
 
+const issueTextArray = [
+  "I'm sorry",
+  "Im sorry",
+  "I dont know",
+  "I don't know",
+  "provided text is fragmented",
+  "unclear and scattered",
+  "impossible to decipher",
+  "lack necessary context",
+  "lacks clarity",
+  "I'm afraid",
+  "Im afraid",
+  "not feasible to rewrite",
+  "disjointed information",
+];
+
 export const RefineText = ({
   state,
   setLoading,
@@ -89,8 +105,22 @@ export const RefineText = ({
     data: any;
   };
 }) => {
+  const [badRefinedText, updateBadText] = useState(false);
+
   useEffect(() => {
     setLoading(false);
+
+    let errors = 0;
+    const refineText = state?.refineText || "";
+    issueTextArray.forEach((text) => {
+      if (refineText.includes(text)) {
+        errors++;
+      }
+    });
+
+    if (errors > 0) {
+      updateBadText(true);
+    }
   }, []);
 
   return (
@@ -108,6 +138,59 @@ export const RefineText = ({
         flexDirection: "column",
       }}
     >
+      {badRefinedText && (
+        <Flex
+          sx={{
+            width: "100%",
+            minHeight: "30px",
+            border: "0px firebrick solid",
+            color: "firebrick",
+            flexDirection: "column",
+          }}
+        >
+          <Paragraph sx={{ textAlign: "left" }}>
+            We have detected that the returned text is suboptimal, further
+            refinement is required.
+          </Paragraph>
+          <Button
+            variant="primary"
+            sx={{
+              color: "white",
+              cursor: "pointer",
+              mt: "10px",
+              mr: "25px",
+              mb: "30px",
+              height: "40px",
+              width: "140px",
+              fontSize: "14px",
+              zIndex: 9999,
+            }}
+            onClick={async () => {
+              try {
+                setLoading(true);
+                const { originalText, document_id } = state;
+                await refineTheText(
+                  originalText,
+                  document_id,
+                  session?.authToken
+                );
+                window.location.reload();
+              } catch (e) {
+                showNotification({
+                  text: "It is taking longer than expected to refine your text, please check back in a moment.",
+                  type: "warning",
+                });
+                setTimeout(() => {
+                  hideNotification();
+                  window.location.assign("/documents");
+                }, 4200);
+              }
+            }}
+          >
+            Refine Text
+          </Button>
+        </Flex>
+      )}
       <InputLabel
         customSX={{
           textAlign: "left",
