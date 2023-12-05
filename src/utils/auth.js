@@ -13,7 +13,7 @@ export const authTokenVerification = async (token) => {
     });
 
     const { session_id: sessionID, uuid, role } = data;
-
+    // console.log(">>>>>the uuid is :::: ", uuid);
     if (role === "super_admin") {
       //TODO
       //CALL api and make them superadmin

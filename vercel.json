@@ -1,5 +1,8 @@
 {
   "functions": {
+    "src/pages/documents/refine/*": {
+      "maxDuration": 300
+    },
     "src/pages/api/db/get-users-documents": {
       "maxDuration": 300
     },

@@ -635,7 +635,7 @@ const DashboardComponent = ({
       if (search) {
         mode = search;
       }
-
+      console.log({ user });
       const { data } = await getUserDocuments(
         user._id,
         session?.authToken,
