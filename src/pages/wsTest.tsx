@@ -19,7 +19,7 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
     // let newWebSocket = new WebSocket("ws://localhost:5002");
     let newWebSocket = "ws://staging-the-guide-edd0476aac0d.herokuapp.com";
     if (window.location.protocol === "https:") {
-      wsUrl = wsUrl.replace("ws://", "wss://");
+      newWebSocket = newWebSocket.replace("ws://", "wss://");
     }
 
     newWebSocket.onmessage = (event) => {
