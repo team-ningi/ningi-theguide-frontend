@@ -16,10 +16,11 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
-    // const newWebSocket = new WebSocket("ws://localhost:5002");
-    const newWebSocket = new WebSocket(
-      "ws://staging-the-guide-edd0476aac0d.herokuapp.com"
-    );
+    // let newWebSocket = new WebSocket("ws://localhost:5002");
+    let newWebSocket = "ws://staging-the-guide-edd0476aac0d.herokuapp.com";
+    if (window.location.protocol === "https:") {
+      wsUrl = wsUrl.replace("ws://", "wss://");
+    }
 
     newWebSocket.onmessage = (event) => {
       const msg = event.data;
