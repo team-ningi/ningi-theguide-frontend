@@ -16,8 +16,9 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
-    const user = `?uuid=123456789`;
-    const wsDomain = `://staging-the-guide-edd0476aac0d.herokuapp.com`; //`://localhost:5002`;
+    const user = `?uuid=12345678966${new Date()}`;
+    const wsDomain = `://staging-the-guide-edd0476aac0d.herokuapp.com`;
+    // const wsDomain = `://localhost:5002`;
     const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
     const wsUrl = `${wsScheme}${wsDomain}${user}`;
     const socket = new WebSocket(wsUrl);
