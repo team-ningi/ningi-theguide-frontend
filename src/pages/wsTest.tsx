@@ -16,26 +16,33 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
-    // let newWebSocket = new WebSocket("ws://localhost:5002");
-    let newWebSocket = "ws://staging-the-guide-edd0476aac0d.herokuapp.com";
-    if (window.location.protocol === "https:") {
-      newWebSocket = newWebSocket.replace("ws://", "wss://");
-    }
+    const user = `?uuid=123456789`;
+    const wsDomain = `://staging-the-guide-edd0476aac0d.herokuapp.com`; //`://localhost:5002`;
+    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsUrl = `${wsScheme}${wsDomain}${user}`;
+    const socket = new WebSocket(wsUrl);
 
-    newWebSocket.onmessage = (event) => {
+    socket.addEventListener("open", function (event) {
+      console.log("Connected to the WebSocket server.");
+    });
+
+    socket.onmessage = function (event) {
       const msg = event.data;
+      console.log("Message from server:", event.data);
       setMessages((prevMessages) => [...prevMessages, msg]);
     };
 
-    newWebSocket.onerror = (event) => {
-      console.error("WebSocket error observed:", event);
+    socket.onerror = function (error) {
+      console.error("WebSocket Error:", error);
     };
 
-    setWs(newWebSocket);
+    socket.onclose = function (event) {
+      console.log("WebSocket connection closed:", event);
+    };
+    setWs(socket);
 
-    // Cleanup on unmount
     return () => {
-      newWebSocket.close();
+      socket.close();
     };
   }, []);
 
@@ -55,8 +62,8 @@ const Page = ({ session, setCoreData, user }: PageTypes) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Wrapper>
-        <div>
-          <h1>WebSocket Chat</h1>
+        <div style={{ marginTop: "100px" }}>
+          <h1 style={{ color: "#777" }}>WebSocket Test</h1>
           <ul>
             {messages.map((message, index) => (
               <li key={index}>{message}</li>
