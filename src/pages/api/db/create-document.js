@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     custom_filename,
     type_of_embedding = "document",
     additional_context = "",
+    document_group_id = "",
     metadata,
     authToken,
   } = req.body;
@@ -25,6 +26,7 @@ export default async function handler(req, res) {
         file_url,
         file_type,
         original_filename,
+        document_group_id,
         saved_filename,
         custom_filename,
         type_of_embedding,

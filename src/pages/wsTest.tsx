@@ -10,6 +10,11 @@ import { Dispatch } from "redux";
 import serverSidePropsWithAuth from "../utils/server_side_props_with_auth";
 import { SessionType, UserType, PageTypes } from "../lib/types";
 
+/*
+TODO
+
+This is not in use, only used for prototyping how it may work
+*/
 const Page = ({ session, setCoreData, user }: PageTypes) => {
   const [ws, setWs] = useState(null);
   const [messages, setMessages] = useState([]);

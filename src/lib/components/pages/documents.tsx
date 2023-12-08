@@ -14,6 +14,7 @@ import {
   DashboardStateType,
   HideNotificationType,
   ShowNotificationType,
+  DocGroupType,
 } from "../../../lib/types";
 import {
   FilePdf,
@@ -29,7 +30,11 @@ import {
   FileJpg,
   XCircle,
 } from "phosphor-react";
-import { getUserDocuments, getSignedURL } from "../../../utils/api-helper";
+import {
+  getUserDocuments,
+  getSignedURL,
+  getUserDocGroups,
+} from "../../../utils/api-helper";
 import { AddNewForm } from "../../../lib/components/addContent/add-new-document";
 import { Title, Description } from "../../../lib/components/TextItems";
 import moment from "moment";
@@ -193,7 +198,6 @@ const TableItem = ({
   userId?: string;
 }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
-  console.log(item);
   const { file_type, label, embedding_created, saved_filename } = item;
   const isEven = i % 2 === 0;
 
@@ -362,6 +366,9 @@ const defaultState = {
   docsFound: true,
   type_of_embedding: "document",
   additional_context: "",
+  initialRender: true,
+  docGroupSelected: "",
+  docGroupNew: "",
 };
 
 const InputLabel = ({
@@ -624,35 +631,46 @@ const DashboardComponent = ({
 }) => {
   const [state, updateState] = useState<DashboardStateType>(defaultState);
   const [docs, updateDocs] = useState<DocType[]>([]);
+  const [docGroups, updateDocGroups] = useState<DocGroupType[]>([]);
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    (async () => {
-      setLoading(true);
-      let mode = "start";
-      const search = searchParams.get("mode");
-      if (search) {
-        mode = search;
-      }
-      console.log({ user });
-      const { data } = await getUserDocuments(
-        user._id,
-        session?.authToken,
-        "all"
-      );
+    if (state?.initialRender) {
+      (async () => {
+        setLoading(true);
+        let mode = "start";
+        const search = searchParams.get("mode");
+        if (search) {
+          mode = search;
+        }
+        console.log({ user });
+        const { data } = await getUserDocuments(
+          user._id,
+          session?.authToken,
+          "all"
+        );
 
-      updateDocs(data);
+        updateDocs(data);
 
-      updateState({
-        ...state,
-        user_id: user?._id,
-        docsFound: data?.length > 0,
-        mode,
-      });
-      setLoading(false);
-    })();
-  }, []);
+        const { data: groups } = await getUserDocGroups(
+          user._id,
+          session?.authToken
+        );
+        updateDocGroups(groups);
+
+        updateState({
+          ...state,
+          user_id: user?._id,
+          docsFound: data?.length > 0,
+          mode,
+          initialRender: false,
+        });
+        setLoading(false);
+      })();
+    }
+  }, [state.initialRender]);
+
   if (loading) return;
   return (
     <Box
@@ -696,6 +714,7 @@ const DashboardComponent = ({
         session={session}
         hideNotification={hideNotification}
         showNotification={showNotification}
+        docGroups={docGroups}
       />
 
       {state.mode === "start" && (

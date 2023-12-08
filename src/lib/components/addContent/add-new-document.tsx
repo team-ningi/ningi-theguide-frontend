@@ -7,6 +7,7 @@ import {
   UserType,
   SetLoadingType,
   SessionType,
+  DocGroupType,
 } from "@/lib/types";
 import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
@@ -19,7 +20,11 @@ import {
   useState,
 } from "react";
 import axios from "axios";
-import { refineTheText } from "../../../utils/api-helper";
+import {
+  refineTheText,
+  CreateUserDocGroup,
+  UpdateDocGroup,
+} from "../../../utils/api-helper";
 
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
@@ -105,6 +110,7 @@ const addDocument = async (
   custom_filename: string,
   type_of_embedding: string,
   additional_context: string,
+  document_group_id: string,
   authToken: string
 ) =>
   await axios({
@@ -118,6 +124,7 @@ const addDocument = async (
       original_filename,
       saved_filename,
       custom_filename,
+      document_group_id,
       type_of_embedding,
       additional_context,
       metadata: {},
@@ -179,6 +186,7 @@ export const AddNewForm = ({
   session,
   hideNotification,
   showNotification,
+  docGroups,
 }: {
   setLoading: SetLoadingType;
   state: DashboardStateType;
@@ -192,6 +200,7 @@ export const AddNewForm = ({
     type: string;
     data: any;
   };
+  docGroups: DocGroupType[];
 }) => {
   const [errorState, updateErrorState] =
     useState<AddContentErrorStateType>(defaultErrorState);
@@ -243,6 +252,23 @@ export const AddNewForm = ({
         const command = new PutObjectCommand(params);
         await s3Client.send(command);
 
+        let groupId = "";
+
+        const { docGroupSelected, docGroupNew } = state;
+        if (docGroupSelected !== "") {
+          groupId = `${docGroupSelected}`;
+        }
+        if (docGroupNew !== "") {
+          const { data: groupData } = await CreateUserDocGroup(
+            state?.user_id,
+            `${docGroupNew}`,
+            [],
+            session?.authToken
+          );
+
+          groupId = groupData?.group?._id;
+        }
+
         const { data } = await addDocument(
           state?.user_id,
           state?.label,
@@ -253,12 +279,32 @@ export const AddNewForm = ({
           customFileName,
           state?.type_of_embedding!,
           state?.additional_context!,
+          groupId,
           session?.authToken
         );
 
         const doc = data?.document || {};
         const { user_id, file_url, _id, file_type } = doc;
         let returnedText;
+
+        if (docGroupSelected === "" && docGroupNew !== "") {
+          await UpdateDocGroup(
+            groupId,
+            `${docGroupNew}`,
+            [_id],
+            session?.authToken
+          );
+        }
+        if (docGroupSelected !== "" && docGroupNew === "") {
+          const selectedGroup = docGroups?.find(
+            (item) => item?._id === groupId
+          );
+
+          const existingIds = selectedGroup?.document_ids; //@ts-ignore
+          const updatedDocArr = [...existingIds, _id];
+          await UpdateDocGroup(groupId, "", updatedDocArr, session?.authToken);
+        }
+
         try {
           if (supportedDocTypes.includes(file_type)) {
             const { data } = await createEmbeddings(
@@ -319,11 +365,13 @@ export const AddNewForm = ({
         width: "800px",
         opacity: 1,
         mt: "0px",
-        minHeight: "40px",
+        minHeight: "60px",
         textAlign: "center",
         backgroundColor: "transparent",
         border: "0px solid blue",
         "@media screen and (max-width: 1275px)": { width: "600px" },
+        justifyContent: "flex-end",
+        flexDirection: "column",
       }}
     >
       {state?.mode === "start" && (
@@ -356,7 +404,13 @@ export const AddNewForm = ({
       )}
 
       {state?.mode === "add" && (
-        <Flex sx={{ flexDirection: "column" }}>
+        <Flex
+          sx={{
+            flexDirection: "column",
+            height: "425px",
+            justifyContent: "flex-end",
+          }}
+        >
           <Flex
             sx={{
               flexDirection: "row",
@@ -542,13 +596,139 @@ export const AddNewForm = ({
                 onChange={handleFileChange}
               />
             </Box>
+          </Flex>
+          <Flex
+            sx={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              width: "100%",
+              height: "110px",
+              mt: "25px",
+              borderTop: "1px solid lightgrey",
+              pt: "30px",
+              position: "relative",
+            }}
+          >
+            <Box
+              sx={{
+                border: errorState.label ? "1px firebrick solid" : "unset",
+              }}
+            >
+              <Paragraph
+                sx={{ textAlign: "left", color: "#444", fontSize: "14px" }}
+              >
+                You can optionally link this document to a group
+              </Paragraph>
+
+              <InputLabel
+                customSX={{
+                  textAlign: "left",
+                  width: "300px",
+                  mt: "20px",
+                }}
+                title="Select Existing Group"
+                subtitle=""
+              />
+
+              <ReactSelect
+                value={docGroups?.map((item) => {
+                  if (item?._id === state?.docGroupSelected)
+                    return {
+                      value: item?._id,
+                      label: item?.label,
+                    };
+                })}
+                onChange={async (values: any) => {
+                  updateState({
+                    ...state,
+                    docGroupSelected: values.value,
+                    docGroupNew: "",
+                  });
+                }}
+                placeholder="Select.."
+                styles={{
+                  control: (provided) => ({
+                    ...provided,
+                    width: "300px",
+                    fontSize: "14px",
+                    outline: "none",
+                    minHeight: "40px",
+                    marginLeft: "0px",
+                    textAlign: "left",
+                  }),
+                }}
+                options={[
+                  { value: "", label: "none" },
+                  ...docGroups?.map((item) => ({
+                    value: item?._id,
+                    label: item?.label,
+                  })),
+                ]}
+              />
+            </Box>
+            <Box
+              sx={{
+                border: errorState.label ? "1px firebrick solid" : "unset",
+                ml: "20px",
+              }}
+            >
+              <Paragraph sx={{ textAlign: "left" }}></Paragraph>
+
+              <InputLabel
+                customSX={{
+                  textAlign: "left",
+                  width: "300px",
+                  mt: "35px",
+                }}
+                title="Add New Group"
+                subtitle=""
+              />
+              <Input
+                sx={{
+                  backgroundColor: "white",
+                  height: "40px",
+                  borderRadius: 0,
+                  borderColor: "inputBorder",
+                  width: "300px",
+                  mb: "20px",
+                  border: "1px solid #E8E8E8",
+                }}
+                type="text"
+                data-testid="add-content-docGroupNew"
+                id="add-content-docGroupNew"
+                name="add-content-docGroupNew"
+                placeholder=""
+                value={state.docGroupNew}
+                onChange={(e: { target: { value: string } }) => {
+                  updateState({
+                    ...state,
+                    docGroupNew: e.target.value,
+                    docGroupSelected: "",
+                  });
+                }}
+              />
+            </Box>
+          </Flex>
+
+          <Flex
+            sx={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              width: "100%",
+              height: "90px",
+              mt: "40px",
+              border: "0px solid red",
+              position: "relative",
+            }}
+          >
             <Box
               sx={{
                 height: "40px",
                 width: "100px",
-                mt: "0px",
+                mt: "10px",
+                ml: "0px",
                 alignSelf: "flex-end",
-                mb: "20px",
+                mb: "10px",
               }}
             >
               <Button

@@ -327,3 +327,47 @@ export const getSignedURL = async (
       authToken,
     },
   });
+
+export const getUserDocGroups = async (user_id: string, authToken: string) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-users-doc-groups",
+    data: {
+      user_id,
+      authToken,
+    },
+  });
+
+export const CreateUserDocGroup = async (
+  user_id: string,
+  label: string,
+  document_ids: string[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/create-doc-group",
+    data: {
+      user_id,
+      label,
+      document_ids,
+      authToken,
+    },
+  });
+
+export const UpdateDocGroup = async (
+  document_group_id: string,
+  label: string,
+  documentIds: string[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/update-doc-group",
+    data: {
+      document_group_id,
+      label,
+      documentIds,
+      authToken,
+    },
+  });

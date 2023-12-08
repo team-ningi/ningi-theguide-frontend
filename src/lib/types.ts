@@ -30,6 +30,13 @@ export type DocType = {
   user_id: string;
 };
 
+export type DocGroupType = {
+  _id: string;
+  user_id: string;
+  label: boolean;
+  document_ids: string[];
+};
+
 export type ReportType = {
   report_name: string;
   report_type: string;
@@ -199,6 +206,9 @@ export type DashboardStateType = {
   docsFound: boolean;
   type_of_embedding?: string;
   additional_context?: string;
+  initialRender?: boolean;
+  docGroupSelected?: string;
+  docGroupNew?: string;
 };
 
 export type TagsStateType = {
