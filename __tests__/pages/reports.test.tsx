@@ -28,6 +28,7 @@ jest.mock("../../src/utils/api-helper", () => {
   };
   return {
     getUserReports: jest.fn(() => Promise.resolve(reports)),
+    getUserDocGroups: jest.fn(() => Promise.resolve(reports)),
     getUserDocuments: jest.fn(() => Promise.resolve(docs)),
     getUserTemplates: jest.fn(() => Promise.resolve(templates)),
     getTags: jest.fn(() => Promise.resolve(theTags)),
