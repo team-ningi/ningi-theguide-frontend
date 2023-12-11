@@ -371,3 +371,31 @@ export const UpdateDocGroup = async (
       authToken,
     },
   });
+
+export const UpdateGroupIdInDocument = async (
+  document_group_id: string,
+  document_id: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/update-doc-group-id",
+    data: {
+      document_group_id,
+      document_id,
+      authToken,
+    },
+  });
+
+export const getSingleDocGroup = async (
+  doc_group_id: string,
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/get-individual-doc-group",
+    data: {
+      doc_group_id,
+      authToken,
+    },
+  });

@@ -17,12 +17,14 @@ import {
   ShowNotificationType,
   DocType,
   TagItemType,
+  DocGroupType,
 } from "@/lib/types";
 import { Files } from "phosphor-react";
 import {
   getUserReports,
   getUserDocuments,
   getUserTemplates,
+  getUserDocGroups,
 } from "../../../utils/api-helper";
 import { Title, Description } from "../../../lib/components/TextItems";
 import axios from "axios";
@@ -299,6 +301,7 @@ const ReportsComponent = ({
   const [state, updateState] = useState<ReportsStateType>(defaultState);
   const [reports, updateReports] = useState<ReportType[]>([]);
   const [docs, updateDocs] = useState<DocType[]>([]);
+  const [docGroups, updateDocGroups] = useState<DocGroupType[]>([]);
   const [baseTemplates, updateTemplates] = useState<any[]>([]);
 
   const router = useRouter();
@@ -332,6 +335,12 @@ const ReportsComponent = ({
         label: item?.label,
       }));
       updateTemplates(templatesForSelect);
+
+      const { data: groups } = await getUserDocGroups(
+        user._id,
+        session?.authToken
+      );
+      updateDocGroups(groups);
 
       updateState({
         ...state,
@@ -553,6 +562,7 @@ const ReportsComponent = ({
           hideNotification={hideNotification}
           tagList={tagList}
           baseTemplates={baseTemplates}
+          docGroups={docGroups}
         />
       )}
 

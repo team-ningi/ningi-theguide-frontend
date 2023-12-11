@@ -209,6 +209,7 @@ export type DashboardStateType = {
   initialRender?: boolean;
   docGroupSelected?: string;
   docGroupNew?: string;
+  selectedDocId?: string;
 };
 
 export type TagsStateType = {

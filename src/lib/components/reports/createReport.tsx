@@ -1,4 +1,4 @@
-import { Box, Paragraph, Flex, Input, Button } from "theme-ui";
+import { Box, Paragraph, Flex, Input, Button, Switch } from "theme-ui";
 import {
   chat,
   createTheTags,
@@ -11,6 +11,7 @@ import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
 import { DocType, SessionType, SetLoadingType } from "../../../lib/types";
 import { v4 as uuidv4 } from "uuid";
+import { select } from "redux-saga/effects";
 
 const returnPrePrompt = (clientNames: {
   client1Name: string;
@@ -55,7 +56,6 @@ const saveReport = async (
 ) => {
   const docId = reportState?.documentIds;
 
-  //Antonio Gerardo Cervi  Toni Cervi
   const initialPrompt = returnPrePrompt(clientNames);
   console.log(tags);
   if (
@@ -104,6 +104,8 @@ const defaultState = {
   baseTemplateURL: "",
   tagsSelected: "Custom",
   tags: [],
+  docSelectMode: "individual", // individual || grouped
+  groupSelected: "",
 };
 
 export const TagAndPromptItem = ({
@@ -237,6 +239,7 @@ const CreateNewReportComponent = ({
   hideNotification,
   tagList,
   baseTemplates = [],
+  docGroups,
 }: any) => {
   const [reportState, updateReportState] = useState(defaultState);
   const [clientNames, updateClientNames] = useState({
@@ -246,7 +249,7 @@ const CreateNewReportComponent = ({
     client2NameAlias: "",
   });
   const [tags, updateTags] = useState([]);
-
+  console.log(docGroups);
   return (
     <Flex sx={{ flexDirection: "column", width: "100%", mb: "200px" }}>
       <Box>
@@ -435,50 +438,163 @@ const CreateNewReportComponent = ({
           }
         />
       </Box>
-      <Box>
-        <InputLabel
-          customSX={{
-            textAlign: "left",
-            width: "100%",
-          }}
-          title="Select Documents"
-          subtitle=" *"
-        />
-        <ReactSelect
-          value={docs.map((doc: any) => {
-            //@ts-ignore
-            if (reportState.documentIds?.includes(doc?._id)) {
+
+      <InputLabel
+        customSX={{
+          textAlign: "left",
+          width: "100%",
+        }}
+        title="How would you like to select your documents"
+        subtitle=" *"
+      />
+      <Flex
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "center",
+          pt: 2,
+          pb: 4,
+          width: "260px",
+        }}
+      >
+        <Paragraph sx={{ flex: 1, mr: "18px", fontSize: "15px" }}>
+          Individual
+        </Paragraph>
+        <Box>
+          <Switch
+            id="lb_switch"
+            data-testid="lb_switch_select"
+            defaultChecked={reportState?.docSelectMode === "grouped"}
+            sx={{
+              width: "80px",
+              height: "40px",
+              bakgroundColor: "gray",
+              "input:checked ~ &": {
+                backgroundColor: "#96CCB9",
+              },
+              " >div": {
+                mt: "3px",
+                ml: "3px",
+                width: "30px",
+                height: "30px",
+              },
+              "input:checked ~ & >div": {
+                transform: "translateX(40px)",
+                width: "30px",
+                height: "30px",
+              },
+            }}
+            onChange={(e) => {
+              updateReportState({
+                ...reportState,
+                docSelectMode: e?.target?.checked ? "grouped" : "individual",
+                documentIds: !e?.target?.checked
+                  ? reportState?.documentIds
+                  : [],
+                groupSelected: "",
+              });
+            }}
+          />
+        </Box>
+        <Paragraph sx={{ flex: 1, ml: "10px", fontSize: "15px" }}>
+          grouped
+        </Paragraph>
+      </Flex>
+      {reportState?.docSelectMode === "individual" && (
+        <Box>
+          <InputLabel
+            customSX={{
+              textAlign: "left",
+              width: "100%",
+            }}
+            title="Select Documents Individually"
+            subtitle=" *"
+          />
+          <ReactSelect
+            value={docs.map((doc: any) => {
+              //@ts-ignore
+              if (reportState.documentIds?.includes(doc?._id)) {
+                return {
+                  value: doc?._id,
+                  label: doc?.label ? doc?.label : doc?.saved_filename,
+                };
+              }
+            })}
+            onChange={(values: any) => {
+              const idsOnly = values?.map((doc: any) => doc?.value);
+              updateReportState({
+                ...reportState,
+                documentIds: idsOnly,
+              });
+            }}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: "100%",
+                outline: "none",
+                minHeight: "45px",
+                marginBottom: "20px",
+              }),
+            }}
+            isMulti={true}
+            options={docs?.map((doc: any) => {
               return {
                 value: doc?._id,
                 label: doc?.label ? doc?.label : doc?.saved_filename,
               };
-            }
-          })}
-          onChange={(values: any) => {
-            const idsOnly = values?.map((doc: any) => doc?.value);
-            updateReportState({
-              ...reportState,
-              documentIds: idsOnly,
-            });
-          }}
-          styles={{
-            control: (provided) => ({
-              ...provided,
+            })}
+          />
+        </Box>
+      )}
+      {reportState?.docSelectMode === "grouped" && (
+        <Box>
+          <InputLabel
+            customSX={{
+              textAlign: "left",
               width: "100%",
-              outline: "none",
-              minHeight: "45px",
-              marginBottom: "20px",
-            }),
-          }}
-          isMulti={true}
-          options={docs?.map((doc: any) => {
-            return {
-              value: doc?._id,
-              label: doc?.label ? doc?.label : doc?.saved_filename,
-            };
-          })}
-        />
-      </Box>
+            }}
+            title="Select Document Group"
+            subtitle=" *"
+          />
+          <ReactSelect
+            value={docGroups.map((doc: any) => {
+              //@ts-ignore
+              if (reportState?.groupSelected === doc?.label) {
+                return {
+                  value: doc?.label,
+                  label: `${doc?.label} (${doc?.document_ids?.length} docs)`,
+                };
+              }
+            })}
+            onChange={(values: any) => {
+              const selectedGroup = docGroups?.find(
+                (doc: any) => doc?.label === values?.value
+              );
+              const DocIds = selectedGroup?.document_ids;
+
+              updateReportState({
+                ...reportState,
+                documentIds: DocIds,
+                groupSelected: selectedGroup?.label,
+              });
+            }}
+            styles={{
+              control: (provided) => ({
+                ...provided,
+                width: "100%",
+                outline: "none",
+                minHeight: "45px",
+                marginBottom: "20px",
+              }),
+            }}
+            options={docGroups?.map((doc: any) => {
+              return {
+                value: doc?.label,
+                label: `${doc?.label} (${doc?.document_ids?.length} docs)`,
+              };
+            })}
+          />
+        </Box>
+      )}
       <Box>
         <InputLabel
           customSX={{

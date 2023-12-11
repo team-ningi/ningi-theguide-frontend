@@ -37,6 +37,7 @@ import {
 } from "../../../utils/api-helper";
 import { AddNewForm } from "../../../lib/components/addContent/add-new-document";
 import { Title, Description } from "../../../lib/components/TextItems";
+import GroupInfo from "../documents/groupInfo";
 import moment from "moment";
 import axios from "axios";
 
@@ -190,12 +191,16 @@ const TableItem = ({
   authToken,
   setLoading,
   userId,
+  updateState,
+  state,
 }: {
   item: any;
   i: number;
   authToken: string;
   setLoading: SetLoadingType;
   userId?: string;
+  updateState: any;
+  state: any;
 }) => {
   const [showDetails, toggleDetails] = useState<boolean>(false);
   const { file_type, label, embedding_created, saved_filename } = item;
@@ -206,7 +211,7 @@ const TableItem = ({
       sx={{
         p: "0 20px",
         borderBottom: "1px solid #E2E8F0",
-        minHeight: showDetails ? "230px" : "70px",
+        minHeight: showDetails ? "250px" : "70px",
         backgroundColor: !isEven ? "#F8F8F8" : "white",
         flexDirection: "column",
         justifyContent: "flex-start",
@@ -215,7 +220,7 @@ const TableItem = ({
       <Flex
         sx={{
           flex: 1,
-          height: "100px",
+          height: "120px",
           fontSize: "14px",
           justifyContent: "space-between",
           alignItems: "center",
@@ -267,8 +272,7 @@ const TableItem = ({
         </Box>
       </Flex>
       {showDetails && (
-        <Flex sx={{ height: "160px", flexDirection: "column" }}>
-          {/* moment */}
+        <Flex sx={{ height: "180px", flexDirection: "column" }}>
           <FileKeyValue
             theKey="Uploaded"
             theValue={moment(item.updated_at).format("dddd, MMMM Do YYYY")}
@@ -345,6 +349,30 @@ const TableItem = ({
               Embed document
             </Paragraph>
           )}
+
+          {item.embedding_created && (
+            <Paragraph
+              sx={{
+                width: "auto",
+                textAlign: "right",
+                pr: "20px",
+                fontSize: "14px",
+                color: "#444",
+                fontWeight: "600",
+                cursor: "pointer",
+                alignSelf: "flex-end",
+              }}
+              onClick={() =>
+                updateState({
+                  ...state,
+                  mode: "group-info",
+                  selectedDocId: item?._id,
+                })
+              }
+            >
+              View Group info
+            </Paragraph>
+          )}
         </Flex>
       )}
     </Flex>
@@ -369,6 +397,7 @@ const defaultState = {
   initialRender: true,
   docGroupSelected: "",
   docGroupNew: "",
+  selectedDocId: "",
 };
 
 const InputLabel = ({
@@ -699,10 +728,20 @@ const DashboardComponent = ({
       }}
     >
       <Box sx={{ border: "0px red solid", mb: "40px", width: "800px" }}>
-        <Title text="Supporting Documents" />
+        <Title
+          text={`${
+            state?.mode === "group-info"
+              ? "Document Info"
+              : "Supporting Documents"
+          }`}
+        />
         <Description
           text={`
-          Please upload the necessary support documents for data extraction in order to generate your reports.`}
+          ${
+            state?.mode === "group-info"
+              ? "View / change the associated group for the selected document."
+              : "Please upload the necessary support documents for data extraction in order to generate your reports."
+          }`}
         />
       </Box>
 
@@ -747,6 +786,8 @@ const DashboardComponent = ({
                 authToken={session?.authToken}
                 setLoading={setLoading}
                 userId={user._id}
+                state={state}
+                updateState={updateState}
               />
             ))}
           </Box>
@@ -778,6 +819,16 @@ const DashboardComponent = ({
             <Files size={50} color="#777" />
           </Box>
         </Flex>
+      )}
+
+      {state?.mode === "group-info" && (
+        <GroupInfo
+          state={state}
+          updateState={updateState}
+          session={session}
+          hideNotification={hideNotification}
+          showNotification={showNotification}
+        />
       )}
     </Box>
   );

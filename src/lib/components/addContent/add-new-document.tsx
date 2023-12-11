@@ -178,6 +178,108 @@ const InputLabel = ({
   </Paragraph>
 );
 
+export const GroupSelection = ({
+  state,
+  updateState,
+  docGroups,
+  title,
+}: any) => (
+  <Flex>
+    <Box sx={{}}>
+      <Paragraph sx={{ textAlign: "left", color: "#444", fontSize: "14px" }}>
+        {title}
+      </Paragraph>
+
+      <InputLabel
+        customSX={{
+          textAlign: "left",
+          width: "300px",
+          mt: "20px",
+        }}
+        title="Select Existing Group"
+        subtitle=""
+      />
+
+      <ReactSelect
+        value={docGroups?.map((item: any) => {
+          if (item?._id === state?.docGroupSelected)
+            return {
+              value: item?._id,
+              label: item?.label,
+            };
+        })}
+        onChange={async (values: any) => {
+          updateState({
+            ...state,
+            docGroupSelected: values.value,
+            docGroupNew: "",
+          });
+        }}
+        placeholder="Select.."
+        styles={{
+          control: (provided) => ({
+            ...provided,
+            width: "300px",
+            fontSize: "14px",
+            outline: "none",
+            minHeight: "40px",
+            marginLeft: "0px",
+            textAlign: "left",
+          }),
+        }}
+        options={[
+          { value: "", label: "none" },
+          ...docGroups?.map((item: any) => ({
+            value: item?._id,
+            label: item?.label,
+          })),
+        ]}
+      />
+    </Box>
+    <Box
+      sx={{
+        ml: "20px",
+      }}
+    >
+      <Paragraph sx={{ textAlign: "left" }}></Paragraph>
+
+      <InputLabel
+        customSX={{
+          textAlign: "left",
+          width: "300px",
+          mt: "35px",
+        }}
+        title="Create New Group"
+        subtitle=""
+      />
+      <Input
+        sx={{
+          backgroundColor: "white",
+          height: "40px",
+          borderRadius: 0,
+          borderColor: "inputBorder",
+          width: "300px",
+          mb: "20px",
+          border: "1px solid #E8E8E8",
+        }}
+        type="text"
+        data-testid="add-content-docGroupNew"
+        id="add-content-docGroupNew"
+        name="add-content-docGroupNew"
+        placeholder=""
+        value={state.docGroupNew}
+        onChange={(e: { target: { value: string } }) => {
+          updateState({
+            ...state,
+            docGroupNew: e.target.value,
+            docGroupSelected: "",
+          });
+        }}
+      />
+    </Box>
+  </Flex>
+);
+
 export const AddNewForm = ({
   state,
   setLoading,
@@ -224,6 +326,24 @@ export const AddNewForm = ({
   const handleUpload: MouseEventHandler<HTMLButtonElement> = async (e) => {
     try {
       e.preventDefault();
+
+      if (state.docGroupNew !== "") {
+        const LabelExists = docGroups?.filter(
+          (item: any) => item?.label === state?.docGroupNew
+        );
+
+        if (LabelExists?.length > 0) {
+          showNotification({
+            text: "Group label exists",
+            type: "error",
+          });
+          setTimeout(() => {
+            hideNotification();
+          }, 4000);
+          return;
+        }
+      }
+
       if (state.label === "") return;
       await setLoading(true);
       const validatedForm = await validateForm(
@@ -609,105 +729,12 @@ export const AddNewForm = ({
               position: "relative",
             }}
           >
-            <Box
-              sx={{
-                border: errorState.label ? "1px firebrick solid" : "unset",
-              }}
-            >
-              <Paragraph
-                sx={{ textAlign: "left", color: "#444", fontSize: "14px" }}
-              >
-                You can optionally link this document to a group
-              </Paragraph>
-
-              <InputLabel
-                customSX={{
-                  textAlign: "left",
-                  width: "300px",
-                  mt: "20px",
-                }}
-                title="Select Existing Group"
-                subtitle=""
-              />
-
-              <ReactSelect
-                value={docGroups?.map((item) => {
-                  if (item?._id === state?.docGroupSelected)
-                    return {
-                      value: item?._id,
-                      label: item?.label,
-                    };
-                })}
-                onChange={async (values: any) => {
-                  updateState({
-                    ...state,
-                    docGroupSelected: values.value,
-                    docGroupNew: "",
-                  });
-                }}
-                placeholder="Select.."
-                styles={{
-                  control: (provided) => ({
-                    ...provided,
-                    width: "300px",
-                    fontSize: "14px",
-                    outline: "none",
-                    minHeight: "40px",
-                    marginLeft: "0px",
-                    textAlign: "left",
-                  }),
-                }}
-                options={[
-                  { value: "", label: "none" },
-                  ...docGroups?.map((item) => ({
-                    value: item?._id,
-                    label: item?.label,
-                  })),
-                ]}
-              />
-            </Box>
-            <Box
-              sx={{
-                border: errorState.label ? "1px firebrick solid" : "unset",
-                ml: "20px",
-              }}
-            >
-              <Paragraph sx={{ textAlign: "left" }}></Paragraph>
-
-              <InputLabel
-                customSX={{
-                  textAlign: "left",
-                  width: "300px",
-                  mt: "35px",
-                }}
-                title="Add New Group"
-                subtitle=""
-              />
-              <Input
-                sx={{
-                  backgroundColor: "white",
-                  height: "40px",
-                  borderRadius: 0,
-                  borderColor: "inputBorder",
-                  width: "300px",
-                  mb: "20px",
-                  border: "1px solid #E8E8E8",
-                }}
-                type="text"
-                data-testid="add-content-docGroupNew"
-                id="add-content-docGroupNew"
-                name="add-content-docGroupNew"
-                placeholder=""
-                value={state.docGroupNew}
-                onChange={(e: { target: { value: string } }) => {
-                  updateState({
-                    ...state,
-                    docGroupNew: e.target.value,
-                    docGroupSelected: "",
-                  });
-                }}
-              />
-            </Box>
+            <GroupSelection
+              title="You can optionally link this document to a group"
+              state={state}
+              updateState={updateState}
+              docGroups={docGroups}
+            />
           </Flex>
 
           <Flex
