@@ -3,6 +3,7 @@ import axios from "axios";
 
 export const generateDocx = async (
   tags: object,
+  templateDefinition: object,
   reportId: string,
   templateURL: string,
   outputName: string,
@@ -13,6 +14,7 @@ export const generateDocx = async (
     url: "/api/db/generate-docx",
     data: {
       tags,
+      templateDefinition,
       reportId,
       templateURL,
       outputName,
@@ -113,6 +115,7 @@ export const createNewReport = async (
   user_id: string,
   report_name: string,
   tags: any[],
+  template_definition: any,
   tagResults: any,
   document_ids: string[],
   baseTemplateURL: string,
@@ -128,6 +131,7 @@ export const createNewReport = async (
       user_id,
       report_name,
       tags,
+      template_definition,
       tagResults,
       document_ids,
       baseTemplateURL,
@@ -309,6 +313,25 @@ export const updateReportTagsProcessed = async (
       report_id,
       tag_chunks_to_process,
       tag_chunks_processed,
+      authToken,
+    },
+  });
+
+export const updateReportTagsAndDefinitions = async (
+  user_id: string,
+  report_id: string,
+  template_definition: any[],
+  tagResults: any[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/update-report-definitions-and-tags",
+    data: {
+      user_id,
+      report_id,
+      template_definition,
+      tagResults,
       authToken,
     },
   });

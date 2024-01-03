@@ -1,17 +1,16 @@
 import { Box, Paragraph, Flex, Input, Button, Switch } from "theme-ui";
-import {
-  chat,
-  createTheTags,
-  generateDocx,
-  createNewReport,
-} from "../../../utils/api-helper";
+import { createNewReport } from "../../../utils/api-helper";
 import { useState } from "react";
 import ReactSelect from "react-select";
 import { XCircle } from "phosphor-react";
 import { InputLabel } from "../pages/reports";
 import { DocType, SessionType, SetLoadingType } from "../../../lib/types";
 import { v4 as uuidv4 } from "uuid";
-import { select } from "redux-saga/effects";
+import {
+  definitionQuestions,
+  DefinitionSwitches,
+  defaultDefinitions,
+} from "./templateDefinitions";
 
 const returnPrePrompt = (clientNames: {
   client1Name: string;
@@ -78,10 +77,14 @@ const saveReport = async (
 
   const tag_chunks_to_process: any[] = chunks;
   const tag_chunks_processed: any[] = [];
+
+  const templateDefinition = reportState?.templateDefinition || {};
+
   const { data } = await createNewReport(
     user_id,
     reportState?.reportName,
     tags,
+    templateDefinition,
     {},
     reportState?.documentIds,
     reportState?.baseTemplateURL,
@@ -99,6 +102,8 @@ const saveReport = async (
 
 const defaultState = {
   reportName: "",
+  templateDefinition: defaultDefinitions,
+  selectCustomDefinitions: "default", // dafault || custom
   documentIds: [],
   baseTemplate: "",
   baseTemplateURL: "",
@@ -249,7 +254,8 @@ const CreateNewReportComponent = ({
     client2NameAlias: "",
   });
   const [tags, updateTags] = useState([]);
-  console.log(docGroups);
+  // console.log(docGroups);
+
   return (
     <Flex sx={{ flexDirection: "column", width: "100%", mb: "200px" }}>
       <Box>
@@ -726,6 +732,88 @@ const CreateNewReportComponent = ({
             </Flex>
           </>
         )}
+      </Box>
+      <Box sx={{ mt: "10px" }}>
+        <InputLabel
+          customSX={{
+            textAlign: "left",
+            width: "100%",
+          }}
+          title="Dynamic Sections"
+          subtitle=" *"
+        />
+        <Paragraph
+          sx={{ fontSize: "13px", color: "#666", textAlign: "left", mb: "5px" }}
+        >
+          Toggle sections to be on or off
+        </Paragraph>
+
+        <Flex
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+            pt: 2,
+            pb: 4,
+            width: "260px",
+          }}
+        >
+          <Paragraph sx={{ flex: 1, mr: "18px", fontSize: "15px" }}>
+            Defaults
+          </Paragraph>
+          <Box>
+            {/* / selectCustomDefinitions: 'default' , // dafault || custom */}
+            <Switch
+              id="lb_switch"
+              data-testid="lb_switch_select"
+              defaultChecked={reportState?.selectCustomDefinitions === "custom"}
+              sx={{
+                width: "80px",
+                height: "40px",
+                bakgroundColor: "gray",
+                "input:checked ~ &": {
+                  backgroundColor: "#96CCB9",
+                },
+                " >div": {
+                  mt: "3px",
+                  ml: "3px",
+                  width: "30px",
+                  height: "30px",
+                },
+                "input:checked ~ & >div": {
+                  transform: "translateX(40px)",
+                  width: "30px",
+                  height: "30px",
+                },
+              }}
+              onChange={(e) => {
+                updateReportState({
+                  ...reportState,
+                  selectCustomDefinitions: e?.target?.checked
+                    ? "custom"
+                    : "default",
+                  templateDefinition: !e?.target?.checked
+                    ? defaultDefinitions
+                    : reportState?.templateDefinition,
+                });
+              }}
+            />
+          </Box>
+          <Paragraph sx={{ flex: 1, ml: "10px", fontSize: "15px" }}>
+            Custom
+          </Paragraph>
+        </Flex>
+
+        {reportState?.selectCustomDefinitions === "custom" && (
+          <DefinitionSwitches
+            reportState={reportState}
+            updateReportState={updateReportState}
+            definitionQuestions={definitionQuestions}
+            templateDefinitionKey="templateDefinition"
+          />
+        )}
+      </Box>
+
+      <Box>
         <Flex sx={{ justifyContent: "flex-end" }}>
           <Paragraph
             sx={{
@@ -753,6 +841,8 @@ const CreateNewReportComponent = ({
               fontSize: "14px",
             }}
             onClick={async () => {
+              // console.log(reportState?.templateDefinition);
+              // return;
               let tagstoUse = tags;
 
               //IF CUSTOM FILTER TAGS TO BE FLAT ARRAY

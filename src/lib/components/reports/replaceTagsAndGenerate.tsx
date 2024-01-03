@@ -6,21 +6,44 @@ import {
   updateReportTagsProcessed,
   getSingleReport,
   getTagsSingleChunk,
+  updateReportTagsAndDefinitions,
 } from "../../../utils/api-helper";
 import { useEffect, useState } from "react";
 import { CheckCircle } from "phosphor-react";
-
+import { definitionQuestions, DefinitionSwitches } from "./templateDefinitions";
 import { TagsForGeneration } from "./tagsForGeneration";
 import { v4 as uuidv4 } from "uuid";
 import { getSignedURL } from "../../../utils/api-helper";
 import ConfettiExplosion from "react-confetti-explosion";
 
+/*
+TODO
+
+  1 ✅- WHEN USER UPDATES DEFINITION VALUES
+    - WHEN VALUE IS CHANGED SHOW NEW BUTTON - 'save changes'
+
+  2 ❌- ALLOW USER TO UPDATE TAGS
+    - WHEN TAG IS CHANGED SHOW NEW BUTTON - 'save changes'
+
+  3 ❌ - ADD A REGENERATE BUTTON , WHICH CALLS THE ENDPOINT WITH THE DATA AND CREATES NEW REPORT
+
+
+
+  ... MIGHT NOT DO THIS ...
+    - BECAUSE IF U THEN TOGGLE SOMETHING ON AND TAGS WERE NOT GENERATED ... CAUSES BIT OF A WEIRD ISSUE
+  4 ❌- OMIT KEYS BASED ON THE DEFINITION KEYS THAT ARE TRUE
+      - CREATE MAPPING TO KNOW WHICH KEYS TO OMIT FOR EACH DEFINITION
+
+*/
+
 const defaultState = {
   file_type: "",
   _id: "",
+  user_id: "",
   base_template_url: "",
   tag_chunks_to_process: [],
   tag_chunks_processed: [],
+  changes_made: false,
 };
 
 const ChunkItem = ({
@@ -118,6 +141,7 @@ const processTags = async (
 
     await generateDocx(
       report?.tagResults,
+      report?.template_definition,
       report?._id,
       report?.base_template_url,
       outputName,
@@ -154,15 +178,19 @@ const ReplaceTagsAndGenerateComponent = ({
   const [tagsProcessed, updateTagsProcessed] = useState<
     { [key: string]: string }[]
   >([]);
+
   const [reportData, updateReportData] = useState<{
     file_type: string;
     tagResults?: any;
     _id: string;
+    user_id: string;
     base_template_url: string;
+    template_definition?: any;
     tag_chunks_to_process: string[];
     tag_chunks_processed: string[];
     generated_report_url?: string;
     tagResultsOriginal?: any;
+    changes_made: boolean;
   }>(defaultState);
   const [loading, updateLoading] = useState(false);
   const [throwConfetti, updateThrowConfetti] = useState(false);
@@ -228,7 +256,6 @@ const ReplaceTagsAndGenerateComponent = ({
           force={0.8}
         />
       )}
-
       <Paragraph
         sx={{
           fontSize: "17px",
@@ -245,8 +272,7 @@ const ReplaceTagsAndGenerateComponent = ({
           {tagsProcessed.length + tagsToProcess?.length}
         </span>
       </Paragraph>
-
-      {!!tagsToProcess?.length && (
+      {!!tagsToProcess?.length && !reportData?.changes_made && (
         <>
           <Button
             variant="primary"
@@ -299,8 +325,7 @@ const ReplaceTagsAndGenerateComponent = ({
           </Paragraph>
         </>
       )}
-
-      {!tagsToProcess?.length && !loading && (
+      {!tagsToProcess?.length && !loading && !reportData?.changes_made && (
         <Flex>
           {reportData?.tagResultsOriginal && (
             <Button
@@ -332,6 +357,7 @@ const ReplaceTagsAndGenerateComponent = ({
 
                 await generateDocx(
                   report?.tagResults,
+                  report?.template_definition,
                   report?._id,
                   report?.base_template_url,
                   outputName,
@@ -356,7 +382,7 @@ const ReplaceTagsAndGenerateComponent = ({
               Regenerate
             </Button>
           )}
-          {reportData?.generated_report_url && (
+          {reportData?.generated_report_url && !reportData?.changes_made && (
             <Button
               variant="primary"
               sx={{
@@ -441,6 +467,72 @@ const ReplaceTagsAndGenerateComponent = ({
             />
           ))}
         </Flex>
+      )}
+
+      {reportData?.template_definition && (
+        <Flex
+          sx={{
+            flexDirection: "column",
+            borderTop: "1px solid lightgrey",
+            mt: "10px",
+            pt: "10px",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          <Paragraph
+            sx={{
+              fontSize: "17px",
+              fontWeight: "300",
+              textAlign: "left",
+              color: "#444",
+              mb: "30px",
+              mt: "25px",
+            }}
+          >
+            {" "}
+            Review the Template Defnition values
+          </Paragraph>
+          <DefinitionSwitches
+            reportState={reportData}
+            updateReportState={updateReportData}
+            definitionQuestions={definitionQuestions}
+            templateDefinitionKey="template_definition"
+          />
+        </Flex>
+      )}
+
+      {reportData?.changes_made && (
+        <Button
+          variant="primary"
+          sx={{
+            color: "white",
+            cursor: "pointer",
+            mt: "0px",
+            alignSelf: "flex-start",
+            mb: "50px",
+            height: "40px",
+            width: "190px",
+            fontSize: "14px",
+            zIndex: 9999,
+          }}
+          onClick={async () => {
+            updateLoading(true);
+
+            await updateReportTagsAndDefinitions(
+              reportData?.user_id,
+              reportData?._id,
+              reportData?.template_definition,
+              reportData?.tagResults || {},
+              session?.authToken
+            );
+
+            updateReportData({ ...reportData, changes_made: false });
+            updateLoading(false);
+          }}
+        >
+          Save changes
+        </Button>
       )}
     </Flex>
   );
