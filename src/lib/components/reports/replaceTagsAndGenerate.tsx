@@ -19,19 +19,9 @@ import ConfettiExplosion from "react-confetti-explosion";
 /*
 TODO
 
-  1 ✅- WHEN USER UPDATES DEFINITION VALUES
-    - WHEN VALUE IS CHANGED SHOW NEW BUTTON - 'save changes'
-
-  2 ❌- ALLOW USER TO UPDATE TAGS
-    - WHEN TAG IS CHANGED SHOW NEW BUTTON - 'save changes'
-
-  3 ❌ - ADD A REGENERATE BUTTON , WHICH CALLS THE ENDPOINT WITH THE DATA AND CREATES NEW REPORT
-
-
-
-  ... MIGHT NOT DO THIS ...
+  ...  NOT DOING THIS ...
     - BECAUSE IF U THEN TOGGLE SOMETHING ON AND TAGS WERE NOT GENERATED ... CAUSES BIT OF A WEIRD ISSUE
-  4 ❌- OMIT KEYS BASED ON THE DEFINITION KEYS THAT ARE TRUE
+   ❌- OMIT KEYS BASED ON THE DEFINITION KEYS THAT ARE TRUE
       - CREATE MAPPING TO KNOW WHICH KEYS TO OMIT FOR EACH DEFINITION
 
 */
@@ -139,6 +129,10 @@ const processTags = async (
     const outputName = `${uuidv4()}.${report?.file_type}`;
     updateReportData(report);
 
+    // TODO
+    // SAVE tagResultsOriginal as report?.tagResults,
+    //
+
     await generateDocx(
       report?.tagResults,
       report?.template_definition,
@@ -203,7 +197,7 @@ const ReplaceTagsAndGenerateComponent = ({
           session?.authToken
         );
         const report = data[0];
-        console.log({ report });
+
         updateReportData(report);
         updateTagsToProcess(report?.tag_chunks_to_process);
         updateTagsProcessed(report?.tag_chunks_processed);
@@ -327,61 +321,60 @@ const ReplaceTagsAndGenerateComponent = ({
       )}
       {!tagsToProcess?.length && !loading && !reportData?.changes_made && (
         <Flex>
-          {reportData?.tagResultsOriginal && (
-            <Button
-              variant="primary"
-              sx={{
-                color: "#555",
-                border: "1px solid grey",
-                cursor: "pointer",
-                background: "transparent",
-                mt: "0px",
-                alignSelf: "flex-start",
-                mb: "30px",
-                mr: "15px",
-                height: "40px",
-                width: "140px",
-                fontSize: "14px",
-                zIndex: 9999,
-              }}
-              onClick={async () => {
-                updateLoading(true);
+          <Button
+            variant="primary"
+            sx={{
+              color: "#555",
+              border: "1px solid grey",
+              cursor: "pointer",
+              background: "transparent",
+              mt: "0px",
+              alignSelf: "flex-start",
+              mb: "30px",
+              mr: "15px",
+              height: "40px",
+              width: "140px",
+              fontSize: "14px",
+              zIndex: 9999,
+            }}
+            onClick={async () => {
+              updateLoading(true);
 
-                const { data } = await getSingleReport(
-                  state.reportId,
-                  session?.authToken
-                );
-                const report = data[0];
-                const outputName = `${uuidv4()}.${report?.file_type}`;
-                updateReportData(report);
+              const { data } = await getSingleReport(
+                state.reportId,
+                session?.authToken
+              );
+              const report = data[0];
+              const outputName = `${uuidv4()}.${report?.file_type}`;
+              updateReportData(report);
 
-                await generateDocx(
-                  report?.tagResults,
-                  report?.template_definition,
-                  report?._id,
-                  report?.base_template_url,
-                  outputName,
-                  session?.authToken
-                );
+              await generateDocx(
+                report?.tagResults,
+                report?.template_definition,
+                report?._id,
+                report?.base_template_url,
+                outputName,
+                session?.authToken
+              );
 
-                const { data: dataR } = await getSingleReport(
-                  state.reportId,
-                  session?.authToken
-                );
-                const reportAfterGen = dataR[0];
-                updateReportData(reportAfterGen);
+              const { data: dataR } = await getSingleReport(
+                state.reportId,
+                session?.authToken
+              );
+              const reportAfterGen = dataR[0];
+              updateReportData(reportAfterGen);
 
-                updateThrowConfetti(true);
-                setTimeout(() => {
-                  updateThrowConfetti(false);
-                }, 3000);
+              updateThrowConfetti(true);
+              setTimeout(() => {
+                updateThrowConfetti(false);
+              }, 3000);
 
-                updateLoading(false);
-              }}
-            >
-              Regenerate
-            </Button>
-          )}
+              updateLoading(false);
+            }}
+          >
+            Regenerate
+          </Button>
+
           {reportData?.generated_report_url && !reportData?.changes_made && (
             <Button
               variant="primary"
@@ -427,7 +420,12 @@ const ReplaceTagsAndGenerateComponent = ({
       )}
 
       {reportData?.generated_report_url && (
-        <TagsForGeneration reportData={reportData} />
+        <TagsForGeneration
+          reportData={reportData}
+          updateReportData={updateReportData}
+          updateLoading={updateLoading}
+          session={session}
+        />
       )}
 
       {!reportData?.generated_report_url && (
@@ -490,8 +488,8 @@ const ReplaceTagsAndGenerateComponent = ({
               mt: "25px",
             }}
           >
-            {" "}
-            Review the Template Defnition values
+            Review the template defnition values, make changes & regenerate your
+            report
           </Paragraph>
           <DefinitionSwitches
             reportState={reportData}
@@ -525,6 +523,9 @@ const ReplaceTagsAndGenerateComponent = ({
               reportData?.template_definition,
               reportData?.tagResults || {},
               session?.authToken
+            );
+            await new Promise((resolve) =>
+              setTimeout(() => resolve(true), 500)
             );
 
             updateReportData({ ...reportData, changes_made: false });
