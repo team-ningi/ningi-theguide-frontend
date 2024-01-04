@@ -7,6 +7,7 @@ import {
   getSingleReport,
   getTagsSingleChunk,
   updateReportTagsAndDefinitions,
+  updateReportOriginalTags,
 } from "../../../utils/api-helper";
 import { useEffect, useState } from "react";
 import { CheckCircle } from "phosphor-react";
@@ -15,16 +16,6 @@ import { TagsForGeneration } from "./tagsForGeneration";
 import { v4 as uuidv4 } from "uuid";
 import { getSignedURL } from "../../../utils/api-helper";
 import ConfettiExplosion from "react-confetti-explosion";
-
-/*
-TODO
-
-  ...  NOT DOING THIS ...
-    - BECAUSE IF U THEN TOGGLE SOMETHING ON AND TAGS WERE NOT GENERATED ... CAUSES BIT OF A WEIRD ISSUE
-   ❌- OMIT KEYS BASED ON THE DEFINITION KEYS THAT ARE TRUE
-      - CREATE MAPPING TO KNOW WHICH KEYS TO OMIT FOR EACH DEFINITION
-
-*/
 
 const defaultState = {
   file_type: "",
@@ -90,7 +81,8 @@ const processTags = async (
   updateReportData: any,
   updateThrowConfetti: any,
   showNotification: any,
-  hideNotification: any
+  hideNotification: any,
+  session: any
 ) => {
   const toProcess = [...tagsToProcess];
   const updatedProcessed = [...tagsProcessed];
@@ -129,9 +121,12 @@ const processTags = async (
     const outputName = `${uuidv4()}.${report?.file_type}`;
     updateReportData(report);
 
-    // TODO
-    // SAVE tagResultsOriginal as report?.tagResults,
-    //
+    await updateReportOriginalTags(
+      report?.user_id,
+      report?._id,
+      report?.tagResults || {},
+      session?.authToken
+    );
 
     await generateDocx(
       report?.tagResults,
@@ -294,7 +289,8 @@ const ReplaceTagsAndGenerateComponent = ({
                 updateReportData,
                 updateThrowConfetti,
                 showNotification,
-                hideNotification
+                hideNotification,
+                session
               );
 
               updateLoading(false);

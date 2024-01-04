@@ -336,6 +336,23 @@ export const updateReportTagsAndDefinitions = async (
     },
   });
 
+export const updateReportOriginalTags = async (
+  user_id: string,
+  report_id: string,
+  tagResults: any[],
+  authToken: string
+) =>
+  await axios({
+    method: "post",
+    url: "/api/db/set-original-tag-results",
+    data: {
+      user_id,
+      report_id,
+      tagResults,
+      authToken,
+    },
+  });
+
 export const getSignedURL = async (
   id: string,
   file: string,
